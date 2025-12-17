@@ -1,0 +1,62 @@
+{
+  "courseId": "javascript-basics",
+  "chapters": [
+    {
+      "id": "chapter-1",
+      "title": "Getting Started with JavaScript",
+      "order": 1,
+      "topics": [
+        {
+          "id": "what-is-js",
+          "title": "What is JavaScript?"
+        },
+        {
+          "id": "variables",
+          "title": "Variables and Data Types"
+        },
+        {
+          "id": "operators",
+          "title": "Operators"
+        }
+      ]
+    },
+    {
+      "id": "chapter-2",
+      "title": "Control Flow and Functions",
+      "order": 2,
+      "topics": [
+        {
+          "id": "conditionals",
+          "title": "Conditional Statements"
+        },
+        {
+          "id": "loops",
+          "title": "Loops"
+        },
+        {
+          "id": "functions",
+          "title": "Functions"
+        }
+      ]
+    },
+    {
+      "id": "chapter-3",
+      "title": "Arrays and Objects",
+      "order": 3,
+      "topics": [
+        {
+          "id": "arrays",
+          "title": "Arrays"
+        },
+        {
+          "id": "objects",
+          "title": "Objects"
+        },
+        {
+          "id": "methods",
+          "title": "Array and Object Methods"
+        }
+      ]
+    }
+  ]
+}
