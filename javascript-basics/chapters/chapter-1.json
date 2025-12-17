@@ -1,0 +1,25 @@
+{
+  "id": "chapter-1",
+  "title": "Getting Started with JavaScript",
+  "description": "Learn the basics of JavaScript programming language",
+  "subtopics": [
+    {
+      "id": "what-is-js",
+      "title": "What is JavaScript?",
+      "content": "JavaScript is a high-level, interpreted programming language that conforms to the ECMAScript specification. It is a language that is also characterized as dynamic, weakly typed, prototype-based and multi-paradigm.\n\nJavaScript enables interactive web pages and is an essential part of web applications. The vast majority of websites use it, and all major web browsers have a dedicated JavaScript engine to execute it.",
+      "codeExample": "// This is a JavaScript comment\nconsole.log('Hello, World!'); // Prints to browser console"
+    },
+    {
+      "id": "variables",
+      "title": "Variables and Data Types",
+      "content": "Variables are containers for storing data values. In JavaScript, you can declare variables using three keywords: var, let, and const.\n\nJavaScript has several data types:\n- Number: integer or floating point numbers\n- String: sequence of characters\n- Boolean: true or false\n- Object: for more complex data structures\n- Undefined: a variable that has not been assigned a value\n- Null: represents no value",
+      "codeExample": "// Variable declarations\nlet message = 'Hello'; // String\nconst pi = 3.14; // Number\nvar isActive = true; // Boolean\n\n// Different data types\nlet age = 25; // Number\nlet name = 'John'; // String\nlet isStudent = false; // Boolean\nlet person = {firstName: 'John', age: 25}; // Object"
+    },
+    {
+      "id": "operators",
+      "title": "Operators",
+      "content": "Operators are used to perform operations on variables and values.\n\n**Arithmetic Operators**: +, -, *, /, %, ++, --\n**Assignment Operators**: =, +=, -=, *=, /=\n**Comparison Operators**: ==, ===, !=, !==, >, <, >=, <=\n**Logical Operators**: &&, ||, !",
+      "codeExample": "// Arithmetic operators\nlet sum = 10 + 5; // 15\nlet product = 10 * 5; // 50\n\n// Comparison operators\nconsole.log(10 > 5); // true\nconsole.log(10 === '10'); // false (strict equality)\n\n// Logical operators\nlet isAdult = true;\nlet hasLicense = false;\nconsole.log(isAdult && hasLicense); // false\nconsole.log(isAdult || hasLicense); // true"
+    }
+  ]
+}
