@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Course Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            min-height: 90vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: #4CAF50;
+        }
+
+        .search-container {
+            position: relative;
+            width: 300px;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 12px 20px;
+            padding-left: 45px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        #searchInput::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .main-content {
+            display: flex;
+            height: calc(90vh - 100px);
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #f8f9fa;
+            border-right: 1px solid #eaeaea;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .course-selector {
+            margin-bottom: 25px;
+        }
+
+        #courseSelect {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .chapters-list {
+            margin-top: 20px;
+        }
+
+        .chapter-item {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chapter-header {
+            padding: 15px;
+            background: #f1f8ff;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #2a5298;
+        }
+
+        .topics-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: white;
+        }
+
+        .chapter-item.active .topics-list {
+            max-height: 500px;
+        }
+
+        .topic-item {
+            padding: 12px 20px;
+            border-top: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .topic-item:hover {
+            background: #f8f9ff;
+        }
+
+        .topic-item.active {
+            background: #e8f4ff;
+            border-left: 4px solid #2a5298;
+            font-weight: 600;
+        }
+
+        .topic-item i {
+            color: #4CAF50;
+            font-size: 14px;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: white;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .loading i {
+            margin-right: 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .course-title {
+            font-size: 32px;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .course-description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .chapter-content {
+            display: none;
+        }
+
+        .chapter-content.active {
+            display: block;
+        }
+
+        .chapter-title {
+            font-size: 28px;
+            color: #2a5298;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+
+        .subtopics-list {
+            margin: 30px 0;
+        }
+
+        .subtopic-item {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4CAF50;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .subtopic-title {
+            font-size: 20px;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subtopic-content {
+            color: #444;
+            line-height: 1.7;
+            margin-top: 15px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .search-results {
+            display: none;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-result-item:hover {
+            background: #f8f9ff;
+        }
+
+        .search-result-item h4 {
+            color: #2a5298;
+            margin-bottom: 5px;
+        }
+
+        .search-result-item p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .highlight {
+            background-color: yellow;
+            padding: 2px;
+            border-radius: 3px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .breadcrumb span {
+            cursor: pointer;
+            color: #2a5298;
+        }
+
+        .breadcrumb span:hover {
+            text-decoration: underline;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 300px;
+                display: none;
+            }
+            
+            .sidebar.active {
+                display: block;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .search-container {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>CourseMaster Pro</span>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search course content...">
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar" id="sidebar">
+                <div class="course-selector">
+                    <select id="courseSelect">
+                        <option value="">Select a Course</option>
+                    </select>
+                </div>
+                
+                <div class="chapters-list" id="chaptersList">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i> Loading course structure...
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area" id="contentArea">
+                <div class="loading" id="initialLoading">
+                    <i class="fas fa-spinner"></i> Select a chapter to start learning
+                </div>
+                
+                <div class="search-results" id="searchResults">
+                    <div style="padding: 20px; color: #666;">
+                        <h3>Search Results</h3>
+                        <div id="searchResultsList"></div>
+                    </div>
+                </div>
+                
+                <div id="courseContent">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="course-viewer.js"></script>
+</body>
+</html>
