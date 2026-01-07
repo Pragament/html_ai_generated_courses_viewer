@@ -1,0 +1,25 @@
+{
+  "id": "chapter-3-science",
+  "title": "Science Food Basics",
+  "description": "Learn about food needs, types, sources, and habits for Class 1 students.",
+  "subtopics": [
+    {
+      "id": "why-need-food",
+      "title": "Why Do We Need Food?",
+      "content": "## Importance of Food\n\nWe eat food because it:\n\n- Gives us energy to play, study, and work.\n- Helps us grow strong and tall.\n- Keeps us healthy and fit.\n- Helps us fight diseases.\n\nWithout food, we cannot live.",
+      "codeExample": "### Food Questions:\n- Why do we need food for energy?\n- How does food help us grow?\n- What happens without food?\n\n### Practice:\n- List reasons for eating food\n- Match food benefits\n- True or false statements"
+    },
+    {
+      "id": "types-of-food",
+      "title": "Types of Food and Advantages",
+      "content": "## Food Types\n\n- **Energy foods**: Rice, bread, butter, sugar, chapatti - Gives energy to work and play.\n- **Growth foods**: Milk, eggs, meat, fish, pulses - Helps grow strong.\n- **Protective foods**: Fruits and vegetables - Keeps healthy and fights sickness.",
+      "codeExample": "### Food Type Questions:\n- Name an energy food.\n- What do growth foods do?\n- Give examples of protective foods.\n\n### Practice:\n- Classify foods by type\n- Match foods to benefits\n- Identify healthy foods"
+    },
+    {
+      "id": "food-from-animals",
+      "title": "Food from Animals",
+      "content": "## Animal Food Sources\n\nFoods from animals:\n\n- Cow: milk, curd, ghee\n- Hen: eggs\n- Goat/Chicken: meat\n- Honeybee: honey\n\nGood habits: Wash hands before/after eating, eat clean food, eat at proper times, drink water, no waste.",
+      "codeExample": "### Source Questions:\n- What food from cow?\n- Which animal gives eggs?\n- Name good eating habits.\n\n### Practice:\n- Match animals to foods\n- List eating habits\n- Identify animal foods"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "chapter-4-gk",
+  "title": "General Knowledge: Our World",
+  "description": "Explore fascinating facts about our world, India, and everyday knowledge through engaging topics for Class 2 students.",
+  "subtopics": [
+    {
+      "id": "our-world",
+      "title": "Our World",
+      "content": "## Our Solar System and Earth\n\nWe live on planet Earth. The Sun is the nearest star to Earth. Jupiter is the largest planet in our Solar System. There are 7 continents on Earth. The Sun rises in the East and sets in the West.",
+      "codeExample": "### World Facts Questions:\n- Which planet do we live on?\n- What is the nearest star to Earth?\n- Where does the Sun rise?\n\n### Practice:\n- Name the largest planet\n- Count the continents on Earth\n- Identify: Sun rises in __"
+    },
+    {
+      "id": "india-around",
+      "title": "India and Around",
+      "content": "## India Facts\n\nThe capital of India is New Delhi. Mahatma Gandhi is known as the Father of the Nation. National animal of India is the Tiger. National bird is the Peacock. National flower is the Lotus.",
+      "codeExample": "### India Questions:\n- What is India's capital?\n- Who is Father of the Nation?\n- Name India's national animal?\n\n### Practice:\n- Match symbols to India\n- Fill: National bird is __\n- Identify national flower"
+    },
+    {
+      "id": "everyday-gk",
+      "title": "Everyday GK",
+      "content": "## Daily Life Knowledge\n\nA clock tells time. Wear a raincoat when it rains. A cow gives milk. We use eyes to see. There are 7 days in a week.",
+      "codeExample": "### Everyday Questions:\n- What does a clock show?\n- What to wear in rain?\n- How many days in a week?\n\n### Practice:\n- Match uses: cow-milk\n- Identify senses: eyes-see\n- Count days in a week"
+    }
+  ]
+}

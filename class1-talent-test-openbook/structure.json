@@ -1,0 +1,81 @@
+{
+  "courseId": "class1-r1-online-course",
+  "chapters": [
+    {
+      "id": "chapter-1-english",
+      "title": "English",
+      "order": 1,
+      "topics": [
+        {
+          "id": "word-families-1",
+          "title": "Word Families 1"
+        },
+        {
+          "id": "more-word-families",
+          "title": "More Word Families"
+        }
+      ]
+    },
+    {
+      "id": "chapter-2-maths",
+      "title": "Mathematics",
+      "order": 2,
+      "topics": [
+        {
+          "id": "shapes",
+          "title": "Shapes"
+        },
+        {
+          "id": "addition",
+          "title": "Addition"
+        },
+        {
+          "id": "long-and-short",
+          "title": "Long and Short"
+        }
+      ]
+    },
+    {
+      "id": "chapter-3-science",
+      "title": "Science",
+      "order": 3,
+      "topics": [
+        {
+          "id": "why-need-food",
+          "title": "Why Do We Need Food?"
+        },
+        {
+          "id": "types-of-food",
+          "title": "Types of Food and Their Advantages"
+        },
+        {
+          "id": "food-from-animals",
+          "title": "Food from Animals"
+        }
+      ]
+    },
+    {
+      "id": "chapter-4-gk",
+      "title": "General Knowledge",
+      "order": 4,
+      "topics": [
+        {
+          "id": "solar-system",
+          "title": "Our Solar System"
+        },
+        {
+          "id": "environment",
+          "title": "Our Environment"
+        },
+        {
+          "id": "my-country",
+          "title": "My Country"
+        },
+        {
+          "id": "good-habits",
+          "title": "Good Habits"
+        }
+      ]
+    }
+  ]
+}

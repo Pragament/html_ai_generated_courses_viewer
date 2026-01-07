@@ -1,0 +1,73 @@
+{
+  "courseId": "class2-r1-online-course",
+  "chapters": [
+    {
+      "id": "chapter-1-english",
+      "title": "English",
+      "order": 1,
+      "topics": [
+        {
+          "id": "capitalisation-punctuation",
+          "title": "Capitalisation and Punctuation Marks"
+        },
+        {
+          "id": "similar-words-opposites",
+          "title": "Similar-Sounding Words and Opposites"
+        },
+        {
+          "id": "naming-words-nouns",
+          "title": "Naming Words Nouns"
+        }
+      ]
+    },
+    {
+      "id": "chapter-2-maths",
+      "title": "Mathematics",
+      "order": 2,
+      "topics": [
+        {
+          "id": "counting-groups",
+          "title": "Counting in Groups"
+        },
+        {
+          "id": "numbers-100-999",
+          "title": "Numbers from 100 to 999"
+        },
+        {
+          "id": "fun-addition",
+          "title": "Fun with Addition"
+        }
+      ]
+    },
+    {
+      "id": "chapter-3-science",
+      "title": "Science",
+      "order": 3,
+      "topics": [
+        {
+          "id": "vegetarian-nonveg-food",
+          "title": "Vegetarian and Non-Vegetarian Food"
+        }
+      ]
+    },
+    {
+      "id": "chapter-4-gk",
+      "title": "General Knowledge",
+      "order": 4,
+      "topics": [
+        {
+          "id": "our-world",
+          "title": "Our World"
+        },
+        {
+          "id": "india-around",
+          "title": "India and Around"
+        },
+        {
+          "id": "everyday-gk",
+          "title": "Everyday GK"
+        }
+      ]
+    }
+  ]
+}

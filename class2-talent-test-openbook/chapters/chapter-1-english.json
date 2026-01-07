@@ -1,0 +1,25 @@
+{
+  "id": "chapter-1-english",
+  "title": "English Grammar Skills",
+  "description": "Develop foundational grammar skills through topics like capitalisation and punctuation, similar-sounding words and opposites, and naming words (nouns) for Class 2 students.",
+  "subtopics": [
+    {
+      "id": "capitalisation-punctuation",
+      "title": "Capitalisation and Punctuation Marks",
+      "content": "## Capitalisation and Punctuation Rules\n\nAlways begin a sentence with a capital letter. Example: Riya is my friend. Use full stop (.) at the end of a sentence. Use question mark (?) for asking something. Use exclamation mark (!) for surprise or strong feeling. Capitalise names of people, days, months, and places. Example: Monday, India, Amit.",
+      "codeExample": "### Understanding Capitalisation and Punctuation:\n- When do we begin sentences with capital letters?\n- What punctuation marks end statements, questions, or show surprise?\n- Name people, places, or days that need capital letters.\n\n### Practice:\n- Rewrite sentences with correct capitalisation and punctuation\n- Identify errors in capitalisation or punctuation\n- Add missing punctuation marks to sentences"
+    },
+    {
+      "id": "similar-words-opposites",
+      "title": "Similar-Sounding Words and Opposites",
+      "content": "## Similar-Sounding Words and Opposites\n\nSimilar-sounding words sound the same but mean different things. Examples: sun/son, two/too/to, pair/pear. Opposite words mean the reverse. Examples: hot/cold, big/small, day/night, happy/sad.",
+      "codeExample": "### Understanding Similar Words and Opposites:\n- What are similar-sounding words?\n- Give examples of homophones and opposites.\n- Choose correct word for sentences.\n\n### Practice:\n- Match similar-sounding word pairs\n- Fill blanks with correct homophones\n- Identify opposites in sentences"
+    },
+    {
+      "id": "naming-words-nouns",
+      "title": "Naming Words (Nouns)",
+      "content": "## Naming Words - Nouns\n\nNaming words are names of people, places, animals, or things. Examples: Rita, dog, school, table. Proper nouns are special names that begin with a capital letter. Example: Hyderabad. Common nouns are general names. Example: city, boy, flower.",
+      "codeExample": "### Noun Identification:\n- What are naming words?\n- What is a proper noun? Give examples.\n- What is a common noun? Give examples.\n\n### Practice:\n- Identify nouns in sentences\n- Classify nouns as proper or common\n- Write examples of each type"
+    }
+  ]
+}

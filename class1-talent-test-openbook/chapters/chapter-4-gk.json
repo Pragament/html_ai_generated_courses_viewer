@@ -1,0 +1,31 @@
+{
+  "id": "chapter-4-gk",
+  "title": "General Knowledge",
+  "description": "Explore solar system, environment, country facts, and good habits for Class 1 students.",
+  "subtopics": [
+    {
+      "id": "solar-system",
+      "title": "Our Solar System",
+      "content": "## Solar System Facts\n\n- The sun is a big ball of fire.\n- Earth goes around the Sun.\n- Moon goes around the Earth.\n- There are 8 planets in our solar system.",
+      "codeExample": "### Solar Questions:\n- What is the sun?\n- What orbits the sun?\n- How many planets?\n\n### Practice:\n- True/false facts\n- Label sun, earth, moon\n- Count planets"
+    },
+    {
+      "id": "environment",
+      "title": "Our Environment",
+      "content": "## Environment\n\n- Trees give oxygen, fruits, and shade.\n- Animals live in forests, farms, or homes.\n- Water is used for drinking, cooking, cleaning.",
+      "codeExample": "### Environment Questions:\n- What do trees give?\n- Where do animals live?\n- Uses of water?\n\n### Practice:\n- List tree benefits\n- Animal homes\n- Water uses"
+    },
+    {
+      "id": "my-country",
+      "title": "My Country",
+      "content": "## India Facts\n\n- Name of country: India.\n- National flag: saffron, white, green.\n- National animal: Tiger.\n- National bird: Peacock.",
+      "codeExample": "### Country Questions:\n- What is our country?\n- Flag colors?\n- National animal?\n\n### Practice:\n- Identify symbols\n- Flag colors\n- List national symbols"
+    },
+    {
+      "id": "good-habits",
+      "title": "Good Habits",
+      "content": "## Good Habits\n\n- Brush your teeth twice a day.\n- Wash your hands before eating.\n- Always say 'Please' and 'Thank you'.",
+      "codeExample": "### Habit Questions:\n- How often to brush teeth?\n- When to wash hands?\n- What polite words to say?\n\n### Practice:\n- List daily habits\n- True/false habit statements\n- Match habits to pictures"
+    }
+  ]
+}

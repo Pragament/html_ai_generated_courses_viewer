@@ -1,0 +1,25 @@
+{
+  "id": "chapter-2-maths",
+  "title": "Mathematics Basics",
+  "description": "Build foundational math skills through shapes, addition, and comparisons for Class 1 students.",
+  "subtopics": [
+    {
+      "id": "shapes",
+      "title": "Shapes",
+      "content": "## Common Shapes\n\nLearn basic shapes:\n\n- **Circle**: Round like a clock.\n- **Square**: Four equal sides like a window.\n- **Rectangle**: Long shape with four sides like a book.\n- **Triangle**: Three sides like a pizza slice.\n\nIdentify shapes in everyday objects.",
+      "codeExample": "### Shape Questions:\n- How many sides does a triangle have?\n- What shape is round like a clock?\n- Name a shape with four equal sides.\n\n### Practice:\n- Identify shapes in pictures\n- Count sides of shapes\n- Match shapes to objects"
+    },
+    {
+      "id": "addition",
+      "title": "Addition",
+      "content": "## Addition\n\nAddition means putting together to find the total. Example: 2 + 3 = 5.\n\nWhen we add, the number grows bigger. Add objects, numbers, or pictures.",
+      "codeExample": "### Addition Questions:\n- What does addition mean?\n- Solve 2 + 3 =\n- How does addition make numbers bigger?\n\n### Practice:\n- Add small numbers\n- Use pictures for addition\n- Fill in addition sums"
+    },
+    {
+      "id": "long-short",
+      "title": "Long and Short",
+      "content": "## Long and Short\n\nA long object is stretched or tall like a pencil, stick, or ruler.\nA short object is small in size or height like an eraser or button.\n\nCompare lengths: A pencil is longer than a crayon.",
+      "codeExample": "### Comparison Questions:\n- What is a long object?\n- Give an example of a short object.\n- Compare pencil and crayon.\n\n### Practice:\n- Identify long and short objects\n- Sort objects by length\n- Compare lengths"
+    }
+  ]
+}

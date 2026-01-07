@@ -1,0 +1,19 @@
+{
+  "id": "chapter-1-english",
+  "title": "English Word Families",
+  "description": "Develop foundational phonics skills through word families for Class 1 students.",
+  "subtopics": [
+    {
+      "id": "word-families-1",
+      "title": "Word Families 1",
+      "content": "## Word Families\n\nA word family is a group of words that have the same ending sound. Examples include:\n\n- **-an family**: can, fan, man, pan, van\n- **-at family**: bat, cat, hat, mat, rat\n- **-en family**: den, hen, men, pen, ten\n- **-et family**: jet, met, net, pet, wet\n\nWords in the same family sound alike at the end and rhyme.",
+      "codeExample": "### Understanding Word Families:\n- What is a word family?\n- Name words from the -at family.\n- Say words from the -an family aloud.\n\n### Practice:\n- Identify words from given families\n- Match words to their word family\n- Complete word family charts"
+    },
+    {
+      "id": "word-families-2",
+      "title": "More Word Families",
+      "content": "## More Word Families\n\nLearn new word families that rhyme:\n\n- **-ack family**: back, pack, rack, sack\n- **-ain family**: rain, main, pain, gain\n- **-ake family**: bake, lake, make, take\n- **-ale family**: male, pale, tale, sale\n- **-all family**: ball, hall, tall, wall\n- **-ame family**: name, game, same, tame\n\nPractice clapping, stamping, or shouting to remember each family's sound.",
+      "codeExample": "### Word Family Questions:\n- Which words belong to the -ake family?\n- What sound does the -all family make?\n- Name two words from the -ame family.\n\n### Practice:\n- Sort words into correct families\n- Complete rhyming patterns\n- Play word family games"
+    }
+  ]
+}

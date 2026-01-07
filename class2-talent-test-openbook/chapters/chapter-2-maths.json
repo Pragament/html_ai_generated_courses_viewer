@@ -1,0 +1,25 @@
+{
+  "id": "chapter-2-maths",
+  "title": "Mathematics: Basic Concepts",
+  "description": "Master essential Class 2 math skills through counting in groups, understanding numbers from 100 to 999, and fun addition techniques with carry-over.",
+  "subtopics": [
+    {
+      "id": "counting-groups",
+      "title": "Counting in Groups",
+      "content": "## Counting by Groups\n\nCounting by 2s: 2, 4, 6, 8... Counting by 5s: 5, 10, 15... Counting by 10s: 10, 20, 30... Grouping helps count faster: 2 groups of 5 make 10.",
+      "codeExample": "### Practice Questions:\n- Count by 2s up to 10.\n- What comes after 15 when counting by 5s?\n- How many in 3 groups of 10?\n\n### Activity:\n- Complete: 10, 20, 30, __, __\n- Group objects by 5s and count\n- Skip count by 2s from 6 to 16"
+    },
+    {
+      "id": "numbers-100-999",
+      "title": "Numbers from 100 to 999",
+      "content": "## Place Value and Number Concepts\n\nPlace value example: 256 = 2 hundreds, 5 tens, 6 ones. Expanding numbers: 345 = 300 + 40 + 5. Comparing numbers: 789 > 654.",
+      "codeExample": "### Key Questions:\n- What is place value of 6 in 256?\n- Expand 123.\n- Compare: 456 ___ 465?\n\n### Practice:\n- Write place values for 789\n- Expand: 501 = __ + __ + __\n- Order numbers: 234, 243, 223"
+    },
+    {
+      "id": "fun-addition",
+      "title": "Fun with Addition",
+      "content": "## Addition Techniques\n\nCarry-over addition: 58 + 47 = 105. Real-life addition: 7 apples in two baskets. Adding three numbers: 20 + 30 + 10 = 60.",
+      "codeExample": "### Practice Questions:\n- Solve 58 + 47.\n- Add apples: 3 + 4 =\n- What is 20 + 30 + 10?\n\n### Activity:\n- Add with carry-over: 67 + 38\n- Solve three-number addition\n- Real-life: Add toys from 2 boxes"
+    }
+  ]
+}

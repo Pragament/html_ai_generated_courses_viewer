@@ -1,0 +1,13 @@
+{
+  "id": "chapter-3-science",
+  "title": "Science: Healthy Eating",
+  "description": "Learn about vegetarian and non-vegetarian food, healthy foods like milk, and why to avoid junk food for Class 2 students.",
+  "subtopics": [
+    {
+      "id": "vegetarian-nonveg-food",
+      "title": "Vegetarian and Non-Vegetarian Food",
+      "content": "## Types of Food\n\nPeople who eat only vegetables, fruits, and milk products but no eggs, fish, or meat are vegetarians. People who eat eggs, fish, and meat are non-vegetarians. Milk is important for strong bones and teeth; drink it daily along with curd and buttermilk.",
+      "codeExample": "### Understanding Food Types:\n- Who are vegetarians?\n- Who are non-vegetarians?\n- Why drink milk every day?\n\n### Practice:\n- Classify foods: vegetarian or non-vegetarian\n- List healthy milk products\n- Identify good foods vs junk"
+    }
+  ]
+}
