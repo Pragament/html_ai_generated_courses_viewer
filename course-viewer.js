@@ -164,6 +164,7 @@ class CourseViewer {
     renderCourseStructure() {
         const chaptersList = document.getElementById('chaptersList');
         chaptersList.innerHTML = '';
+        console.log('Rendering course structure:', this.courseStructure);
         
         this.courseStructure.chapters.forEach((chapter, index) => {
             const chapterItem = document.createElement('div');
@@ -256,7 +257,7 @@ class CourseViewer {
                             
                             ${subtopic.codeExample ? `
                                 <div class="code-block">
-                                    <pre><code>${this.escapeHtml(subtopic.codeExample)}</code></pre>
+                                    <pre>${this.formatContent(subtopic.codeExample)}</pre>
                                 </div>
                             ` : ''}
                         </div>

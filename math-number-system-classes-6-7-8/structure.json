@@ -1,0 +1,67 @@
+{
+  "courseId": "math-number-system-classes-6-7-8",
+  "chapters": [
+    {
+      "id": "number-system-classes-6-7-8",
+      "title": "Number System: Complete Guide (Classes 6-8)",
+      "order": 1,
+      "topics": [
+        {
+          "id": "class6-natural-whole-numbers",
+          "title": "Class 6: Natural & Whole Numbers",
+          "order": 1
+        },
+        {
+          "id": "class6-integers-intro",
+          "title": "Class 6: Integers (Introduction)",
+          "order": 2
+        },
+        {
+          "id": "class6-factors-multiples",
+          "title": "Class 6: Factors & Multiples",
+          "order": 3
+        },
+        {
+          "id": "class6-hcf-lcm",
+          "title": "Class 6: HCF & LCM",
+          "order": 4
+        },
+        {
+          "id": "class7-integers-operations",
+          "title": "Class 7: Integers (Operations & Properties)",
+          "order": 5
+        },
+        {
+          "id": "class7-fractions-decimals",
+          "title": "Class 7: Fractions & Decimals",
+          "order": 6
+        },
+        {
+          "id": "class7-rational-numbers-intro",
+          "title": "Class 7: Rational Numbers (Introduction)",
+          "order": 7
+        },
+        {
+          "id": "class8-rational-numbers",
+          "title": "Class 8: Rational Numbers (Properties & Operations)",
+          "order": 8
+        },
+        {
+          "id": "class8-squares-square-roots",
+          "title": "Class 8: Squares & Square Roots",
+          "order": 9
+        },
+        {
+          "id": "class8-cubes-cube-roots",
+          "title": "Class 8: Cubes & Cube Roots",
+          "order": 10
+        },
+        {
+          "id": "class8-playing-with-numbers",
+          "title": "Class 8: Playing with Numbers",
+          "order": 11
+        }
+      ]
+    }
+  ]
+}
