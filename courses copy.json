@@ -130,55 +130,6 @@
       "subjects": ["Mathematics", "Number Theory"],
       "classes": ["6", "7", "8"],
       "tags": ["cbse", "comprehensive", "progressive-learning"],
-      "status": true,
-      "category": "Mathematics"
-    },
-    {
-      "id": "math-algebra-classes-6-7-8",
-      "title": "Math Algebra: Complete Guide (Classes 6-8)",
-      "description": "Comprehensive study material covering Algebra basics, patterns, equations, and problem-solving following CBSE curriculum progression.",
-      "estimatedTime": "40 hours",
-      "level": "Intermediate",
-      "subjects": ["Mathematics", "Algebra"],
-      "classes": ["6", "7", "8"],
-      "tags": ["cbse", "comprehensive", "progressive-learning"],
-      "status": true,
-      "category": "Mathematics"
-    },
-    {
-      "id": "math-ratio-proportion-classes-6-7-8",
-      "title": "Math Ratio & Proportion: Complete Guide (Classes 6-8)",
-      "description": "Comprehensive study material covering Ratio and Proportion basics, applications, and problem-solving following CBSE curriculum progression.",
-      "estimatedTime": "40 hours",
-      "level": "Intermediate",
-      "subjects": ["Mathematics", "Ratio & Proportion"],
-      "classes": ["6", "7", "8"],
-      "tags": ["cbse", "comprehensive", "progressive-learning"],
-      "status": true,
-      "category": "Mathematics"
-    },
-    {
-      "id": "math-geometry-classes-6-7-8",
-      "title": "Math Geometry: Complete Guide (Classes 6-8)",
-      "description": "Comprehensive study material covering Geometry basics, shapes, angles, and problem-solving following CBSE curriculum progression.",
-      "estimatedTime": "40 hours",
-      "level": "Intermediate",
-      "subjects": ["Mathematics", "Geometry"],
-      "classes": ["6", "7", "8"],
-      "tags": ["cbse", "comprehensive", "progressive-learning"],
-      "status": true,
-      "category": "Mathematics"
-    },
-    {
-      "id": "math-mensuration-classes-6-7-8",
-      "title": "Math Mensuration: Complete Guide (Classes 6-8)",
-      "description": "Comprehensive study material covering Mensuration basics, shapes, perimeter, area, and problem-solving following CBSE curriculum progression.",
-      "estimatedTime": "40 hours",
-      "level": "Intermediate",
-      "subjects": ["Mathematics", "Mensuration"],
-      "classes": ["6", "7", "8"],
-      "tags": ["cbse", "comprehensive", "progressive-learning"],
-      "status": true,
       "category": "Mathematics"
     }
   ]

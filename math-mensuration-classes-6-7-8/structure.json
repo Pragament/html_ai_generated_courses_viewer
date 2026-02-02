@@ -1,0 +1,27 @@
+{
+  "courseId": "math-mensuration-classes-6-7-8",
+  "chapters": [
+    {
+      "id": "mensuration-classes-6-7-8",
+      "title": "Mensuration Mastery: The Complete Measurement Adventure! \ud83d\udccf\ud83d\udcd0\ud83d\udce6",
+      "order": 1,
+      "topics": [
+        {
+          "id": "class6-perimeter-area-basics",
+          "title": "Class 6: Perimeter & Area Basics - The Measurement Magicians! \ud83e\uddd9\u200d\u2642\ufe0f\ud83d\udccf",
+          "order": 1
+        },
+        {
+          "id": "class7-advanced-area-volume",
+          "title": "Class 7: Advanced Area & Volume - The 3D Measurement Wizards! \ud83d\udce6\u2728",
+          "order": 2
+        },
+        {
+          "id": "class8-comprehensive-mensuration",
+          "title": "Class 8: Comprehensive Mensuration - The Master Architects! \ud83c\udfd7\ufe0f\ud83d\udcca",
+          "order": 3
+        }
+      ]
+    }
+  ]
+}

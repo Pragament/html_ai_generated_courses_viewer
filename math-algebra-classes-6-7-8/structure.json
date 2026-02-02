@@ -1,0 +1,42 @@
+{
+  "courseId": "math-algebra-classes-6-7-8",
+  "chapters": [
+    {
+      "id": "algebra-classes-6-7-8",
+      "title": "Algebra Adventures: From Patterns to Puzzles! \ud83e\udde9\u27a1\ufe0f\ud83d\udcd0",
+      "order": 1,
+      "topics": [
+        {
+          "id": "class6-algebra-intro",
+          "title": "Class 6: Algebra Awakening: The Pattern Detectives! \ud83d\udd0d",
+          "order": 1
+        },
+        {
+          "id": "class7-algebraic-expressions",
+          "title": "Class 7: Algebraic Expressions: The Math Sentence Builders! \ud83d\udcdd",
+          "order": 2
+        },
+        {
+          "id": "class7-linear-equations",
+          "title": "Class 7: Linear Equations: The Mystery Solvers! \ud83d\udd75\ufe0f\u200d\u2642\ufe0f",
+          "order": 3
+        },
+        {
+          "id": "class8-algebraic-expressions-identities",
+          "title": "Class 8: Algebraic Expressions & Identities: The Math Magicians! \ud83c\udfa9\u2728",
+          "order": 4
+        },
+        {
+          "id": "class8-factorisation",
+          "title": "Class 8: Factorisation: The Reverse Engineering Wizards! \ud83d\udd04",
+          "order": 5
+        },
+        {
+          "id": "class8-linear-equations-one-variable",
+          "title": "Class 8: Linear Equations in One Variable: The Ultimate Puzzle Masters! \ud83e\udde0",
+          "order": 6
+        }
+      ]
+    }
+  ]
+}

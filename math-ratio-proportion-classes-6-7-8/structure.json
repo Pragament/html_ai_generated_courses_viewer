@@ -1,0 +1,42 @@
+{
+  "courseId": "math-ratio-proportion-classes-6-7-8",
+  "chapters": [
+    {
+      "id": "ratio-proportion-classes-6-7-8",
+      "title": "Ratio & Proportion: The Complete Adventure of Comparisons & Fairness! \ud83d\udccf\u2696\ufe0f\ud83d\udcb0",
+      "order": 1,
+      "topics": [
+        {
+          "id": "class6-ratio-basics",
+          "title": "Class 6: Ratio Basics - The Fair Share Detectives! \ud83d\udd75\ufe0f\u200d\u2640\ufe0f\ud83c\udf55",
+          "order": 1
+        },
+        {
+          "id": "class6-proportion-unitary",
+          "title": "Class 6: Proportion & Unitary Method - The Equal Relationship Masters! \u2696\ufe0f\ud83d\udd0d",
+          "order": 2
+        },
+        {
+          "id": "class7-percentage-foundation",
+          "title": "Class 7: Percentage Foundation - The Out of 100 Super System! \ud83d\udcaf\ud83c\udfaf",
+          "order": 3
+        },
+        {
+          "id": "class7-profit-loss-simple-interest",
+          "title": "Class 7: Profit, Loss & Simple Interest - The Business & Banking Wizards! \ud83d\udcbc\ud83c\udfe6",
+          "order": 4
+        },
+        {
+          "id": "class8-direct-inverse-proportion",
+          "title": "Class 8: Direct & Inverse Proportion - The Relationship Scientists! \ud83d\udd2c\ud83d\udcca",
+          "order": 5
+        },
+        {
+          "id": "class8-compound-interest-comparing",
+          "title": "Class 8: Compound Interest & Comparing Quantities - The Advanced Money Masters! \ud83d\udcb0\ud83c\udf93",
+          "order": 6
+        }
+      ]
+    }
+  ]
+}

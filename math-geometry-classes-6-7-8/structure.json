@@ -1,0 +1,42 @@
+{
+  "courseId": "math-geometry-classes-6-7-8",
+  "chapters": [
+    {
+      "id": "geometry-classes-6-7-8",
+      "title": "Geometry Galaxy: The Complete Shape & Space Adventure! \ud83c\udf0c\ud83d\udcd0\u2728",
+      "order": 1,
+      "topics": [
+        {
+          "id": "class6-geometry-basics",
+          "title": "Class 6: Geometry Basics - The Building Blocks of Shape World! \ud83e\uddf1\ud83c\udf1f",
+          "order": 1
+        },
+        {
+          "id": "class7-lines-angles-congruence",
+          "title": "Class 7: Lines, Angles & Congruence - The Relationship Detectives! \ud83d\udd0d\ud83d\udcd0",
+          "order": 2
+        },
+        {
+          "id": "class7-constructions-properties",
+          "title": "Class 7: Constructions & Triangle Properties - The Geometry Architects! \ud83c\udfd7\ufe0f\ud83d\udcd0",
+          "order": 3
+        },
+        {
+          "id": "class8-quadrilaterals-properties",
+          "title": "Class 8: Understanding Quadrilaterals - The Four-Sided Universe! \ud83d\udd32\ud83c\udf0c",
+          "order": 4
+        },
+        {
+          "id": "class8-practical-geometry-constructions",
+          "title": "Class 8: Practical Geometry - The Construction Architects! \ud83c\udfd7\ufe0f\ud83d\udcd0",
+          "order": 5
+        },
+        {
+          "id": "class8-mensuration-visualizing-solids",
+          "title": "Class 8: Mensuration & 3D Shapes - The Space & Measurement Masters! \ud83d\udce6\ud83d\udccf",
+          "order": 6
+        }
+      ]
+    }
+  ]
+}

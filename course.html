@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-JFXX752KWJ"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-JFXX752KWJ', {
             'page_path': window.location.pathname,
@@ -17,7 +18,8 @@
     </script>
     <!-- End Google Analytics -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * {
@@ -42,7 +44,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             min-height: 90vh;
         }
@@ -90,13 +92,13 @@
             border: none;
             border-radius: 50px;
             font-size: 16px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             backdrop-filter: blur(10px);
         }
 
         #searchInput::placeholder {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .search-icon {
@@ -104,7 +106,7 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .main-content {
@@ -148,7 +150,7 @@
         }
 
         .chapter-item:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .chapter-header {
@@ -220,8 +222,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .course-title {
@@ -262,7 +269,7 @@
             padding: 20px;
             margin-bottom: 20px;
             border-left: 5px solid #4CAF50;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         }
 
         .subtopic-title {
@@ -295,7 +302,7 @@
             margin-top: 20px;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
 
         .search-results.active {
@@ -342,7 +349,9 @@
             flex-wrap: wrap;
         }
 
-        .filters input, .filters select, .filters button {
+        .filters input,
+        .filters select,
+        .filters button {
             padding: 10px 12px;
             border-radius: 8px;
             border: 1px solid #e0e0e0;
@@ -359,7 +368,7 @@
             background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
             border-radius: 12px;
             padding: 18px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
             cursor: pointer;
             display: flex;
             flex-direction: column;
@@ -369,7 +378,7 @@
 
         .course-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.09);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.09);
         }
 
         .course-card h3 {
@@ -415,28 +424,43 @@
             .main-content {
                 flex-direction: column;
             }
-            
+
             .sidebar {
                 width: 100%;
                 height: 300px;
                 display: none;
             }
-            
+
             .sidebar.active {
                 display: block;
             }
-            
+
             .mobile-menu-btn {
                 display: block;
             }
-            
+
             .search-container {
                 width: 200px;
             }
-            
+
             .language-switcher {
-                display: none; /* Hide language switcher on mobile */
+                display: none;
+                /* Hide language switcher on mobile */
             }
+        }
+
+        /* CSS */
+        .logo-link {
+            text-decoration: none;
+            color: inherit;
+            /* Keeps original text color */
+            display: inline-block;
+            /* Or flex, depending on your layout */
+        }
+
+        .logo-link:hover {
+            opacity: 0.8;
+            /* Optional hover effect */
         }
     </style>
     <script type="text/javascript">
@@ -449,22 +473,25 @@
         }
     </script>
 </head>
+
 <body>
     <div class="container">
         <header>
-            <div class="logo">
-                <i class="fas fa-graduation-cap"></i>
-                <span>UpSkill</span>
-            </div>
-            
+            <a href="/" class="logo-link">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>UpSkill</span>
+                </div>
+            </a>
+
             <div class="header-right">
-                <div class="search-container hidden">
+                <div class="search-container">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" id="searchInput" placeholder="Search ...">
                 </div>
-                
+
                 <div id="google_translate_element" class="language-switcher"></div>
-                
+
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -472,13 +499,13 @@
         </header>
 
         <div class="main-content">
-            <div class="sidebar hidden" id="sidebar">
+            <div class="sidebar" id="sidebar">
                 <div class="course-selector hidden">
                     <select id="courseSelect">
                         <option value="">Select a Course</option>
                     </select>
                 </div>
-                
+
                 <div class="chapters-list" id="chaptersList">
                     <div class="loading">
                         <i class="fas fa-spinner"></i> Loading course structure...
@@ -487,36 +514,19 @@
             </div>
 
             <div class="content-area" id="contentArea">
-                
-                <div class="search-results hidden" id="searchResults">
+                <div class="loading" id="initialLoading">
+                    <i class="fas fa-spinner"></i> Select a chapter to start learning
+                </div>
+
+                <div class="search-results" id="searchResults">
                     <div style="padding: 20px; color: #666;">
                         <h3>Search Results</h3>
                         <div id="searchResultsList"></div>
                     </div>
                 </div>
 
-                <!-- Homepage: courses grid -->
-                <div id="coursesGrid" class="courses-grid">
-                    <div class="filters">
-                        <input type="text" id="homepageSearch" placeholder="Search courses...">
-                        <select id="homepageCategory">
-                            <option value="">All categories</option>
-                        </select>
-                        <select id="homepageClass">
-                            <option value="">All classes</option>
-                        </select>
-                        <select id="homepageSubject">
-                            <option value="">All subjects</option>
-                        </select>
-                        <select id="homepageTag">
-                            <option value="">All tags</option>
-                        </select>
-                        <button id="homepageClear">Clear</button>
-                    </div>
-
-                    <div class="grid" id="coursesGridList">
-                        <!-- Course cards will be rendered here -->
-                    </div>
+                <div id="courseContent">
+                    <!-- Dynamic content will be loaded here -->
                 </div>
             </div>
         </div>
@@ -524,4 +534,5 @@
 
     <script src="course-viewer.js"></script>
 </body>
+
 </html>

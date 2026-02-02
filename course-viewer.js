@@ -25,9 +25,11 @@ class CourseViewer {
         // Setup event listeners
         this.setupEventListeners();
         
-        // If course ID specified in URL, load it
+        // If course ID specified in URL, load it, otherwise show homepage
         if (this.courseId) {
             await this.loadCourse(this.courseId);
+        } else {
+            this.renderHomepage();
         }
     }
     
@@ -36,6 +38,7 @@ class CourseViewer {
             const response = await fetch('courses.json');
             const data = await response.json();
             this.courses = data.courses;
+            //this.courses = data.courses.filter(course => course.status === true);
             
             // Track courses loaded
             this.trackEvent('courses_loaded', {
@@ -91,15 +94,16 @@ class CourseViewer {
             
             // Render course structure
             this.renderCourseStructure();
-            
-            // Load first chapter if specified in URL
+            // Load chapter if specified in URL, otherwise load first chapter
             const urlParams = new URLSearchParams(window.location.search);
             const chapterId = urlParams.get('chapter');
-            
+
             if (chapterId) {
                 await this.loadChapter(chapterId);
             } else if (this.courseStructure.chapters.length > 0) {
                 await this.loadChapter(this.courseStructure.chapters[0].id);
+            } else {
+                this.goToCourseOverview();
             }
             
         } catch (error) {
@@ -224,6 +228,119 @@ class CourseViewer {
             
             chaptersList.appendChild(chapterItem);
         });
+    }
+
+    // ------------------ Homepage rendering and filtering ------------------
+    renderHomepage() {
+        // Show courses grid and hide other areas
+        document.getElementById('coursesGrid').style.display = 'block';
+        //document.getElementById('courseContent').style.display = 'none';
+        document.getElementById('searchResults').classList.remove('active');
+
+        // Populate filter selects with unique values
+        const categories = new Set();
+        const classes = new Set();
+        const subjects = new Set();
+        const tags = new Set();
+
+        this.courses.filter(course => course.status === true).forEach(c => {
+            if (c.category) categories.add(c.category);
+            if (Array.isArray(c.classes)) c.classes.forEach(cl => classes.add(cl));
+            if (Array.isArray(c.subjects)) c.subjects.forEach(s => subjects.add(s));
+            if (Array.isArray(c.tags)) c.tags.forEach(t => tags.add(t));
+        });
+
+        const catSel = document.getElementById('homepageCategory');
+        const classSel = document.getElementById('homepageClass');
+        const subjSel = document.getElementById('homepageSubject');
+        const tagSel = document.getElementById('homepageTag');
+
+        // helper to fill
+        const fill = (sel, values) => {
+            sel.innerHTML = '<option value="">All</option>' +
+                Array.from(values).sort().map(v => `<option value="${v}">${v}</option>`).join('');
+        };
+
+        fill(catSel, categories);
+        fill(classSel, classes);
+        fill(subjSel, subjects);
+        fill(tagSel, tags);
+
+        // Render all courses initially
+        this.renderCourseCards(this.courses.filter(course => course.status === true));
+
+        // Attach event listeners for filters/search
+        document.getElementById('homepageSearch').addEventListener('input', (e) => {
+            this.applyHomepageFilters();
+        });
+
+        [catSel, classSel, subjSel, tagSel].forEach(sel => {
+            sel.addEventListener('change', () => this.applyHomepageFilters());
+        });
+
+        document.getElementById('homepageClear').addEventListener('click', () => {
+            document.getElementById('homepageSearch').value = '';
+            catSel.value = '';
+            classSel.value = '';
+            subjSel.value = '';
+            tagSel.value = '';
+            this.renderCourseCards(this.courses);
+        });
+    }
+
+    renderCourseCards(list) {
+        const container = document.getElementById('coursesGridList');
+        if (!container) return;
+
+        if (!list || list.length === 0) {
+            container.innerHTML = '<p style="color:#666;">No courses match the filters</p>';
+            return;
+        }
+
+        container.innerHTML = list.map(c => `
+            <div class="course-card" data-course-id="${c.id}">
+                <h3>${this.escapeHtml(c.title)}</h3>
+                <div class="course-meta">${this.escapeHtml(c.description || '')}</div>
+                <div class="course-meta">Category: ${this.escapeHtml(c.category || '—')}</div>
+                <div class="course-meta">Subjects: ${(c.subjects || []).join(', ')}</div>
+                <div class="hidden" style="margin-top:8px; color:#2a5298; font-weight:600;">Estimated: ${this.escapeHtml(c.estimatedTime || '—')}</div>
+            </div>
+        `).join('');
+
+        // Attach click handlers
+        container.querySelectorAll('.course-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                const id = card.dataset.courseId;
+                if (id) {
+                    // Navigate to separate course detail page
+                    window.location.href = `course.html?course-id=${encodeURIComponent(id)}`;
+                }
+            });
+        });
+    }
+
+    applyHomepageFilters() {
+        const q = (document.getElementById('homepageSearch').value || '').toLowerCase().trim();
+        const cat = document.getElementById('homepageCategory').value;
+        const cls = document.getElementById('homepageClass').value;
+        const subj = document.getElementById('homepageSubject').value;
+        const tag = document.getElementById('homepageTag').value;
+
+        const results = this.courses.filter(c => {
+            if (cat && c.category !== cat) return false;
+            if (cls && !(Array.isArray(c.classes) && c.classes.includes(cls))) return false;
+            if (subj && !(Array.isArray(c.subjects) && c.subjects.includes(subj))) return false;
+            if (tag && !(Array.isArray(c.tags) && c.tags.includes(tag))) return false;
+
+            if (q) {
+                const hay = `${c.title} ${c.description || ''} ${(c.subjects||[]).join(' ')} ${(c.tags||[]).join(' ')}`.toLowerCase();
+                return hay.includes(q);
+            }
+
+            return true;
+        });
+
+        this.renderCourseCards(results);
     }
     
     renderChapterContent() {
@@ -387,7 +504,7 @@ class CourseViewer {
         }
         
         searchResults.classList.add('active');
-        document.getElementById('courseContent').style.display = 'none';
+        //document.getElementById('courseContent').style.display = 'none';
         document.getElementById('initialLoading').style.display = 'none';
     }
     
