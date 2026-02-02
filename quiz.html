@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Quiz Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSV Parser Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Markdown Renderer Library -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e6ed;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .app-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Setup Panel */
+        .setup-panel {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+        }
+
+        .setup-panel h2 {
+            color: #3498db;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        /* Quiz Panel */
+        .quiz-panel {
+            flex: 2;
+            min-width: 400px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            display: none;
+        }
+
+        .quiz-panel.active {
+            display: block;
+        }
+
+        /* Setup Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .multi-select {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background-color: #eef5ff;
+        }
+
+        .checkbox-item input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .question-count {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .question-count input {
+            width: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-start {
+            width: 100%;
+            margin-top: 10px;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+
+        .btn-start:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-check {
+            background-color: #2ecc71;
+        }
+
+        .btn-check:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-check:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .btn-solution {
+            background-color: #9b59b6;
+        }
+
+        .btn-solution:hover {
+            background-color: #8e44ad;
+        }
+
+        .btn-explanation {
+            background-color: #1abc9c;
+        }
+
+        .btn-explanation:hover {
+            background-color: #16a085;
+        }
+
+        .btn-next, .btn-prev {
+            background-color: #f39c12;
+        }
+
+        .btn-next:hover, .btn-prev:hover {
+            background-color: #d68910;
+        }
+
+        .btn-restart {
+            background-color: #e74c3c;
+            margin-top: 20px;
+        }
+
+        .btn-restart:hover {
+            background-color: #c0392b;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 25px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Question Card */
+        .question-card {
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background-color: #f8f9fa;
+            border-color: #bdc3c7;
+        }
+
+        .option.selected {
+            border-color: #3498db;
+            background-color: #e8f4fc;
+        }
+
+        .option.correct {
+            border-color: #27ae60;
+            background-color: #d5f4e6;
+        }
+
+        .option.wrong {
+            border-color: #e74c3c;
+            background-color: #fadbd8;
+        }
+
+        .option-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #95a5a6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-icon {
+            border-color: #3498db;
+            background-color: #3498db;
+            color: white;
+        }
+
+        .option.correct .option-icon {
+            border-color: #27ae60;
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .option.wrong .option-icon {
+            border-color: #e74c3c;
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background-color: #d5f4e6;
+            border-left: 5px solid #27ae60;
+            color: #155724;
+        }
+
+        .feedback.wrong {
+            background-color: #fadbd8;
+            border-left: 5px solid #e74c3c;
+            color: #721c24;
+        }
+
+        .feedback-icon {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .solution-container, .explanation-container {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            display: none;
+        }
+
+        .solution-container h3, .explanation-container h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .solution-content, .explanation-content {
+            line-height: 1.6;
+        }
+
+        /* Quiz Controls */
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .results-panel h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
+
+        .score-text {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .setup-panel, .quiz-panel {
+                min-width: 100%;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Practice Quiz Application</h1>
+            <p class="subtitle">Select courses, chapters, and topics to create your custom quiz</p>
+        </header>
+
+        <div class="app-container">
+            <!-- Setup Panel -->
+            <div class="setup-panel" id="setupPanel">
+                <h2>Quiz Setup</h2>
+                
+                <div class="form-group">
+                    <label>Select Course(s):</label>
+                    <div class="multi-select" id="courseSelect"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Select Chapter(s):</label>
+                    <div class="multi-select" id="chapterSelect">
+                        <div class="loading-message">Select a course first</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Select Topic(s):</label>
+                    <div class="multi-select" id="topicSelect">
+                        <div class="loading-message">Select chapters first</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Number of Questions:</label>
+                    <div class="question-count">
+                        <input type="number" id="questionCount" min="1" max="50" value="10">
+                        <span>(Max: 50)</span>
+                    </div>
+                </div>
+                
+                <button class="btn btn-start" id="startQuizBtn" disabled>
+                    <i class="fas fa-play-circle"></i> Start Quiz
+                </button>
+            </div>
+
+            <!-- Quiz Panel -->
+            <div class="quiz-panel" id="quizPanel">
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <div class="progress-text">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></div>
+                        <div class="score-text">Score: <span id="score">0</span></div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                
+                <div class="question-card" id="questionCard">
+                    <div class="question-text" id="questionText"></div>
+                    
+                    <div class="options-container" id="optionsContainer"></div>
+                    
+                    <div class="feedback" id="feedback"></div>
+                    
+                    <div class="solution-container" id="solutionContainer">
+                        <h3><i class="fas fa-lightbulb"></i> Solution</h3>
+                        <div class="solution-content" id="solutionContent"></div>
+                    </div>
+                    
+                    <div class="explanation-container" id="explanationContainer">
+                        <h3><i class="fas fa-book-open"></i> Topic Explanation</h3>
+                        <div class="explanation-content" id="explanationContent"></div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-check" id="checkAnswerBtn" disabled>
+                        <i class="fas fa-check-circle"></i> Check Answer
+                    </button>
+                    <button class="btn btn-solution" id="showSolutionBtn">
+                        <i class="fas fa-lightbulb"></i> Show Solution
+                    </button>
+                    <button class="btn btn-explanation" id="showExplanationBtn">
+                        <i class="fas fa-book-open"></i> View Topic Explanation
+                    </button>
+                </div>
+                
+                <div class="quiz-controls">
+                    <button class="btn btn-prev" id="prevQuestionBtn">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn btn-next" id="nextQuestionBtn">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <div class="results-panel" id="resultsPanel" style="display: none;">
+                    <h2>Quiz Completed!</h2>
+                    <div class="score-circle">
+                        <div id="finalScore">0%</div>
+                        <div class="score-text">Your Score</div>
+                    </div>
+                    <p id="resultMessage"></p>
+                    <button class="btn btn-restart" id="restartQuizBtn">
+                        <i class="fas fa-redo"></i> Start New Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application state
+        const appState = {
+            courses: [],
+            selectedCourses: [],
+            selectedChapters: [],
+            selectedTopics: [],
+            questions: [],
+            currentQuestionIndex: 0,
+            userAnswers: {},
+            checkedAnswers: {},
+            viewedSolutions: {},
+            viewedExplanations: {},
+            score: 0,
+            quizStarted: false
+        };
+
+        // DOM Elements
+        const setupPanel = document.getElementById('setupPanel');
+        const quizPanel = document.getElementById('quizPanel');
+        const courseSelect = document.getElementById('courseSelect');
+        const chapterSelect = document.getElementById('chapterSelect');
+        const topicSelect = document.getElementById('topicSelect');
+        const questionCountInput = document.getElementById('questionCount');
+        const startQuizBtn = document.getElementById('startQuizBtn');
+        const currentQuestionEl = document.getElementById('currentQuestion');
+        const totalQuestionsEl = document.getElementById('totalQuestions');
+        const progressFill = document.getElementById('progressFill');
+        const scoreEl = document.getElementById('score');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const feedback = document.getElementById('feedback');
+        const solutionContainer = document.getElementById('solutionContainer');
+        const solutionContent = document.getElementById('solutionContent');
+        const explanationContainer = document.getElementById('explanationContainer');
+        const explanationContent = document.getElementById('explanationContent');
+        const checkAnswerBtn = document.getElementById('checkAnswerBtn');
+        const showSolutionBtn = document.getElementById('showSolutionBtn');
+        const showExplanationBtn = document.getElementById('showExplanationBtn');
+        const prevQuestionBtn = document.getElementById('prevQuestionBtn');
+        const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+        const resultsPanel = document.getElementById('resultsPanel');
+        const finalScore = document.getElementById('finalScore');
+        const resultMessage = document.getElementById('resultMessage');
+        const restartQuizBtn = document.getElementById('restartQuizBtn');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadCourses();
+            setupEventListeners();
+        });
+
+        // Load courses from courses.json
+        async function loadCourses() {
+            try {
+                const response = await fetch('courses.json');
+                if (!response.ok) throw new Error('Failed to load courses');
+                
+                const data = await response.json();
+                appState.courses = data.courses.filter(course => course.status === true);
+                
+                renderCourseOptions();
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                courseSelect.innerHTML = `<div class="error">Failed to load courses. Please refresh the page.</div>`;
+            }
+        }
+
+        // Render course options
+        function renderCourseOptions() {
+            courseSelect.innerHTML = '';
+            
+            appState.courses.forEach(course => {
+                const div = document.createElement('div');
+                div.className = 'checkbox-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="course-${course.id}" value="${course.id}">
+                    <label for="course-${course.id}">${course.title}</label>
+                `;
+                courseSelect.appendChild(div);
+            });
+        }
+
+        // Load chapters for selected courses
+        async function loadChapters() {
+            chapterSelect.innerHTML = '<div class="loading-message">Loading chapters...</div>';
+            topicSelect.innerHTML = '<div class="loading-message">Select chapters first</div>';
+            
+            // Reset selections
+            appState.selectedChapters = [];
+            appState.selectedTopics = [];
+            
+            if (appState.selectedCourses.length === 0) {
+                chapterSelect.innerHTML = '<div class="loading-message">Select a course first</div>';
+                return;
+            }
+            
+            try {
+                // Load structure.json for each selected course
+                const allChapters = [];
+                
+                for (const courseId of appState.selectedCourses) {
+                    const courseFolder = courseId; // Assuming course ID matches folder name
+                    const structureUrl = `${courseFolder}/structure.json`;
+                    
+                    const response = await fetch(structureUrl);
+                    if (!response.ok) {
+                        console.warn(`Could not load structure.json for ${courseId}`);
+                        continue;
+                    }
+                    
+                    const data = await response.json();
+                    allChapters.push(...(data.chapters || []));
+                }
+                
+                if (allChapters.length === 0) {
+                    chapterSelect.innerHTML = '<div class="error">No chapters found for selected courses</div>';
+                    return;
+                }
+                
+                renderChapterOptions(allChapters);
+            } catch (error) {
+                console.error('Error loading chapters:', error);
+                chapterSelect.innerHTML = `<div class="error">Failed to load chapters</div>`;
+            }
+        }
+
+        // Render chapter options
+        function renderChapterOptions(chapters) {
+            chapterSelect.innerHTML = '';
+            
+            chapters.forEach(chapter => {
+                const div = document.createElement('div');
+                div.className = 'checkbox-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="chapter-${chapter.id}" value="${chapter.id}" data-topics='${JSON.stringify(chapter.topics)}'>
+                    <label for="chapter-${chapter.id}">${chapter.title}</label>
+                `;
+                chapterSelect.appendChild(div);
+            });
+        }
+
+        // Load topics for selected chapters
+        function loadTopics() {
+            topicSelect.innerHTML = '<div class="loading-message">Loading topics...</div>';
+            
+            // Reset topic selections
+            appState.selectedTopics = [];
+            
+            if (appState.selectedChapters.length === 0) {
+                topicSelect.innerHTML = '<div class="loading-message">Select chapters first</div>';
+                return;
+            }
+            
+            // Collect all topics from selected chapters
+            const allTopics = [];
+            const chapterCheckboxes = document.querySelectorAll('#chapterSelect input[type="checkbox"]:checked');
+            
+            chapterCheckboxes.forEach(checkbox => {
+                const topics = JSON.parse(checkbox.getAttribute('data-topics'));
+                allTopics.push(...topics);
+            });
+            
+            // Remove duplicates by id
+            const uniqueTopics = Array.from(new Map(allTopics.map(topic => [topic.id, topic])).values());
+            
+            renderTopicOptions(uniqueTopics);
+        }
+
+        // Render topic options
+        function renderTopicOptions(topics) {
+            topicSelect.innerHTML = '';
+            
+            topics.forEach(topic => {
+                const div = document.createElement('div');
+                div.className = 'checkbox-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="topic-${topic.id}" value="${topic.id}">
+                    <label for="topic-${topic.id}">${topic.title}</label>
+                `;
+                topicSelect.appendChild(div);
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Course selection
+            courseSelect.addEventListener('change', (e) => {
+                if (e.target.type === 'checkbox') {
+                    const courseId = e.target.value;
+                    
+                    if (e.target.checked) {
+                        appState.selectedCourses.push(courseId);
+                    } else {
+                        appState.selectedCourses = appState.selectedCourses.filter(id => id !== courseId);
+                    }
+                    
+                    loadChapters();
+                    updateStartButton();
+                }
+            });
+
+            // Chapter selection
+            chapterSelect.addEventListener('change', (e) => {
+                if (e.target.type === 'checkbox') {
+                    const chapterId = e.target.value;
+                    
+                    if (e.target.checked) {
+                        appState.selectedChapters.push(chapterId);
+                    } else {
+                        appState.selectedChapters = appState.selectedChapters.filter(id => id !== chapterId);
+                    }
+                    
+                    loadTopics();
+                    updateStartButton();
+                }
+            });
+
+            // Topic selection
+            topicSelect.addEventListener('change', (e) => {
+                if (e.target.type === 'checkbox') {
+                    const topicId = e.target.value;
+                    
+                    if (e.target.checked) {
+                        appState.selectedTopics.push(topicId);
+                    } else {
+                        appState.selectedTopics = appState.selectedTopics.filter(id => id !== topicId);
+                    }
+                    
+                    updateStartButton();
+                }
+            });
+
+            // Question count input
+            questionCountInput.addEventListener('input', updateStartButton);
+
+            // Start quiz button
+            startQuizBtn.addEventListener('click', startQuiz);
+
+            // Check answer button
+            checkAnswerBtn.addEventListener('click', checkAnswer);
+
+            // Show solution button
+            showSolutionBtn.addEventListener('click', showSolution);
+
+            // Show explanation button
+            showExplanationBtn.addEventListener('click', showExplanation);
+
+            // Previous question button
+            prevQuestionBtn.addEventListener('click', () => navigateQuestion(-1));
+
+            // Next question button
+            nextQuestionBtn.addEventListener('click', () => navigateQuestion(1));
+
+            // Restart quiz button
+            restartQuizBtn.addEventListener('click', restartQuiz);
+        }
+
+        // Update start button state
+        function updateStartButton() {
+            const hasCourses = appState.selectedCourses.length > 0;
+            const hasChapters = appState.selectedChapters.length > 0;
+            const hasTopics = appState.selectedTopics.length > 0;
+            const questionCount = parseInt(questionCountInput.value);
+            const isValidCount = questionCount > 0 && questionCount <= 50;
+            
+            startQuizBtn.disabled = !(hasCourses && hasChapters && hasTopics && isValidCount);
+        }
+
+        // Start the quiz
+        async function startQuiz() {
+            // Show loading state
+            setupPanel.style.opacity = '0.5';
+            startQuizBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Quiz...';
+            startQuizBtn.disabled = true;
+            
+            // Generate questions based on selections
+            await generateQuestions();
+            
+            // Initialize quiz state
+            appState.currentQuestionIndex = 0;
+            appState.userAnswers = {};
+            appState.checkedAnswers = {};
+            appState.viewedSolutions = {};
+            appState.viewedExplanations = {};
+            appState.score = 0;
+            appState.quizStarted = true;
+            
+            // Update UI
+            setupPanel.style.display = 'none';
+            quizPanel.classList.add('active');
+            
+            // Show first question
+            showQuestion(0);
+            
+            // Reset start button
+            setupPanel.style.opacity = '1';
+            startQuizBtn.innerHTML = '<i class="fas fa-play-circle"></i> Start Quiz';
+        }
+
+        // Generate questions based on selections
+        async function generateQuestions() {
+            const questionCount = parseInt(questionCountInput.value);
+            appState.questions = [];
+            
+            try {
+                // Load questions from CSV files for each selected course
+                const allQuestions = [];
+                
+                for (const courseId of appState.selectedCourses) {
+                    const courseFolder = courseId;
+                    // Assuming MCQ file is at courseFolder/chapters/mcq.csv
+                    const csvUrl = `${courseFolder}/chapters/mcq.csv`;
+                    
+                    const response = await fetch(csvUrl);
+                    if (!response.ok) {
+                        console.warn(`Could not load MCQ CSV for ${courseId}`);
+                        continue;
+                    }
+                    
+                    const csvText = await response.text();
+                    
+                    // Parse CSV using PapaParse
+                    const results = Papa.parse(csvText, {
+                        header: true,
+                        dynamicTyping: false,
+                        skipEmptyLines: true
+                    });
+                    
+                    if (results.errors.length > 0) {
+                        console.warn('CSV parsing errors:', results.errors);
+                    }
+                    
+                    // Filter questions by selected topics
+                    const filteredQuestions = results.data
+                        .filter(row => appState.selectedTopics.includes(row.subtopic_id))
+                        .map(row => ({
+                            question: row.question,
+                            options: [row.option1, row.option2, row.option3, row.option4],
+                            correct_option: row.correct_option.toLowerCase(), // Ensure lowercase (a, b, c, d)
+                            subtopic_id: row.subtopic_id,
+                            correct_answer_logic: row.correct_answer_logic
+                        }));
+                    
+                    allQuestions.push(...filteredQuestions);
+                }
+                
+                if (allQuestions.length === 0) {
+                    alert("No questions found for the selected topics. Please adjust your selection.");
+                    location.reload();
+                    return;
+                }
+                
+                // Shuffle questions
+                const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+                
+                // Select required number of questions
+                appState.questions = shuffled.slice(0, Math.min(questionCount, shuffled.length));
+                
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                alert("Error loading quiz questions. Please try again.");
+                location.reload();
+            }
+        }
+
+        // Show a specific question
+        function showQuestion(index) {
+            if (index < 0 || index >= appState.questions.length) return;
+            
+            appState.currentQuestionIndex = index;
+            const question = appState.questions[index];
+            
+            // Update progress indicators
+            currentQuestionEl.textContent = index + 1;
+            totalQuestionsEl.textContent = appState.questions.length;
+            progressFill.style.width = `${((index + 1) / appState.questions.length) * 100}%`;
+            scoreEl.textContent = appState.score;
+            
+            // Update question text
+            questionText.textContent = question.question;
+            
+            // Clear previous options and feedback
+            optionsContainer.innerHTML = '';
+            feedback.style.display = 'none';
+            solutionContainer.style.display = 'none';
+            explanationContainer.style.display = 'none';
+            
+            // Reset buttons
+            checkAnswerBtn.disabled = true;
+            checkAnswerBtn.innerHTML = '<i class="fas fa-check-circle"></i> Check Answer';
+            showSolutionBtn.disabled = false;
+            showExplanationBtn.disabled = false;
+            
+            // Create option elements
+            const optionLetters = ['a', 'b', 'c', 'd'];
+            optionLetters.forEach((letter, i) => {
+                if (question.options[i] === undefined) return;
+                
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.dataset.option = letter;
+                
+                // Check if this option was previously selected
+                const isSelected = appState.userAnswers[index] === letter;
+                if (isSelected) {
+                    optionDiv.classList.add('selected');
+                }
+                
+                // Check if answer was checked and this is correct/wrong
+                if (appState.checkedAnswers[index]) {
+                    if (letter === question.correct_option) {
+                        optionDiv.classList.add('correct');
+                    } else if (isSelected && letter !== question.correct_option) {
+                        optionDiv.classList.add('wrong');
+                    }
+                }
+                
+                optionDiv.innerHTML = `
+                    <div class="option-icon">${String.fromCharCode(65 + i)}</div>
+                    <div class="option-text">${question.options[i]}</div>
+                `;
+                
+                optionDiv.addEventListener('click', () => selectOption(letter));
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // Update navigation buttons
+            prevQuestionBtn.disabled = index === 0;
+            nextQuestionBtn.disabled = index === appState.questions.length - 1;
+            
+            // Show feedback if answer was checked
+            if (appState.checkedAnswers[index]) {
+                const isCorrect = appState.userAnswers[index] === question.correct_option;
+                showFeedback(isCorrect);
+                
+                // Disable check answer button if already checked
+                checkAnswerBtn.disabled = true;
+                checkAnswerBtn.innerHTML = isCorrect ? 
+                    '<i class="fas fa-check-circle"></i> Correct!' : 
+                    '<i class="fas fa-times-circle"></i> Already Checked';
+            }
+            
+            // Show solution if already viewed
+            if (appState.viewedSolutions[index]) {
+                showSolution();
+            }
+            
+            // Show explanation if already viewed
+            if (appState.viewedExplanations[index]) {
+                showExplanation();
+            }
+        }
+
+        // Select an option
+        function selectOption(option) {
+            const index = appState.currentQuestionIndex;
+            
+            // Don't allow changing answer if already checked
+            if (appState.checkedAnswers[index]) return;
+            
+            // Update selected option
+            appState.userAnswers[index] = option;
+            
+            // Update UI
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.dataset.option === option) {
+                    opt.classList.add('selected');
+                }
+            });
+            
+            // Enable check answer button
+            checkAnswerBtn.disabled = false;
+        }
+
+        // Check the selected answer
+        function checkAnswer() {
+            const index = appState.currentQuestionIndex;
+            const question = appState.questions[index];
+            const selectedOption = appState.userAnswers[index];
+            
+            if (!selectedOption) return;
+            
+            const isCorrect = selectedOption === question.correct_option;
+            appState.checkedAnswers[index] = true;
+            
+            // Update score if correct
+            if (isCorrect && !appState.viewedSolutions[index]) {
+                appState.score++;
+                scoreEl.textContent = appState.score;
+            }
+            
+            // Show feedback
+            showFeedback(isCorrect);
+            
+            // Update option styling
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => {
+                const optionLetter = opt.dataset.option;
+                
+                if (optionLetter === question.correct_option) {
+                    opt.classList.add('correct');
+                } else if (optionLetter === selectedOption && !isCorrect) {
+                    opt.classList.add('wrong');
+                }
+                
+                // Remove selection styling since we're showing correct/wrong
+                opt.classList.remove('selected');
+            });
+            
+            // Update check answer button
+            checkAnswerBtn.disabled = true;
+            checkAnswerBtn.innerHTML = isCorrect ? 
+                '<i class="fas fa-check-circle"></i> Correct!' : 
+                '<i class="fas fa-times-circle"></i> Wrong';
+            
+            // Enable solution button
+            showSolutionBtn.disabled = false;
+        }
+
+        // Show feedback
+        function showFeedback(isCorrect) {
+            const index = appState.currentQuestionIndex;
+            const question = appState.questions[index];
+            
+            feedback.textContent = isCorrect ? 
+                '✓ Correct! Well done!' : 
+                '✗ Wrong. The correct answer is ' + question.options[question.correct_option.charCodeAt(0) - 97];
+            
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'wrong'}`;
+            feedback.style.display = 'block';
+            
+            // Add icon to feedback
+            const icon = document.createElement('span');
+            icon.className = 'feedback-icon';
+            icon.textContent = isCorrect ? '✓' : '✗';
+            feedback.prepend(icon);
+        }
+
+        // Show solution
+        function showSolution() {
+            const index = appState.currentQuestionIndex;
+            const question = appState.questions[index];
+            
+            solutionContent.innerHTML = question.correct_answer_logic;
+            solutionContainer.style.display = 'block';
+            
+            // Mark as viewed
+            appState.viewedSolutions[index] = true;
+            
+            // Disable button
+            showSolutionBtn.disabled = true;
+            showSolutionBtn.innerHTML = '<i class="fas fa-lightbulb"></i> Solution Shown';
+        }
+
+        // Show explanation
+        async function showExplanation() {
+            const index = appState.currentQuestionIndex;
+            const question = appState.questions[index];
+            
+            try {
+                // Build the explanation JSON file path
+                // Get the first selected course (the one containing this question)
+                const courseId = appState.selectedCourses[0];
+                const courseFolder = courseId;
+                
+                // Find the chapter that contains this topic
+                const chapterCheckboxes = document.querySelectorAll('#chapterSelect input[type="checkbox"]:checked');
+                let chapterFolder = '';
+                
+                // Load all chapters and find the one with our topic
+                const structureUrl = `${courseFolder}/structure.json`;
+                const response = await fetch(structureUrl);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Find the chapter containing this topic
+                    for (const chapter of (data.chapters || [])) {
+                        for (const topic of (chapter.topics || [])) {
+                            if (topic.id === question.subtopic_id) {
+                                chapterFolder = chapter.id;
+                                break;
+                            }
+                        }
+                        if (chapterFolder) break;
+                    }
+                }
+                
+                // Construct the explanation JSON file URL
+                // Assuming file naming: courseFolder/chapters/chapterFolder.json or similar
+                // The actual file name should match the chapter ID
+                const explanationUrl = `${courseFolder}/chapters/${chapterFolder}.json`;
+                
+                const explanationResponse = await fetch(explanationUrl);
+                
+                if (!explanationResponse.ok) {
+                    throw new Error(`Could not load explanation file: ${explanationUrl}`);
+                }
+                
+                const explanationData = await explanationResponse.json();
+                
+                // Find the content for this specific topic
+                let explanationMarkdown = '';
+                
+                if (explanationData.subtopics) {
+                    const subtopic = explanationData.subtopics.find(st => st.id === question.subtopic_id);
+                    if (subtopic && subtopic.content) {
+                        explanationMarkdown = subtopic.content;
+                    }
+                }
+                
+                if (!explanationMarkdown) {
+                    throw new Error('Topic explanation not found in file');
+                }
+                
+                // Render markdown content
+                const htmlContent = marked(explanationMarkdown);
+                explanationContent.innerHTML = htmlContent;
+                explanationContainer.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading explanation:', error);
+                
+                // Fallback: Show error message
+                explanationContent.innerHTML = `<p style="color: #e74c3c;">Error loading explanation: ${error.message}</p><p>Please check that the explanation file exists at the expected location.</p>`;
+                explanationContainer.style.display = 'block';
+            }
+            
+            // Mark as viewed
+            appState.viewedExplanations[index] = true;
+            
+            // Disable button
+            showExplanationBtn.disabled = true;
+            showExplanationBtn.innerHTML = '<i class="fas fa-book-open"></i> Explanation Viewed';
+        }
+
+        // Navigate between questions
+        function navigateQuestion(direction) {
+            const newIndex = appState.currentQuestionIndex + direction;
+            
+            if (newIndex >= 0 && newIndex < appState.questions.length) {
+                showQuestion(newIndex);
+            }
+            
+            // If we're at the last question and clicking next, show results
+            if (newIndex === appState.questions.length && direction === 1) {
+                showResults();
+            }
+        }
+
+        // Show quiz results
+        function showResults() {
+            // Hide question card and controls
+            document.querySelector('.question-card').style.display = 'none';
+            document.querySelector('.button-group').style.display = 'none';
+            document.querySelector('.quiz-controls').style.display = 'none';
+            
+            // Calculate percentage score
+            const percentage = Math.round((appState.score / appState.questions.length) * 100);
+            finalScore.textContent = `${percentage}%`;
+            
+            // Set result message
+            let message = '';
+            if (percentage >= 90) {
+                message = 'Excellent work! You have mastered the material!';
+            } else if (percentage >= 70) {
+                message = 'Good job! You have a solid understanding of the topics.';
+            } else if (percentage >= 50) {
+                message = 'Not bad! Review the topics you missed to improve.';
+            } else {
+                message = 'Keep practicing! Review the topics and try again.';
+            }
+            
+            resultMessage.textContent = `You got ${appState.score} out of ${appState.questions.length} questions correct. ${message}`;
+            
+            // Show results panel
+            resultsPanel.style.display = 'block';
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            // Reset app state
+            appState.selectedCourses = [];
+            appState.selectedChapters = [];
+            appState.selectedTopics = [];
+            appState.questions = [];
+            appState.currentQuestionIndex = 0;
+            appState.userAnswers = {};
+            appState.checkedAnswers = {};
+            appState.viewedSolutions = {};
+            appState.viewedExplanations = {};
+            appState.score = 0;
+            appState.quizStarted = false;
+            
+            // Reset UI
+            quizPanel.classList.remove('active');
+            setupPanel.style.display = 'block';
+            
+            // Reset checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            questionCountInput.value = 10;
+            updateStartButton();
+            
+            // Reset quiz panel elements
+            document.querySelector('.question-card').style.display = 'block';
+            document.querySelector('.button-group').style.display = 'flex';
+            document.querySelector('.quiz-controls').style.display = 'flex';
+            resultsPanel.style.display = 'none';
+            
+            // Reset chapter and topic selects
+            loadChapters();
+        }
+    </script>
+</body>
+</html>
