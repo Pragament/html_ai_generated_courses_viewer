@@ -8,26 +8,27 @@ class CourseViewer {
         this.mcqMap = new Map(); // subtopic_id -> [mcq objects]
         this.mcqLoaded = false;
         this.activeQuizzes = new Map(); // subtopicId -> state
-        
+        this.quizStylesInjected = false;
+
         // Get course ID from URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         this.courseId = urlParams.get('course-id');
-        
+
         // Track app initialization
         this.trackEvent('app_initialized', {
             'initial_course': this.courseId || '(none)'
         });
-        
+
         this.init();
     }
-    
+
     async init() {
         // Load courses list
         await this.loadCourses();
-        
+
         // Setup event listeners
         this.setupEventListeners();
-        
+
         // If course ID specified in URL, load it, otherwise show homepage
         if (this.courseId) {
             await this.loadCourse(this.courseId);
@@ -35,19 +36,19 @@ class CourseViewer {
             this.renderHomepage();
         }
     }
-    
+
     async loadCourses() {
         try {
             const response = await fetch('courses.json');
             const data = await response.json();
             this.courses = data.courses;
             //this.courses = data.courses.filter(course => course.status === true);
-            
+
             // Track courses loaded
             this.trackEvent('courses_loaded', {
                 'courses_count': this.courses.length
             });
-            
+
             // Populate course selector
             const courseSelect = document.getElementById('courseSelect');
             this.courses.forEach(course => {
@@ -56,7 +57,7 @@ class CourseViewer {
                 option.textContent = course.title;
                 courseSelect.appendChild(option);
             });
-            
+
             // Select course if specified in URL
             if (this.courseId) {
                 courseSelect.value = this.courseId;
@@ -70,11 +71,11 @@ class CourseViewer {
             this.showError('Failed to load courses list');
         }
     }
-    
+
     async loadCourse(courseId) {
         try {
             this.showLoading(true);
-            
+
             // Track course view event
             const course = this.courses.find(c => c.id === courseId);
             this.trackEvent('view_course', {
@@ -84,14 +85,14 @@ class CourseViewer {
                 'level': course?.level || '',
                 'estimated_time': course?.estimatedTime || ''
             });
-            
+
             // Also track start_course event
             this.trackEvent('start_course', {
                 'course_id': courseId,
                 'estimated_time': course?.estimatedTime || '',
                 'level': course?.level || ''
             });
-            
+
             // Track if this is an assessment course
             if (course?.category === 'Assessment' || course?.tags?.includes('assessment')) {
                 this.trackEvent('start_assessment', {
@@ -100,7 +101,7 @@ class CourseViewer {
                     'classes': (course?.classes || []).join(',')
                 });
             }
-            
+
             // Find course
             this.currentCourse = this.courses.find(c => c.id === courseId);
             if (!this.currentCourse) {
@@ -111,11 +112,11 @@ class CourseViewer {
                 });
                 return;
             }
-            
+
             // Load course structure
             const response = await fetch(`${courseId}/structure.json`);
             this.courseStructure = await response.json();
-            
+
             // Render course structure
             this.renderCourseStructure();
             // Load chapter if specified in URL, otherwise load first chapter
@@ -129,7 +130,7 @@ class CourseViewer {
             } else {
                 this.goToCourseOverview();
             }
-            
+
         } catch (error) {
             console.error('Error loading course:', error);
             this.trackEvent('error', {
@@ -142,22 +143,22 @@ class CourseViewer {
             this.showLoading(false);
         }
     }
-    
+
     async loadChapter(chapterId) {
         try {
             this.showLoading(true, 'Loading chapter content...');
-            
+
             // Track chapter view
             this.trackEvent('chapter_view', {
                 'course_id': this.currentCourse?.id,
                 'chapter_id': chapterId
             });
-            
+
             // Update URL without reloading page
             const url = new URL(window.location);
             url.searchParams.set('chapter', chapterId);
             window.history.pushState({}, '', url);
-            
+
             // Load MCQs for this course (once)
             if (!this.mcqLoaded) {
                 await this.loadMCQs();
@@ -168,19 +169,19 @@ class CourseViewer {
                 // Load chapter content
                 const response = await fetch(`${this.currentCourse.id}/chapters/${chapterId}.json`);
                 const chapterData = await response.json();
-                
+
                 // Cache the content
                 this.allContent.set(chapterId, chapterData);
             }
-            
+
             this.currentChapter = this.allContent.get(chapterId);
-            
+
             // Render chapter content
             this.renderChapterContent();
-            
+
             // Update active states in sidebar
             this.updateActiveStates(chapterId);
-            
+
         } catch (error) {
             console.error('Error loading chapter:', error);
             this.trackEvent('error', {
@@ -193,17 +194,17 @@ class CourseViewer {
             this.showLoading(false);
         }
     }
-    
+
     renderCourseStructure() {
         const chaptersList = document.getElementById('chaptersList');
         chaptersList.innerHTML = '';
         console.log('Rendering course structure:', this.courseStructure);
-        
+
         this.courseStructure.chapters.forEach((chapter, index) => {
             const chapterItem = document.createElement('div');
             chapterItem.className = 'chapter-item';
             chapterItem.dataset.chapterId = chapter.id;
-            
+
             chapterItem.innerHTML = `
                 <div class="chapter-header">
                     <span>${index + 1}. ${chapter.title}</span>
@@ -218,7 +219,7 @@ class CourseViewer {
                     `).join('')}
                 </div>
             `;
-            
+
             // Add click event to chapter header
             const header = chapterItem.querySelector('.chapter-header');
             header.addEventListener('click', () => {
@@ -230,23 +231,23 @@ class CourseViewer {
                     'expanded': chapterItem.classList.contains('active')
                 });
             });
-            
+
             // Add click events to topics
             const topicItems = chapterItem.querySelectorAll('.topic-item');
             topicItems.forEach(topic => {
                 topic.addEventListener('click', async (e) => {
                     e.stopPropagation();
                     const topicId = topic.dataset.topicId;
-                    
+
                     // Track topic click
                     this.trackEvent('topic_clicked', {
                         'course_id': this.currentCourse?.id,
                         'chapter_id': chapter.id,
                         'topic_id': topicId
                     });
-                    
+
                     await this.loadChapter(chapter.id);
-                    
+
                     // Scroll to specific topic
                     const subtopicElement = document.querySelector(`[data-subtopic-id="${topicId}"]`);
                     if (subtopicElement) {
@@ -254,7 +255,7 @@ class CourseViewer {
                     }
                 });
             });
-            
+
             chaptersList.appendChild(chapterItem);
         });
     }
@@ -343,7 +344,7 @@ class CourseViewer {
                 if (id) {
                     // Find course data for tracking
                     const course = this.courses.find(c => c.id === id);
-                    
+
                     // Track course card click
                     this.trackEvent('course_click', {
                         'course_id': id,
@@ -352,7 +353,7 @@ class CourseViewer {
                         'level': course?.level || '',
                         'source_page': 'homepage'
                     });
-                    
+
                     // Navigate to separate course detail page
                     window.location.href = `course.html?course-id=${encodeURIComponent(id)}`;
                 }
@@ -395,7 +396,7 @@ class CourseViewer {
             if (tag && !(Array.isArray(c.tags) && c.tags.includes(tag))) return false;
 
             if (q) {
-                const hay = `${c.title} ${c.description || ''} ${(c.subjects||[]).join(' ')} ${(c.tags||[]).join(' ')}`.toLowerCase();
+                const hay = `${c.title} ${c.description || ''} ${(c.subjects || []).join(' ')} ${(c.tags || []).join(' ')}`.toLowerCase();
                 return hay.includes(q);
             }
 
@@ -404,12 +405,12 @@ class CourseViewer {
 
         this.renderCourseCards(results);
     }
-    
+
     renderChapterContent() {
         if (!this.currentChapter) return;
-        
+
         const contentArea = document.getElementById('courseContent');
-        
+
         contentArea.innerHTML = `
             <div class="breadcrumb" id="breadcrumb">
                 <span onclick="courseViewer.goToCourseOverview()">${this.currentCourse.title}</span>
@@ -444,7 +445,7 @@ class CourseViewer {
                 </div>
             </div>
         `;
-        
+
         // Show content area
         document.getElementById('initialLoading').style.display = 'none';
         contentArea.style.display = 'block';
@@ -457,7 +458,7 @@ class CourseViewer {
                 if (this.currentChapter && this.currentChapter['practice-quiz'] && this.mcqMap.has(sid)) {
                     // Create toggle button and quiz container
                     const btn = document.createElement('button');
-                    btn.className = 'quiz-toggle-btn';
+                    btn.className = 'btn btn-primary quiz-toggle-btn';
                     btn.textContent = 'Show Practice Quiz';
                     btn.style.margin = '8px 0';
                     btn.addEventListener('click', (e) => {
@@ -493,13 +494,13 @@ class CourseViewer {
             console.error('Error attaching quizzes:', err);
         }
     }
-    
+
     formatContent(content) {
         // Configure options (optional)
         marked.setOptions({
             breaks: true,
             gfm: true,
-            highlight: function(code, lang) {
+            highlight: function (code, lang) {
                 if (lang && hljs) {
                     return hljs.highlight(code, { language: lang }).value;
                 }
@@ -518,7 +519,7 @@ class CourseViewer {
         for (let i = 0; i < text.length; i++) {
             const ch = text[i];
             if (ch === '"') {
-                if (inQuotes && text[i+1] === '"') {
+                if (inQuotes && text[i + 1] === '"') {
                     cur += '"';
                     i++; // skip escaped quote
                 } else {
@@ -536,7 +537,7 @@ class CourseViewer {
                     cur = '';
                 }
                 // skip following LF in CRLF
-                if (ch === '\r' && text[i+1] === '\n') i++;
+                if (ch === '\r' && text[i + 1] === '\n') i++;
             } else {
                 cur += ch;
             }
@@ -582,8 +583,45 @@ class CourseViewer {
         }
     }
 
+    injectQuizStyles() {
+        if (this.quizStylesInjected) return;
+        this.quizStylesInjected = true;
+        // add fontawesome if missing
+        if (!document.querySelector('link[href*="font-awesome"]') && !document.querySelector('link[href*="fontawesome"]')) {
+            const fa = document.createElement('link');
+            fa.rel = 'stylesheet';
+            fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+            document.head.appendChild(fa);
+        }
+        const style = document.createElement('style');
+        style.innerHTML = `
+        .quiz-container{background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);padding:20px;margin-top:12px}
+        .quiz-title{color:#2c3e50;margin:0 0 8px 0;font-size:1.05rem}
+        .quiz-question{font-size:1rem;margin-bottom:12px;padding:12px;background:#f8f9fa;border-left:4px solid #3498db;border-radius:8px}
+        .quiz-options{margin:12px 0}
+        .option{padding:12px;margin:8px 0;border-radius:8px;border:2px solid #e0e0e0;cursor:pointer;display:flex;align-items:center}
+        .option .option-label{flex-grow:1;font-weight:500}
+        .option.correct{border-color:#27ae60;background:rgba(39,174,96,0.08)}
+        .option.wrong{border-color:#e74c3c;background:rgba(231,76,60,0.06)}
+        .option.neutral{border-color:#bdc3c7}
+        .quiz-solution{margin-top:15px;padding:14px;border-radius:8px;background:#f8f9fa;border-left:4px solid #3498db;display:none}
+        .solution-title{color:#2c3e50;font-weight:600;margin-bottom:8px;display:flex;align-items:center}
+        .buttons-container{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+        .btn{padding:10px 18px;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+        .btn-primary{background:#3498db;color:#fff}
+        .btn-secondary{background:#e74c3c;color:#fff}
+        .feedback-message{display:none;padding:12px;border-radius:8px;margin-top:12px;font-weight:600;align-items:center}
+        .feedback-correct{background:rgba(39,174,96,0.12);color:#27ae60;border-left:4px solid #27ae60}
+        .feedback-wrong{background:rgba(231,76,60,0.08);color:#e74c3c;border-left:4px solid #e74c3c}
+        `;
+        document.head.appendChild(style);
+    }
+
     renderQuizForSubtopic(subtopicEl, mcqs) {
         if (!subtopicEl || !mcqs || mcqs.length === 0) return;
+        // inject styles once
+        if (!this.quizStylesInjected) this.injectQuizStyles();
+
         const sid = subtopicEl.dataset.subtopicId;
         if (!this.activeQuizzes.has(sid)) {
             this.activeQuizzes.set(sid, {
@@ -596,94 +634,124 @@ class CourseViewer {
         const container = subtopicEl.querySelector('.practice-quiz-container');
         container.innerHTML = '';
 
-        const header = document.createElement('div');
-        header.style.display = 'flex';
-        header.style.justifyContent = 'space-between';
-        header.style.alignItems = 'center';
+        // Build quiz markup
+        const quiz = document.createElement('div');
+        quiz.className = 'quiz-container';
 
-        const title = document.createElement('strong');
-        title.textContent = `Practice Quiz (${mcqs.length} questions)`;
-        header.appendChild(title);
+        const title = document.createElement('h3');
+        title.className = 'quiz-title';
+        title.textContent = `Practice Quiz: ${subtopicEl.querySelector('.subtopic-title')?.textContent || ''}`;
+        quiz.appendChild(title);
 
-        const navInfo = document.createElement('span');
-        navInfo.className = 'quiz-nav-info';
-        header.appendChild(navInfo);
-        container.appendChild(header);
+        const questionBox = document.createElement('div');
+        questionBox.className = 'quiz-question';
+        quiz.appendChild(questionBox);
 
-        const qArea = document.createElement('div');
-        qArea.className = 'quiz-question-area';
-        qArea.style.marginTop = '8px';
-        container.appendChild(qArea);
+        const optionsBox = document.createElement('div');
+        optionsBox.className = 'quiz-options';
+        quiz.appendChild(optionsBox);
 
-        const controls = document.createElement('div');
-        controls.style.marginTop = '12px';
-        controls.style.display = 'flex';
-        controls.style.gap = '8px';
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback-message';
+        quiz.appendChild(feedback);
+
+        const solution = document.createElement('div');
+        solution.className = 'quiz-solution';
+        quiz.appendChild(solution);
+
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'buttons-container';
 
         const prevBtn = document.createElement('button');
+        prevBtn.className = 'btn';
         prevBtn.textContent = 'Previous';
         prevBtn.disabled = true;
-        controls.appendChild(prevBtn);
+        buttonsContainer.appendChild(prevBtn);
 
         const nextBtn = document.createElement('button');
+        nextBtn.className = 'btn btn-primary';
         nextBtn.textContent = 'Next';
-        controls.appendChild(nextBtn);
+        buttonsContainer.appendChild(nextBtn);
 
         const checkBtn = document.createElement('button');
-        checkBtn.textContent = 'Check';
-        controls.appendChild(checkBtn);
+        checkBtn.className = 'btn btn-primary';
+        checkBtn.textContent = 'Check Answer';
+        checkBtn.disabled = true;
+        buttonsContainer.appendChild(checkBtn);
+
+        /*const retryBtn = document.createElement('button');
+        retryBtn.className = 'btn btn-secondary';
+        retryBtn.textContent = 'Try Again';
+        retryBtn.style.display = 'none';
+        buttonsContainer.appendChild(retryBtn);*/
 
         const viewSolBtn = document.createElement('button');
-        viewSolBtn.textContent = 'View Solution';
-        controls.appendChild(viewSolBtn);
+        viewSolBtn.className = 'btn';
+        viewSolBtn.style.backgroundColor = '#9b59b6';
+        viewSolBtn.style.color = 'white';
+        viewSolBtn.textContent = 'Show Solution';
+        buttonsContainer.appendChild(viewSolBtn);
 
-        const retryBtn = document.createElement('button');
-        retryBtn.textContent = 'Retry';
-        retryBtn.style.display = 'none';
-        controls.appendChild(retryBtn);
-
-        container.appendChild(controls);
+        quiz.appendChild(buttonsContainer);
+        container.appendChild(quiz);
 
         function renderQuestion() {
             const idx = state.index;
             const row = mcqs[idx];
-            navInfo.textContent = `Question ${idx + 1} / ${mcqs.length}`;
-            qArea.innerHTML = '';
-            const qEl = document.createElement('div');
-            qEl.innerHTML = `<div class="quiz-question"><strong>${row.question}</strong></div>`;
-            qArea.appendChild(qEl);
+            // question
+            questionBox.innerHTML = `<div style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 8px; font-weight: 600;">Question ${idx + 1} of ${mcqs.length}</div><i class="fas fa-question-circle" style="color: #3498db; margin-right: 10px;"></i> ${row.question}`;
 
-            const opts = document.createElement('div');
-            opts.className = 'quiz-options';
-            ['option1','option2','option3','option4'].forEach((key, i) => {
-                const id = `q_${sid}_${idx}_${i}`;
-                const wrapper = document.createElement('div');
-                wrapper.style.margin = '6px 0';
-                wrapper.innerHTML = `
-                    <label style="cursor:pointer;">
-                        <input type="radio" name="${sid}_q_${idx}" value="${String.fromCharCode(97+i)}" ${state.userAnswers[idx]===String.fromCharCode(97+i)?'checked':''} /> ${row[key] || ''}
-                    </label>
-                `;
-                opts.appendChild(wrapper);
+            // options
+            optionsBox.innerHTML = '';
+            ['option1', 'option2', 'option3', 'option4'].forEach((key, i) => {
+                const optVal = String.fromCharCode(97 + i);
+                const optDiv = document.createElement('div');
+                optDiv.className = 'option neutral';
+                optDiv.dataset.value = optVal;
+                optDiv.innerHTML = `
+                        <input type="radio" name="${sid}_q_${idx}" value="${optVal}" style1="display:none;" />
+                        <div class="option-label">${row[key] || ''}</div>
+                        <span class="wrong-icon" style="display:none;"> <i class="fas fa-times-circle"></i></span>
+                        <span class="correct-icon" style="display:none;"> <i class="fas fa-check-circle"></i></span>
+                        <span class="wrong-text" style="display:none;">Wrong</span>
+                        <span class="correct-text" style="display:none;">Correct!</span>
+                        <span class="neutral-icon" style="display:none;"><i class="fas fa-circle"></i></span>
+                    `;
+                optionsBox.appendChild(optDiv);
+
+                // click
+                optDiv.addEventListener('click', () => {
+                    // clear selection
+                    optionsBox.querySelectorAll('.option').forEach(o => {
+                        o.classList.remove('selected');
+                        o.querySelector('input[type="radio"]').checked = false;
+                    });
+                    optDiv.classList.add('selected');
+                    optDiv.querySelector('input[type="radio"]').checked = true;
+                    // Enable Check button when option is selected
+                    checkBtn.disabled = false;
+                });
             });
-            qArea.appendChild(opts);
 
-            // Show solution block if checked or view requested
-            const sol = document.createElement('div');
-            sol.className = 'quiz-solution';
-            sol.style.marginTop = '8px';
-            sol.style.display = state.checked[idx] ? 'block' : 'none';
-            sol.innerHTML = `<div style="background:#f8f8f8;padding:8px;border-radius:4px;color:#333;">${row.correct_answer_logic || ''}</div>`;
-            qArea.appendChild(sol);
+            // solution content
+            solution.innerHTML = `
+                    <div class="solution-title"><i class="fas fa-lightbulb"></i> Solution Explained</div>
+                    <div class="solution-content">${row.correct_answer_logic || ''}</div>
+                `;
+            //solution.style.display = state.checked[idx] ? 'block' : 'none';
+            solution.style.display = 'none'; // hide by default
 
             prevBtn.disabled = idx === 0;
             nextBtn.disabled = idx === (mcqs.length - 1);
+
+            // reset feedback & retry visibility
+            feedback.style.display = 'none';
+            //retryBtn.style.display = 'none';
+            checkBtn.disabled = true;
         }
 
-        // Initial render
         renderQuestion();
 
-        // Events
         prevBtn.addEventListener('click', () => {
             if (state.index > 0) {
                 state.index--;
@@ -696,88 +764,135 @@ class CourseViewer {
                 renderQuestion();
             }
         });
+
         checkBtn.addEventListener('click', () => {
             const idx = state.index;
-            const selected = container.querySelector(`input[name="${sid}_q_${idx}"]:checked`);
-            if (!selected) return alert('Please select an option to check');
+            const selected = optionsBox.querySelector('input[name="' + sid + '_q_' + idx + '"]:checked');
+            if (!selected) return alert('Please select an option to check!');
             state.userAnswers[idx] = selected.value;
             state.checked[idx] = true;
-            // Mark correctness visually
             const row = mcqs[idx];
             const correct = (row.correct_option || '').toLowerCase();
-            const opts = container.querySelectorAll(`input[name="${sid}_q_${idx}"]`);
-            opts.forEach(inp => {
-                const lab = inp.closest('label');
-                if (!lab) return;
-                lab.style.background = 'transparent';
-                if (inp.checked && inp.value === correct) lab.style.background = '#d4f8d4';
-                if (inp.checked && inp.value !== correct) lab.style.background = '#ffd6d6';
-            });/*
-            // show solution text
-            const sol = container.querySelector('.quiz-solution');
-            if (sol) sol.style.display = 'block';*/
-            // if wrong, show retry
-            if (selected.value !== correct) {
-                retryBtn.style.display = 'inline-block';
-            } else {
-                retryBtn.style.display = 'none';
+
+            // mark styles
+            optionsBox.querySelectorAll('.option').forEach(o => {
+                const val = o.dataset.value;
+                o.classList.remove('correct', 'wrong', 'neutral');
+                o.classList.add('neutral');
+                //o.querySelector('input[type="radio"]').style.display = 'none';
+                o.querySelectorAll('.wrong-icon, .correct-icon, .wrong-text, .correct-text, .neutral-icon').forEach(el => el.style.display = 'none');
+                /*if (val === correct) {
+                    o.classList.remove('neutral');
+                    o.classList.add('correct');
+                    o.querySelector('.correct-icon').style.display = 'inline';
+                    o.querySelector('.correct-text').style.display = 'inline';
+                }*/
+            });
+
+            const selOpt = optionsBox.querySelector('.option.selected');
+            if (selOpt) {
+                if (selOpt.dataset.value !== correct) {
+                    selOpt.classList.remove('neutral');
+                    selOpt.classList.add('wrong');
+                    selOpt.querySelector('.wrong-icon').style.display = 'inline';
+                    selOpt.querySelector('.wrong-text').style.display = 'inline';
+                    // show retry
+                    //retryBtn.style.display = 'inline-block';
+                    feedback.className = 'feedback-message feedback-wrong';
+                    feedback.innerHTML = `<span class="feedback-icon"><i class="fas fa-times-circle"></i></span><span class="feedback-text">Not quite right. Try again!</span>`;
+                    feedback.style.display = 'flex';
+                } else {
+                    feedback.className = 'feedback-message feedback-correct';
+                    feedback.innerHTML = `<span class="feedback-icon"><i class="fas fa-check-circle"></i></span><span class="feedback-text">Excellent! You got it right!</span>`;
+                    feedback.style.display = 'flex';
+                    selOpt.classList.remove('neutral');
+                    selOpt.classList.add('correct');
+                    selOpt.querySelector('.correct-icon').style.display = 'inline';
+                    selOpt.querySelector('.correct-text').style.display = 'inline';
+                    //retryBtn.style.display = 'none';
+                }
             }
+
+            // show solution
+            //solution.style.display = 'block';
+
+            checkBtn.disabled = true;
         });
+
         viewSolBtn.addEventListener('click', () => {
-            const sol = container.querySelector('.quiz-solution');
-            if (sol) sol.style.display = 'block';
+            solution.style.display = solution.style.display === 'block' ? 'none' : 'block';
+            const idx = state.index;
+            const row = mcqs[idx];
+            const correct = (row.correct_option || '').toLowerCase();
+
+            // mark styles
+            optionsBox.querySelectorAll('.option').forEach(o => {
+                const val = o.dataset.value;
+                //o.classList.remove('correct', 'wrong', 'neutral');
+                //o.classList.add('neutral');
+                //o.querySelector('input[type="radio"]').style.display = 'none';
+                //o.querySelectorAll('.wrong-icon, .correct-icon, .wrong-text, .correct-text, .neutral-icon').forEach(el => el.style.display = 'none');
+                if (val === correct) {
+                    o.classList.remove('neutral');
+                    o.classList.add('correct');
+                    o.querySelector('.correct-icon').style.display = 'inline';
+                    o.querySelector('.correct-text').style.display = 'inline';
+                }
+            });
         });
-        retryBtn.addEventListener('click', () => {
+
+        /*retryBtn.addEventListener('click', () => {
             const idx = state.index;
             state.userAnswers[idx] = null;
             state.checked[idx] = false;
-            const opts = container.querySelectorAll(`input[name="${sid}_q_${idx}"]`);
-            opts.forEach(inp => {
-                inp.checked = false;
-                const lab = inp.closest('label');
-                if (lab) lab.style.background = 'transparent';
+            optionsBox.querySelectorAll('.option').forEach(o => {
+                o.classList.remove('correct', 'wrong', 'neutral', 'selected');
+                o.querySelectorAll('.wrong-icon, .correct-icon, .wrong-text, .correct-text, .neutral-icon').forEach(el => el.style.display = 'none');
+                o.querySelector('input[type="radio"]').checked = false;
+                o.querySelector('input[type="radio"]').style.display = 'inline-block';
             });
-            const sol = container.querySelector('.quiz-solution');
-            if (sol) sol.style.display = 'none';
+            feedback.style.display = 'none';
+            solution.style.display = 'none';
             retryBtn.style.display = 'none';
-        });
+            checkBtn.disabled = false;
+        });*/
     }
-    
+
     escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
     }
-    
+
     updateActiveStates(chapterId) {
         // Update active chapter in sidebar
         document.querySelectorAll('.chapter-item').forEach(item => {
             item.classList.remove('active');
         });
-        
+
         const activeChapter = document.querySelector(`[data-chapter-id="${chapterId}"]`);
         if (activeChapter) {
             activeChapter.classList.add('active');
         }
     }
-    
+
     async searchContent(query) {
         if (!query.trim()) {
             document.getElementById('searchResults').classList.remove('active');
             return;
         }
-        
+
         try {
             // Track search
             this.trackEvent('search_performed', {
                 'search_query': query,
                 'course_id': this.currentCourse?.id
             });
-            
+
             // Search in loaded chapters
             const results = [];
             const searchLower = query.toLowerCase();
-            
+
             for (const [chapterId, chapter] of this.allContent) {
                 // Search in chapter title
                 if (chapter.title.toLowerCase().includes(searchLower)) {
@@ -789,16 +904,16 @@ class CourseViewer {
                         subtopicId: null
                     });
                 }
-                
+
                 // Search in subtopics
                 chapter.subtopics.forEach(subtopic => {
-                    if (subtopic.title.toLowerCase().includes(searchLower) || 
+                    if (subtopic.title.toLowerCase().includes(searchLower) ||
                         (subtopic.content && subtopic.content.toLowerCase().includes(searchLower))) {
                         results.push({
                             type: 'subtopic',
                             title: subtopic.title,
-                            content: subtopic.content ? 
-                                subtopic.content.substring(0, 150) + '...' : 
+                            content: subtopic.content ?
+                                subtopic.content.substring(0, 150) + '...' :
                                 'No content',
                             chapterId: chapterId,
                             subtopicId: subtopic.id
@@ -806,17 +921,17 @@ class CourseViewer {
                     }
                 });
             }
-            
+
             // Track search results
             this.trackEvent('search_results', {
                 'search_query': query,
                 'results_count': results.length,
                 'course_id': this.currentCourse?.id
             });
-            
+
             // Display results
             this.displaySearchResults(results, query);
-            
+
         } catch (error) {
             console.error('Search error:', error);
             this.trackEvent('error', {
@@ -825,11 +940,11 @@ class CourseViewer {
             });
         }
     }
-    
+
     displaySearchResults(results, query) {
         const searchResults = document.getElementById('searchResults');
         const resultsList = document.getElementById('searchResultsList');
-        
+
         if (results.length === 0) {
             resultsList.innerHTML = '<p>No results found</p>';
         } else {
@@ -842,19 +957,19 @@ class CourseViewer {
                 </div>
             `).join('');
         }
-        
+
         searchResults.classList.add('active');
         //document.getElementById('courseContent').style.display = 'none';
         document.getElementById('initialLoading').style.display = 'none';
     }
-    
+
     highlightText(text, query) {
         if (!text || !query) return text;
-        
+
         const regex = new RegExp(`(${query})`, 'gi');
         return text.replace(regex, '<span class="highlight">$1</span>');
     }
-    
+
     navigateToSearchResult(chapterId, subtopicId) {
         // Track search result click
         this.trackEvent('search_result_clicked', {
@@ -862,11 +977,11 @@ class CourseViewer {
             'chapter_id': chapterId,
             'subtopic_id': subtopicId || '(none)'
         });
-        
+
         this.loadChapter(chapterId).then(() => {
             document.getElementById('searchResults').classList.remove('active');
             document.getElementById('courseContent').style.display = 'block';
-            
+
             if (subtopicId) {
                 const element = document.querySelector(`[data-subtopic-id="${subtopicId}"]`);
                 if (element) {
@@ -879,13 +994,13 @@ class CourseViewer {
             }
         });
     }
-    
+
     goToCourseOverview() {
         // Track course overview view
         this.trackEvent('course_overview_viewed', {
             'course_id': this.currentCourse?.id
         });
-        
+
         document.getElementById('courseContent').innerHTML = `
             <div class="course-overview">
                 <h1 class="course-title">${this.currentCourse.title}</h1>
@@ -897,7 +1012,7 @@ class CourseViewer {
             </div>
         `;
     }
-    
+
     setupEventListeners() {
         // Course selection
         document.getElementById('courseSelect').addEventListener('change', (e) => {
@@ -907,13 +1022,13 @@ class CourseViewer {
                     'course_id': e.target.value,
                     'course_name': this.courses.find(c => c.id === e.target.value)?.title
                 });
-                
+
                 const url = new URL(window.location);
                 url.searchParams.set('course-id', e.target.value);
                 window.location.href = url.toString();
             }
         });
-        
+
         // Search input
         let searchTimeout;
         document.getElementById('searchInput').addEventListener('input', (e) => {
@@ -922,7 +1037,7 @@ class CourseViewer {
                 this.searchContent(e.target.value);
             }, 300);
         });
-        
+
         // Mobile menu
         document.getElementById('mobileMenuBtn').addEventListener('click', () => {
             const isActive = document.getElementById('sidebar').classList.toggle('active');
@@ -931,19 +1046,19 @@ class CourseViewer {
                 'menu_opened': isActive
             });
         });
-        
+
         // Handle browser back/forward
         window.addEventListener('popstate', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const chapterId = urlParams.get('chapter');
             const courseId = urlParams.get('course-id');
-            
+
             // Track navigation event
             this.trackEvent('navigation_via_history', {
                 'chapter_id': chapterId || '(none)',
                 'course_id': courseId || '(none)'
             });
-            
+
             if (courseId && courseId !== this.currentCourse?.id) {
                 this.loadCourse(courseId);
             } else if (chapterId && chapterId !== this.currentChapter?.id) {
@@ -951,17 +1066,17 @@ class CourseViewer {
             }
         });
     }
-    
+
     showLoading(show, message = 'Loading...') {
         const loadingElement = document.getElementById('initialLoading');
         if (loadingElement) {
-            loadingElement.innerHTML = show ? 
-                `<i class="fas fa-spinner"></i> ${message}` : 
+            loadingElement.innerHTML = show ?
+                `<i class="fas fa-spinner"></i> ${message}` :
                 'Select a chapter to start learning';
             loadingElement.style.display = show ? 'flex' : 'none';
         }
     }
-    
+
     showError(message) {
         const contentArea = document.getElementById('contentArea');
         contentArea.innerHTML = `
@@ -969,13 +1084,13 @@ class CourseViewer {
                 <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ff6b6b; margin-bottom: 20px;"></i>
                 <h2>Oops! Something went wrong</h2>
                 <p>${message}</p>
-                <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                <!-- <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
                     Try Again
-                </button>
+                </button> -->
             </div>
         `;
     }
-    
+
     /**
      * Track events in Google Analytics
      * @param {string} eventName - Name of the event
