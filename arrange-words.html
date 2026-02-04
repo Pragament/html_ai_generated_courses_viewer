@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Learning Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #4a148c 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #00b4d8 0%, #0077b6 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .language-selector {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .language-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .language-btn.active {
+            background-color: #00b4d8;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .language-btn:hover:not(.active) {
+            background-color: #dee2e6;
+        }
+
+        .quiz-container {
+            padding: 30px;
+            min-height: 500px;
+        }
+
+        .question-type {
+            display: inline-block;
+            background-color: #e0f7fa;
+            color: #006064;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            line-height: 1.4;
+            color: #1a237e;
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            min-height: 60px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px dashed #adb5bd;
+        }
+
+        .word-item {
+            background-color: #00b4d8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: move;
+            font-weight: 600;
+            user-select: none;
+        }
+
+        .word-item.placed {
+            background-color: #4caf50;
+        }
+
+        .answer-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            min-height: 60px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #adb5bd;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option-btn {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            background-color: #00b4d8;
+            color: white;
+            border-color: #00b4d8;
+        }
+
+        .option-btn.correct {
+            background-color: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+
+        .input-answer {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #00b4d8;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .audio-btn {
+            padding: 12px 25px;
+            background-color: #00b4d8;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .audio-btn:hover {
+            background-color: #0077b6;
+            transform: scale(1.05);
+        }
+
+        .speech-feedback {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .speech-feedback.correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            display: block;
+        }
+
+        .speech-feedback.incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+            display: block;
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d32f2f;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .control-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background-color: #388e3c;
+            transform: scale(1.05);
+        }
+
+        .next-btn {
+            background-color: #00b4d8;
+            color: white;
+        }
+
+        .next-btn:hover {
+            background-color: #0077b6;
+            transform: scale(1.05);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #00b4d8;
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        .score {
+            color: #4caf50;
+        }
+
+        .streak {
+            color: #ff9800;
+        }
+
+        .feedback {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background-color: #ffebee;
+            color: #c62828;
+            display: block;
+        }
+
+        .explanation {
+            background-color: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            color: #e65100;
+            font-style: italic;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .passage {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 1.4rem;
+            }
+            
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .control-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 Language Learning Quiz</h1>
+            <p>Learn Telugu and Hindi through interactive exercises</p>
+        </div>
+        
+        <div class="language-selector">
+            <button class="language-btn active" data-lang="te">తెలుగు (Telugu)</button>
+            <button class="language-btn" data-lang="hi">हिन्दी (Hindi)</button>
+            <button class="language-btn" data-lang="en">English</button>
+        </div>
+        
+        <div class="stats">
+            <div class="score">Score: <span id="score-value">0</span></div>
+            <div class="streak">Streak: <span id="streak-value">0</span> 🔥</div>
+            <div>Question: <span id="question-number">1</span>/<span id="total-questions">20</span></div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress-bar"></div>
+        </div>
+        
+        <div class="quiz-container" id="quiz-container">
+            <!-- Question content will be dynamically loaded here -->
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn submit-btn hidden" id="submit-btn">Submit Answer</button>
+            <button class="control-btn next-btn hidden" id="next-btn">Next Question →</button>
+        </div>
+    </div>
+
+    <script>
+        // Mock data for different question types
+        const quizData = {
+            "te": {
+                "questions": [
+                    {
+                        "type": "arrange_words",
+                        "prompt": "Arrange the words to form a correct sentence",
+                        "word_bank": ["నేను", "అన్నం", "తింటాను"],
+                        "correct_sentence": "నేను అన్నం తింటాను",
+                        "subtopic_id": "telugu-present-tense",
+                        "correct_answer_logic": "Telugu sentences follow Subject + Object + Verb order."
+                    },
+                    {
+                        "type": "translate_typing",
+                        "question": "Translate to Telugu: I eat rice",
+                        "expected_answer": "నేను అన్నం తింటాను",
+                        "language_direction": "en-te",
+                        "subtopic_id": "telugu-present-tense",
+                        "correct_answer_logic": "'I eat rice' translates to 'నేను అన్నం తింటాను'."
+                    },
+                    {
+                        "type": "translate_word_bank",
+                        "question": "Translate to English",
+                        "word_bank": ["నేను", "అన్నం", "తింటాను"],
+                        "correct_sentence": "I eat rice",
+                        "subtopic_id": "telugu-present-tense",
+                        "correct_answer_logic": "'నేను అన్నం తింటాను' means 'I eat rice'."
+                    },
+                    {
+                        "type": "multiple_choice_meaning",
+                        "word": "నీరు",
+                        "option1": "Fire",
+                        "option2": "Water",
+                        "option3": "Earth",
+                        "option4": "Air",
+                        "correct_option": "b",
+                        "subtopic_id": "telugu-basic-vocab",
+                        "correct_answer_logic": "'నీరు' is the Telugu word for water."
+                    },
+                    {
+                        "type": "listen_type",
+                        "audio_text": "నమస్తే",
+                        "expected_answer": "నమస్తే",
+                        "subtopic_id": "telugu-greetings",
+                        "correct_answer_logic": "The spoken word 'నమస్తే' is spelled correctly as shown."
+                    }
+                ]
+            },
+            "hi": {
+                "questions": [
+                    {
+                        "type": "arrange_words",
+                        "prompt": "Arrange the words to form a correct sentence",
+                        "word_bank": ["मैं", "चावल", "खाता", "हूँ"],
+                        "correct_sentence": "मैं चावल खाता हूँ",
+                        "subtopic_id": "hindi-present-tense",
+                        "correct_answer_logic": "Hindi sentences follow Subject + Object + Verb order."
+                    },
+                    {
+                        "type": "translate_typing",
+                        "question": "Translate to Hindi: I eat rice",
+                        "expected_answer": "मैं चावल खाता हूँ",
+                        "language_direction": "en-hi",
+                        "subtopic_id": "hindi-present-tense",
+                        "correct_answer_logic": "'I eat rice' translates to 'मैं चावल खाता हूँ'."
+                    },
+                    {
+                        "type": "match_pairs",
+                        "pairs": [
+                            {"left": "Dog", "right": "कुत्ता"},
+                            {"left": "Cat", "right": "बिल्ली"},
+                            {"left": "Bird", "right": "पक्षी"}
+                        ],
+                        "subtopic_id": "hindi-animals"
+                    },
+                    {
+                        "type": "listen_choose",
+                        "audio_text": "वह किताब पढ़ रही है",
+                        "option1": "She is reading a book",
+                        "option2": "She reads a book",
+                        "option3": "She reading book",
+                        "correct_option": "a",
+                        "subtopic_id": "hindi-present-continuous",
+                        "correct_answer_logic": "'पढ़ रही है' indicates present continuous tense."
+                    },
+                    {
+                        "type": "single_word_translation",
+                        "word": "पुस्तक",
+                        "option1": "Pen",
+                        "option2": "Table",
+                        "option3": "Book",
+                        "option4": "Chair",
+                        "correct_option": "c",
+                        "subtopic_id": "hindi-nouns",
+                        "correct_answer_logic": "'पुस्तक' means 'Book'."
+                    }
+                ]
+            }
+        };
+
+        // App state
+        const state = {
+            currentLanguage: 'te',
+            currentQuestionIndex: 0,
+            score: 0,
+            streak: 0,
+            userAnswer: null,
+            isAnswered: false,
+            synth: window.speechSynthesis,
+            recognition: null
+        };
+
+        // DOM Elements
+        const quizContainer = document.getElementById('quiz-container');
+        const languageButtons = document.querySelectorAll('.language-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const scoreValue = document.getElementById('score-value');
+        const streakValue = document.getElementById('streak-value');
+        const questionNumber = document.getElementById('question-number');
+        const totalQuestions = document.getElementById('total-questions');
+        const progressBar = document.getElementById('progress-bar');
+
+        // Initialize the app
+        function init() {
+            // Set up language buttons
+            languageButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    languageButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.currentLanguage = btn.dataset.lang;
+                    state.currentQuestionIndex = 0;
+                    state.score = 0;
+                    state.streak = 0;
+                    updateStats();
+                    loadQuestion();
+                });
+            });
+            
+            // Set up control buttons
+            submitBtn.addEventListener('click', handleSubmit);
+            nextBtn.addEventListener('click', handleNext);
+            
+            // Initialize speech recognition if available
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                state.recognition = new SpeechRecognition();
+                state.recognition.continuous = false;
+                state.recognition.interimResults = false;
+            }
+            
+            // Load first question
+            loadQuestion();
+        }
+
+        // Load the current question
+        function loadQuestion() {
+            const languageData = quizData[state.currentLanguage];
+            const question = languageData.questions[state.currentQuestionIndex];
+            
+            if (!question) {
+                showCompletionScreen();
+                return;
+            }
+            
+            // Reset state
+            state.isAnswered = false;
+            state.userAnswer = null;
+            submitBtn.classList.remove('hidden');
+            nextBtn.classList.add('hidden');
+            
+            // Update UI
+            questionNumber.textContent = state.currentQuestionIndex + 1;
+            totalQuestions.textContent = languageData.questions.length;
+            progressBar.style.width = `${((state.currentQuestionIndex + 1) / languageData.questions.length) * 100}%`;
+            
+            // Clear previous content
+            quizContainer.innerHTML = '';
+            
+            // Add question type indicator
+            const questionType = document.createElement('div');
+            questionType.className = 'question-type';
+            questionType.textContent = getQuestionTypeLabel(question.type);
+            quizContainer.appendChild(questionType);
+            
+            // Load question based on type
+            switch (question.type) {
+                case 'arrange_words':
+                    loadArrangeWordsQuestion(question);
+                    break;
+                case 'translate_typing':
+                    loadTranslateTypingQuestion(question);
+                    break;
+                case 'translate_word_bank':
+                    loadTranslateWordBankQuestion(question);
+                    break;
+                case 'multiple_choice_meaning':
+                    loadMultipleChoiceQuestion(question);
+                    break;
+                case 'listen_type':
+                    loadListenTypeQuestion(question);
+                    break;
+                case 'match_pairs':
+                    loadMatchPairsQuestion(question);
+                    break;
+                case 'listen_choose':
+                    loadListenChooseQuestion(question);
+                    break;
+                case 'single_word_translation':
+                    loadSingleWordTranslationQuestion(question);
+                    break;
+                default:
+                    console.error('Unknown question type:', question.type);
+            }
+        }
+
+        // Get label for question type
+        function getQuestionTypeLabel(type) {
+            const labels = {
+                'arrange_words': '🧩 Arrange the Words',
+                'translate_typing': '✍️ Translate This Sentence',
+                'translate_word_bank': '🧱 Translate Using Word Bank',
+                'multiple_choice_meaning': '❓ Multiple Choice Meaning',
+                'listen_type': '🎧 Listen and Type',
+                'match_pairs': '🔤 Match the Pairs',
+                'listen_choose': '🔊 Listen and Choose',
+                'single_word_translation': '📚 Word Translation'
+            };
+            return labels[type] || '❓ Question';
+        }
+
+        // Question type loaders
+        function loadArrangeWordsQuestion(question) {
+            // Question prompt
+            const prompt = document.createElement('div');
+            prompt.className = 'question-text';
+            prompt.textContent = question.prompt;
+            quizContainer.appendChild(prompt);
+            
+            // Answer area (where words will be placed)
+            const answerArea = document.createElement('div');
+            answerArea.className = 'answer-area';
+            answerArea.id = 'answer-area';
+            quizContainer.appendChild(answerArea);
+            
+            // Word bank
+            const wordBank = document.createElement('div');
+            wordBank.className = 'word-bank';
+            wordBank.id = 'word-bank';
+            
+            // Shuffle words
+            const shuffledWords = [...question.word_bank].sort(() => Math.random() - 0.5);
+            
+            shuffledWords.forEach(word => {
+                const wordElement = document.createElement('div');
+                wordElement.className = 'word-item';
+                wordElement.textContent = word;
+                wordElement.draggable = true;
+                wordElement.dataset.word = word;
+                
+                wordElement.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', word);
+                    e.dataTransfer.setData('from', 'bank');
+                });
+                
+                wordBank.appendChild(wordElement);
+            });
+            
+            quizContainer.appendChild(wordBank);
+            
+            // Make answer area a drop target
+            answerArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                answerArea.style.backgroundColor = '#e9ecef';
+            });
+            
+            answerArea.addEventListener('dragleave', () => {
+                answerArea.style.backgroundColor = '#f8f9fa';
+            });
+            
+            answerArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                answerArea.style.backgroundColor = '#f8f9fa';
+                
+                const word = e.dataTransfer.getData('text/plain');
+                const from = e.dataTransfer.getData('from');
+                
+                if (from === 'bank') {
+                    // Add word to answer area
+                    const wordElement = document.createElement('div');
+                    wordElement.className = 'word-item placed';
+                    wordElement.textContent = word;
+                    wordElement.draggable = true;
+                    wordElement.dataset.word = word;
+                    
+                    wordElement.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', word);
+                        e.dataTransfer.setData('from', 'answer');
+                    });
+                    
+                    answerArea.appendChild(wordElement);
+                    
+                    // Remove from word bank
+                    const bankWord = Array.from(wordBank.querySelectorAll('.word-item'))
+                        .find(w => w.dataset.word === word && !w.classList.contains('placed'));
+                    if (bankWord) bankWord.remove();
+                } else if (from === 'answer') {
+                    // Word already in answer area, just move it
+                    // In a full implementation, you would handle reordering
+                }
+            });
+            
+            // Store correct answer for validation
+            state.correctAnswer = question.correct_sentence;
+        }
+
+        function loadTranslateTypingQuestion(question) {
+            // Question prompt
+            const prompt = document.createElement('div');
+            prompt.className = 'question-text';
+            prompt.textContent = question.question;
+            quizContainer.appendChild(prompt);
+            
+            // Input field for answer
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'input-answer';
+            input.placeholder = 'Type your translation here...';
+            input.id = 'text-answer';
+            quizContainer.appendChild(input);
+            
+            // Store correct answer for validation
+            state.correctAnswer = question.expected_answer;
+        }
+
+        function loadTranslateWordBankQuestion(question) {
+            // Question prompt
+            const prompt = document.createElement('div');
+            prompt.className = 'question-text';
+            prompt.textContent = question.question;
+            quizContainer.appendChild(prompt);
+            
+            // Answer area (where words will be placed)
+            const answerArea = document.createElement('div');
+            answerArea.className = 'answer-area';
+            answerArea.id = 'answer-area';
+            quizContainer.appendChild(answerArea);
+            
+            // Word bank
+            const wordBank = document.createElement('div');
+            wordBank.className = 'word-bank';
+            wordBank.id = 'word-bank';
+            
+            // Shuffle words
+            const shuffledWords = [...question.word_bank].sort(() => Math.random() - 0.5);
+            
+            shuffledWords.forEach(word => {
+                const wordElement = document.createElement('div');
+                wordElement.className = 'word-item';
+                wordElement.textContent = word;
+                wordElement.draggable = true;
+                wordElement.dataset.word = word;
+                
+                wordElement.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', word);
+                    e.dataTransfer.setData('from', 'bank');
+                });
+                
+                wordBank.appendChild(wordElement);
+            });
+            
+            quizContainer.appendChild(wordBank);
+            
+            // Make answer area a drop target
+            answerArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                answerArea.style.backgroundColor = '#e9ecef';
+            });
+            
+            answerArea.addEventListener('dragleave', () => {
+                answerArea.style.backgroundColor = '#f8f9fa';
+            });
+            
+            answerArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                answerArea.style.backgroundColor = '#f8f9fa';
+                
+                const word = e.dataTransfer.getData('text/plain');
+                const from = e.dataTransfer.getData('from');
+                
+                if (from === 'bank') {
+                    // Add word to answer area
+                    const wordElement = document.createElement('div');
+                    wordElement.className = 'word-item placed';
+                    wordElement.textContent = word;
+                    wordElement.draggable = true;
+                    wordElement.dataset.word = word;
+                    
+                    wordElement.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', word);
+                        e.dataTransfer.setData('from', 'answer');
+                    });
+                    
+                    answerArea.appendChild(wordElement);
+                    
+                    // Remove from word bank
+                    const bankWord = Array.from(wordBank.querySelectorAll('.word-item'))
+                        .find(w => w.dataset.word === word && !w.classList.contains('placed'));
+                    if (bankWord) bankWord.remove();
+                }
+            });
+            
+            // Store correct answer for validation
+            state.correctAnswer = question.correct_sentence;
+        }
+
+        function loadMultipleChoiceQuestion(question) {
+            // Question prompt
+            const prompt = document.createElement('div');
+            prompt.className = 'question-text';
+            prompt.textContent = `What does "${question.word}" mean?`;
+            quizContainer.appendChild(prompt);
+            
+            // Options container
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'options-container';
+            
+            // Create option buttons
+            const options = [
+                { text: question.option1, value: 'a' },
+                { text: question.option2, value: 'b' },
+                { text: question.option3, value: 'c' },
+                { text: question.option4, value: 'd' }
+            ];
+            
+            options.forEach(option => {
+                const optionBtn = document.createElement('button');
+                optionBtn.className = 'option-btn';
+                optionBtn.textContent = option.text;
+                optionBtn.dataset.value = option.value;
+                
+                optionBtn.addEventListener('click', () => {
+                    if (state.isAnswered) return;
+                    
+                    // Remove selected class from all options
+                    document.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    optionBtn.classList.add('selected');
+                    state.userAnswer = option.value;
+                });
+                
+                optionsContainer.appendChild(optionBtn);
+            });
+            
+            quizContainer.appendChild(optionsContainer);
+            
+            // Store correct answer for validation
+            state.correctAnswer = question.correct_option;
+        }
+
+        function loadListenTypeQuestion(question) {
+            // Question prompt
+            const prompt = document.createElement('div');
+            prompt.className = 'question-text';
+            prompt.textContent = "Listen to the audio and type what you hear:";
+            quizContainer.appendChild(prompt);
+            
+            // Audio controls
+            const audioControls = document.createElement('div');
+            audioControls.className = 'audio-controls';
+            
+            const playBtn = document.createElement('button');
+            playBtn.className = 'audio-btn';
+            playBtn.innerHTML = '▶️ Play Audio';
+            playBtn.addEventListener('click', () => {
+                speakText(question.audio_text, state.currentLanguage);
+            });
+            
+            const slowBtn = document.createElement('button');
+            slowBtn.className = 'audio-btn';
+            slowBtn.innerHTML = '🐌 Play Slowly';
+            slowBtn.addEventListener('click', () => {
+                speakText(question.audio_text, state.currentLanguage, 0.5);
+            });
+            
+            audioControls.appendChild(playBtn);
+            audioControls.appendChild(slowBtn);
+            quizContainer.appendChild(audioControls);
+            
+            // Speech recognition button (if available)
+            if (state.recognition) {
+                const micBtn = document.createElement('button');
+                micBtn.className = 'audio-btn';
+                micBtn.innerHTML = '🎤 Speak Answer';
+                micBtn.addEventListener('click', startSpeechRecognition);
+                audioControls.appendChild(micBtn);
+            }
+            
+            // Input field for answer
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'input-answer';
+            input.placeholder = 'Type what you hear...';
+            input.id = 'text-answer';
+            quizContainer.appendChild(input);
+            
+            // Store correct answer for validation
+            state.correctAnswer = question.expected_answer;
+        }
+
+        function loadMatchPairsQuestion(question) {
+            // Question prompt
+            const prompt = document.createElement('div');
+            prompt.className = 'question-text';
+            prompt.textContent = "Match the words with their translations:";
+            quizContainer.appendChild(prompt);
+            
+            // Create matching game UI
+            const matchingGame = document.createElement('div');
+            matchingGame.className = 'matching-game';
+            matchingGame.style.display = 'grid';
+            matchingGame.style.gridTemplateColumns = '1fr 1fr';
+            matchingGame.style.gap = '20px';
+            matchingGame.style.marginTop = '20px';
+            
+            // Left column (English words)
+            const leftColumn = document.createElement('div');
+            leftColumn.className = 'matching-column';
+            
+            // Right column (Hindi words)
+            const rightColumn = document.createElement('div');
+            rightColumn.className = 'matching-column';
+            
+            // Shuffle pairs
+            const shuffledPairs = [...question.pairs].sort(() => Math.random() - 0.5);
+            
+            // Add left items
+            shuffledPairs.forEach((pair, index) => {
+                const leftItem = document.createElement('div');
+                leftItem.className = 'word-item';
+                leftItem.textContent = pair.left;
+                leftItem.dataset.index = index;
+                leftItem.dataset.side = 'left';
+                leftItem.style.marginBottom = '10px';
+                leftItem.style.cursor = 'pointer';
+                
+                leftItem.addEventListener('click', () => {
+                    if (state.isAnswered) return;
+                    selectMatchingItem(leftItem);
+                });
+                
+                leftColumn.appendChild(leftItem);
+            });
+            
+            // Add right items (shuffled)
+            const shuffledRight = [...shuffledPairs].sort(() => Math.random() - 0.5);
+            
+            shuffledRight.forEach((pair, index) => {
+                const rightItem = document.createElement('div');
+                rightItem.className = 'word-item';
+                rightItem.textContent = pair.right;
+                rightItem.dataset.pairIndex = shuffledPairs.findIndex(p => p.right === pair.right);
+                rightItem.dataset.side = 'right';
+                rightItem.style.marginBottom = '10px';
+                rightItem.style.cursor = 'pointer';
+                
+                rightItem.addEventListener('click', () => {
+                    if (state.isAnswered) return;
+                    selectMatchingItem(rightItem);
+                });
+                
+                rightColumn.appendChild(rightItem);
+            });
+            
+            matchingGame.appendChild(leftColumn);
+            matchingGame.appendChild(rightColumn);
+            quizContainer.appendChild(matchingGame);
+            
+            // Matching game state
+            state.matchingState = {
+                selectedItem: null,
+                pairsMatched: 0,
+                totalPairs: question.pairs.length,
+                correctMatches: []
+            };
+            
+            // Store correct pairs for validation
+            state.correctAnswer = question.pairs;
+        }
+
+        function loadListenChooseQuestion(question) {
+            // Question prompt
+            const prompt = document.createElement('div');
+            prompt.className = 'question-text';
+            prompt.textContent = "Listen to the audio and choose the correct translation:";
+            quizContainer.appendChild(prompt);
+            
+            // Audio controls
+            const audioControls = document.createElement('div');
+            audioControls.className = 'audio-controls';
+            
+            const playBtn = document.createElement('button');
+            playBtn.className = 'audio-btn';
+            playBtn.innerHTML = '▶️ Play Audio';
+            playBtn.addEventListener('click', () => {
+                speakText(question.audio_text, 'hi'); // Assuming Hindi audio
+            });
+            
+            audioControls.appendChild(playBtn);
+            quizContainer.appendChild(audioControls);
+            
+            // Options container
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'options-container';
+            
+            // Create option buttons
+            const options = [
+                { text: question.option1, value: 'a' },
+                { text: question.option2, value: 'b' },
+                { text: question.option3, value: 'c' }
+            ];
+            
+            options.forEach(option => {
+                const optionBtn = document.createElement('button');
+                optionBtn.className = 'option-btn';
+                optionBtn.textContent = option.text;
+                optionBtn.dataset.value = option.value;
+                
+                optionBtn.addEventListener('click', () => {
+                    if (state.isAnswered) return;
+                    
+                    // Remove selected class from all options
+                    document.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    optionBtn.classList.add('selected');
+                    state.userAnswer = option.value;
+                });
+                
+                optionsContainer.appendChild(optionBtn);
+            });
+            
+            quizContainer.appendChild(optionsContainer);
+            
+            // Store correct answer for validation
+            state.correctAnswer = question.correct_option;
+        }
+
+        function loadSingleWordTranslationQuestion(question) {
+            // Question prompt
+            const prompt = document.createElement('div');
+            prompt.className = 'question-text';
+            prompt.textContent = `Translate the word: "${question.word}"`;
+            quizContainer.appendChild(prompt);
+            
+            // Options container
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'options-container';
+            
+            // Create option buttons
+            const options = [
+                { text: question.option1, value: 'a' },
+                { text: question.option2, value: 'b' },
+                { text: question.option3, value: 'c' },
+                { text: question.option4, value: 'd' }
+            ];
+            
+            options.forEach(option => {
+                const optionBtn = document.createElement('button');
+                optionBtn.className = 'option-btn';
+                optionBtn.textContent = option.text;
+                optionBtn.dataset.value = option.value;
+                
+                optionBtn.addEventListener('click', () => {
+                    if (state.isAnswered) return;
+                    
+                    // Remove selected class from all options
+                    document.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    optionBtn.classList.add('selected');
+                    state.userAnswer = option.value;
+                });
+                
+                optionsContainer.appendChild(optionBtn);
+            });
+            
+            quizContainer.appendChild(optionsContainer);
+            
+            // Store correct answer for validation
+            state.correctAnswer = question.correct_option;
+        }
+
+        // Helper functions
+        function selectMatchingItem(item) {
+            if (!state.matchingState) return;
+            
+            const side = item.dataset.side;
+            const index = side === 'left' ? item.dataset.index : item.dataset.pairIndex;
+            
+            if (!state.matchingState.selectedItem) {
+                // First item selected
+                state.matchingState.selectedItem = { side, index, element: item };
+                item.style.backgroundColor = '#00b4d8';
+                item.style.color = 'white';
+            } else {
+                // Second item selected
+                const first = state.matchingState.selectedItem;
+                
+                if (first.side !== side && first.index === index) {
+                    // Correct match
+                    item.style.backgroundColor = '#4caf50';
+                    first.element.style.backgroundColor = '#4caf50';
+                    state.matchingState.pairsMatched++;
+                    state.matchingState.correctMatches.push({
+                        left: first.side === 'left' ? first.element.textContent : item.textContent,
+                        right: first.side === 'right' ? first.element.textContent : item.textContent
+                    });
+                    
+                    // Check if all pairs are matched
+                    if (state.matchingState.pairsMatched === state.matchingState.totalPairs) {
+                        state.userAnswer = state.matchingState.correctMatches;
+                        setTimeout(() => handleSubmit(), 500);
+                    }
+                } else {
+                    // Incorrect match
+                    item.style.backgroundColor = '#f44336';
+                    first.element.style.backgroundColor = '#f44336';
+                    
+                    // Reset colors after delay
+                    setTimeout(() => {
+                        item.style.backgroundColor = '';
+                        item.style.color = '';
+                        first.element.style.backgroundColor = '';
+                        first.element.style.color = '';
+                    }, 1000);
+                }
+                
+                // Reset selection
+                state.matchingState.selectedItem = null;
+            }
+        }
+
+        function speakText(text, lang, rate = 1) {
+            if (!state.synth) return;
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = getLanguageCode(lang);
+            utterance.rate = rate;
+            
+            state.synth.speak(utterance);
+        }
+
+        function getLanguageCode(lang) {
+            const codes = {
+                'te': 'te-IN',
+                'hi': 'hi-IN',
+                'en': 'en-US'
+            };
+            return codes[lang] || 'en-US';
+        }
+
+        function startSpeechRecognition() {
+            if (!state.recognition) {
+                alert('Speech recognition is not supported in your browser.');
+                return;
+            }
+            
+            const input = document.getElementById('text-answer');
+            if (!input) return;
+            
+            state.recognition.lang = getLanguageCode(state.currentLanguage);
+            state.recognition.start();
+            
+            input.placeholder = 'Listening...';
+            
+            state.recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                input.value = transcript;
+                input.placeholder = 'Type what you hear...';
+            };
+            
+            state.recognition.onerror = () => {
+                input.placeholder = 'Type what you hear...';
+            };
+        }
+
+        // Handle submit button click
+        function handleSubmit() {
+            if (state.isAnswered) return;
+            
+            const languageData = quizData[state.currentLanguage];
+            const question = languageData.questions[state.currentQuestionIndex];
+            let isCorrect = false;
+            
+            // Validate answer based on question type
+            switch (question.type) {
+                case 'arrange_words':
+                case 'translate_word_bank':
+                    const answerArea = document.getElementById('answer-area');
+                    if (answerArea) {
+                        const userSentence = Array.from(answerArea.querySelectorAll('.word-item'))
+                            .map(item => item.textContent)
+                            .join(' ');
+                        isCorrect = userSentence === state.correctAnswer;
+                        state.userAnswer = userSentence;
+                    }
+                    break;
+                    
+                case 'translate_typing':
+                case 'listen_type':
+                    const input = document.getElementById('text-answer');
+                    if (input) {
+                        isCorrect = input.value.trim() === state.correctAnswer;
+                        state.userAnswer = input.value.trim();
+                    }
+                    break;
+                    
+                case 'multiple_choice_meaning':
+                case 'listen_choose':
+                case 'single_word_translation':
+                    isCorrect = state.userAnswer === state.correctAnswer;
+                    break;
+                    
+                case 'match_pairs':
+                    // For match pairs, we check during the game
+                    isCorrect = state.matchingState.pairsMatched === state.matchingState.totalPairs;
+                    break;
+            }
+            
+            // Update UI based on correctness
+            showFeedback(isCorrect, question);
+            
+            // Update score and streak
+            if (isCorrect) {
+                state.score += 10;
+                state.streak++;
+            } else {
+                state.streak = 0;
+            }
+            
+            updateStats();
+            state.isAnswered = true;
+            
+            // Show next button
+            submitBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+        }
+
+        // Handle next button click
+        function handleNext() {
+            state.currentQuestionIndex++;
+            
+            const languageData = quizData[state.currentLanguage];
+            if (state.currentQuestionIndex >= languageData.questions.length) {
+                showCompletionScreen();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        // Show feedback for the answer
+        function showFeedback(isCorrect, question) {
+            // Remove any existing feedback
+            const existingFeedback = quizContainer.querySelector('.feedback');
+            if (existingFeedback) existingFeedback.remove();
+            
+            const existingExplanation = quizContainer.querySelector('.explanation');
+            if (existingExplanation) existingExplanation.remove();
+            
+            // Create feedback element
+            const feedback = document.createElement('div');
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.innerHTML = isCorrect ? 
+                '✅ Correct! Well done!' : 
+                `❌ Incorrect. The correct answer is: ${state.correctAnswer}`;
+            
+            quizContainer.appendChild(feedback);
+            
+            // Add explanation if available
+            if (question.correct_answer_logic) {
+                const explanation = document.createElement('div');
+                explanation.className = 'explanation';
+                explanation.textContent = question.correct_answer_logic;
+                quizContainer.appendChild(explanation);
+            }
+            
+            // For multiple choice questions, highlight correct answer
+            if (question.type.includes('choice') || question.type === 'listen_choose' || question.type === 'single_word_translation') {
+                const correctOption = document.querySelector(`.option-btn[data-value="${question.correct_option}"]`);
+                if (correctOption) {
+                    correctOption.classList.add('correct');
+                }
+                
+                if (state.userAnswer && !isCorrect) {
+                    const userOption = document.querySelector(`.option-btn[data-value="${state.userAnswer}"]`);
+                    if (userOption) {
+                        userOption.classList.add('incorrect');
+                    }
+                }
+            }
+        }
+
+        // Update score and streak display
+        function updateStats() {
+            scoreValue.textContent = state.score;
+            streakValue.textContent = state.streak;
+        }
+
+        // Show completion screen
+        function showCompletionScreen() {
+            quizContainer.innerHTML = `
+                <div style="text-align: center; padding: 50px 20px;">
+                    <h2 style="color: #4caf50; margin-bottom: 20px;">🎉 Quiz Completed! 🎉</h2>
+                    <div style="font-size: 1.5rem; margin-bottom: 30px;">
+                        Your final score: <span style="color: #00b4d8; font-weight: bold;">${state.score}</span>
+                    </div>
+                    <div style="font-size: 1.2rem; margin-bottom: 30px;">
+                        Longest streak: <span style="color: #ff9800; font-weight: bold;">${state.streak} 🔥</span>
+                    </div>
+                    <p style="margin-bottom: 30px; font-size: 1.1rem;">
+                        Great job! Keep practicing to improve your language skills.
+                    </p>
+                    <button id="restart-btn" class="control-btn submit-btn" style="margin: 0 auto;">
+                        Restart Quiz
+                    </button>
+                </div>
+            `;
+            
+            submitBtn.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            
+            // Add restart button event listener
+            document.getElementById('restart-btn').addEventListener('click', () => {
+                state.currentQuestionIndex = 0;
+                state.score = 0;
+                updateStats();
+                loadQuestion();
+            });
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

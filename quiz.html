@@ -998,7 +998,7 @@
             
             // Update navigation buttons
             prevQuestionBtn.disabled = index === 0;
-            nextQuestionBtn.disabled = index === appState.questions.length - 1;
+            //nextQuestionBtn.disabled = index === appState.questions.length - 1;
             
             // Show feedback if answer was checked
             if (appState.checkedAnswers[index]) {
@@ -1211,11 +1211,9 @@
         // Navigate between questions
         function navigateQuestion(direction) {
             const newIndex = appState.currentQuestionIndex + direction;
-            
             if (newIndex >= 0 && newIndex < appState.questions.length) {
                 showQuestion(newIndex);
             }
-            
             // If we're at the last question and clicking next, show results
             if (newIndex === appState.questions.length && direction === 1) {
                 showResults();
