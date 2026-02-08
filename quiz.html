@@ -583,7 +583,8 @@
             viewedSolutions: {},
             viewedExplanations: {},
             score: 0,
-            quizStarted: false
+            quizStarted: false,
+            autoSelectAll: false // Flag to auto-select all chapters and topics
         };
 
         // DOM Elements
@@ -615,10 +616,43 @@
         const resultMessage = document.getElementById('resultMessage');
         const restartQuizBtn = document.getElementById('restartQuizBtn');
 
+        // Get URL parameters
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
         // Initialize the application
         document.addEventListener('DOMContentLoaded', async () => {
             await loadCourses();
             setupEventListeners();
+            
+            // Check if a course-id was passed via URL parameter
+            const courseId = getUrlParameter('course-id');
+            console.log('Course ID from URL:', courseId);
+            
+            if (courseId) {
+                // Set flag to auto-select all chapters and topics
+                appState.autoSelectAll = true;
+                console.log('Auto-select mode enabled');
+                
+                // Add course to selected courses
+                appState.selectedCourses.push(courseId);
+                console.log('Selected courses:', appState.selectedCourses);
+                
+                // Find and check the course checkbox
+                const checkbox = document.querySelector(`input[value="${courseId}"]`);
+                console.log('Course checkbox found:', !!checkbox);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+                
+                // Directly call loadChapters with proper await
+                console.log('Starting loadChapters with autoSelectAll=true');
+                await loadChapters(false); // Don't reset selections when auto-selecting
+                console.log('After loadChapters - selectedChapters:', appState.selectedChapters);
+                console.log('After loadChapters - selectedTopics:', appState.selectedTopics);
+            }
         });
 
         // Load courses from courses.json
@@ -644,22 +678,32 @@
             appState.courses.forEach(course => {
                 const div = document.createElement('div');
                 div.className = 'checkbox-item';
-                div.innerHTML = `
-                    <input type="checkbox" id="course-${course.id}" value="${course.id}">
-                    <label for="course-${course.id}">${course.title}</label>
-                `;
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `course-${course.id}`;
+                checkbox.value = course.id;
+                
+                const label = document.createElement('label');
+                label.htmlFor = `course-${course.id}`;
+                label.textContent = course.title;
+                
+                div.appendChild(checkbox);
+                div.appendChild(label);
                 courseSelect.appendChild(div);
             });
         }
 
         // Load chapters for selected courses
-        async function loadChapters() {
+        async function loadChapters(resetSelections = true) {
             chapterSelect.innerHTML = '<div class="loading-message">Loading chapters...</div>';
             topicSelect.innerHTML = '<div class="loading-message">Select chapters first</div>';
             
-            // Reset selections
-            appState.selectedChapters = [];
-            appState.selectedTopics = [];
+            // Reset selections only if requested and not in auto-select mode
+            if (resetSelections && !appState.autoSelectAll) {
+                appState.selectedChapters = [];
+                appState.selectedTopics = [];
+            }
             
             if (appState.selectedCourses.length === 0) {
                 chapterSelect.innerHTML = '<div class="loading-message">Select a course first</div>';
@@ -710,6 +754,12 @@
                 checkbox.value = chapter.id;
                 checkbox.setAttribute('data-topics', JSON.stringify(chapter.topics));
                 
+                // Auto-select if flag is set
+                if (appState.autoSelectAll) {
+                    checkbox.checked = true;
+                    appState.selectedChapters.push(chapter.id);
+                }
+                
                 const label = document.createElement('label');
                 label.htmlFor = `chapter-${chapter.id}`;
                 label.textContent = chapter.title;
@@ -718,6 +768,11 @@
                 div.appendChild(label);
                 chapterSelect.appendChild(div);
             });
+            
+            // If auto-select is enabled, load topics for the selected chapters
+            if (appState.autoSelectAll) {
+                loadTopics();
+            }
         }
 
         // Load topics for selected chapters
@@ -754,12 +809,32 @@
             topics.forEach(topic => {
                 const div = document.createElement('div');
                 div.className = 'checkbox-item';
-                div.innerHTML = `
-                    <input type="checkbox" id="topic-${topic.id}" value="${topic.id}">
-                    <label for="topic-${topic.id}">${topic.title}</label>
-                `;
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `topic-${topic.id}`;
+                checkbox.value = topic.id;
+                
+                // Auto-select if flag is set
+                if (appState.autoSelectAll) {
+                    checkbox.checked = true;
+                    appState.selectedTopics.push(topic.id);
+                }
+                
+                const label = document.createElement('label');
+                label.htmlFor = `topic-${topic.id}`;
+                label.textContent = topic.title;
+                
+                div.appendChild(checkbox);
+                div.appendChild(label);
                 topicSelect.appendChild(div);
             });
+            
+            // If auto-select is enabled, disable the flag and update the start button
+            if (appState.autoSelectAll) {
+                appState.autoSelectAll = false;
+                updateStartButton();
+            }
         }
 
         // Setup event listeners

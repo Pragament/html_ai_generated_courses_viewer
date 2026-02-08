@@ -334,30 +334,57 @@ class CourseViewer {
                 <div class="course-meta">Category: ${this.escapeHtml(c.category || '—')}</div>
                 <div class="course-meta">Subjects: ${(c.subjects || []).join(', ')}</div>
                 <div class="hidden" style="margin-top:8px; color:#2a5298; font-weight:600;">Estimated: ${this.escapeHtml(c.estimatedTime || '—')}</div>
+                <div style="margin-top:15px; display:flex; gap:10px;">
+                    <button class="course-btn course-view-btn" data-course-id="${c.id}">View Course</button>
+                    <button class="course-btn course-quiz-btn" data-course-id="${c.id}">Quiz</button>
+                </div>
             </div>
         `).join('');
 
         // Attach click handlers
         container.querySelectorAll('.course-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                const id = card.dataset.courseId;
-                if (id) {
-                    // Find course data for tracking
-                    const course = this.courses.find(c => c.id === id);
+            const courseId = card.dataset.courseId;
+            const course = this.courses.find(c => c.id === courseId);
 
-                    // Track course card click
-                    this.trackEvent('course_click', {
-                        'course_id': id,
-                        'course_title': course?.title || '',
-                        'category': course?.category || '',
-                        'level': course?.level || '',
-                        'source_page': 'homepage'
-                    });
+            // View Course button handler
+            const viewBtn = card.querySelector('.course-view-btn');
+            if (viewBtn) {
+                viewBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (courseId) {
+                        // Track course card click
+                        this.trackEvent('course_click', {
+                            'course_id': courseId,
+                            'course_title': course?.title || '',
+                            'category': course?.category || '',
+                            'level': course?.level || '',
+                            'source_page': 'homepage'
+                        });
 
-                    // Navigate to separate course detail page
-                    window.location.href = `course.html?course-id=${encodeURIComponent(id)}`;
-                }
-            });
+                        // Navigate to separate course detail page
+                        window.location.href = `course.html?course-id=${encodeURIComponent(courseId)}`;
+                    }
+                });
+            }
+
+            // Quiz button handler
+            const quizBtn = card.querySelector('.course-quiz-btn');
+            if (quizBtn) {
+                quizBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (courseId) {
+                        // Track quiz access
+                        this.trackEvent('quiz_access', {
+                            'course_id': courseId,
+                            'course_title': course?.title || '',
+                            'source_page': 'homepage'
+                        });
+
+                        // Navigate to quiz page with course pre-selected (use relative URL)
+                        window.location.href = `quiz.html?course-id=${encodeURIComponent(courseId)}`;
+                    }
+                });
+            }
         });
     }
 
