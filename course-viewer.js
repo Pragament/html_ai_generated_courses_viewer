@@ -415,8 +415,8 @@ class CourseViewer {
                 'filter_tag': tag || '(none)'
             });
         }
-
-        const results = this.courses.filter(c => {
+ 
+        const results = this.courses.filter(course => course.status === true).filter(c => {
             if (cat && c.category !== cat) return false;
             if (cls && !(Array.isArray(c.classes) && c.classes.includes(cls))) return false;
             if (subj && !(Array.isArray(c.subjects) && c.subjects.includes(subj))) return false;
