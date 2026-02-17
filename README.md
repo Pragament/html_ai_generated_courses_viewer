@@ -30,3 +30,32 @@ Use this exact JSON structure:
 }
 
 Make the content joyful, interactive, and perfectly suited for 8-9 year olds. Add emojis sparingly to enhance engagement. Focus on making learning feel like play while covering all educational objectives."
+
+### What “hallucinations” means in AI
+
+In AI, a **hallucination** is when a system:
+
+* Makes up facts
+* Gives incorrect information confidently
+* Invents sources, data, or details
+* Misunderstands the question but still produces a fluent answer
+
+For example, some AI chatbots might:
+
+* Cite a fake research study
+* Give the wrong historical date
+* Create a nonexistent book or quote
+
+### Why pre-scripted lessons prevent this
+
+If content is:
+
+* Written and reviewed by educators
+* Fixed in advance
+* Not generated dynamically
+
+Then:
+
+* The information stays consistent
+* There’s no spontaneous guesswork
+* Errors are less likely
