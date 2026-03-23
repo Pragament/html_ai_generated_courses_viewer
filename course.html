@@ -911,6 +911,58 @@
             cursor: not-allowed;
         }
 
+        /* System Prompt Styles */
+        .ai-chat-system-prompt {
+            background: #f5f5f5;
+            border-bottom: 1px solid #e0e0e0;
+            max-height: 200px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .ai-chat-system-prompt.hidden {
+            display: none;
+        }
+
+        .ai-system-prompt-header {
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e8e8e8;
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .ai-system-prompt-header button {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .ai-system-prompt-header button:hover {
+            background: #d0d0d0;
+        }
+
+        .ai-system-prompt-content {
+            padding: 12px 16px;
+            font-size: 11px;
+            color: #666;
+            line-height: 1.5;
+            max-height: 150px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
         /* Progress Bar Styles */
         .ai-chat-progress {
             display: none;
@@ -1146,6 +1198,7 @@
                 <h3><i class="fas fa-robot"></i> AI Learning Assistant</h3>
                 <div class="header-actions">
                     <button id="aiChatPosition" title="Move to other side"><i class="fas fa-arrows-alt-h"></i></button>
+                    <button id="aiChatSystemPrompt" title="Show/hide system prompt"><i class="fas fa-terminal"></i></button>
                     <button id="aiChatClear" title="Clear chat"><i class="fas fa-trash"></i></button>
                     <button id="aiChatToggle" title="Minimize/Maximize"><i class="fas fa-minus"></i></button>
                 </div>
@@ -1200,6 +1253,13 @@
                         </ul>
                     </div>
                 </div>
+            </div>
+            <div class="ai-chat-system-prompt hidden" id="aiSystemPromptArea">
+                <div class="ai-system-prompt-header">
+                    <span><i class="fas fa-cog"></i> System Prompt</span>
+                    <button id="aiCloseSystemPrompt" title="Hide system prompt"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="ai-system-prompt-content" id="aiSystemPromptContent"></div>
             </div>
             <div class="ai-chat-progress" id="aiProgressContainer">
                 <div class="ai-progress-bar">

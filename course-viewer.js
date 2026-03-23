@@ -1169,6 +1169,12 @@ class AIChatPanel {
         this.quickActions = document.getElementById('aiQuickActions');
         this.chatInputArea = document.getElementById('aiChatInputArea');
         
+        // System prompt elements
+        this.systemPromptArea = document.getElementById('aiSystemPromptArea');
+        this.systemPromptContent = document.getElementById('aiSystemPromptContent');
+        this.systemPromptBtn = document.getElementById('aiChatSystemPrompt');
+        this.closeSystemPromptBtn = document.getElementById('aiCloseSystemPrompt');
+        
         
         const header = document.getElementById('aiChatHeader');
         const toggleBtn = document.getElementById('aiChatToggle');
@@ -1241,6 +1247,22 @@ class AIChatPanel {
             helpContainer.classList.add('collapsed');
         }
 
+        // System prompt toggle
+        if (this.systemPromptBtn) {
+            this.systemPromptBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleSystemPrompt();
+            });
+        }
+
+        // Close system prompt button
+        if (this.closeSystemPromptBtn) {
+            this.closeSystemPromptBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.hideSystemPrompt();
+            });
+        }
+
         // Sample prompt buttons
         document.querySelectorAll('.ai-sample-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1292,19 +1314,13 @@ class AIChatPanel {
 
             // Get current page content for context
             const pageContent = this.getCurrentPageContent();
-            const contextSection = pageContent ? `\n\nCurrent course content context:\n${pageContent.substring(0, 2000)}` : '';
+            const contextSection = pageContent ? `\n\nCurrent course content context:\n${pageContent.substring(0, 6000)}` : '';
 
             // Set up chat with system prompt for educational context
             this.messages = [
                 {
                     role: 'system',
-                    content: `You are an AI learning assistant helping students with their course content. 
-                    You can:
-                    1. Summarize educational content
-                    2. Generate practice questions based on topics
-                    3. Check and correct grammar in student responses
-                    4. Explain concepts clearly and helpfully
-                    
+                    content: `You are an AI learning assistant helping students with their course content.                     
                     Always be encouraging, clear, and educational in your responses.
                     Keep responses concise but informative.${contextSection}`
                 }
@@ -1425,19 +1441,13 @@ Try:
     clearChat() {
         // Get current page content for context
         const pageContent = this.getCurrentPageContent();
-        const contextSection = pageContent ? `\n\nCurrent course content context:\n${pageContent.substring(0, 2000)}` : '';
+        const contextSection = pageContent ? `\n\nCurrent course content context:\n${pageContent.substring(0, 6000)}` : '';
         
         // Reset messages with system prompt including context
         this.messages = [
             {
                 role: 'system',
-                content: `You are an AI learning assistant helping students with their course content. 
-                You can:
-                1. Summarize educational content
-                2. Generate practice questions based on topics
-                3. Check and correct grammar in student responses
-                4. Explain concepts clearly and helpfully
-                
+                content: `You are an AI learning assistant helping students with their course content.                
                 Always be encouraging, clear, and educational in your responses.
                 Keep responses concise but informative.${contextSection}`
             }
@@ -1532,7 +1542,7 @@ Try:
         let fullPrompt = prompt;
         
         if (content && prompt.includes('this chapter') || prompt.includes('this topic') || prompt.includes('this concept')) {
-            fullPrompt = `${prompt}\n\nContext:\n${content.substring(0, 2000)}`;
+            fullPrompt = `${prompt}\n\nContext:\n${content.substring(0, 6000)}`;
         }
 
         this.addMessage('user', prompt);
@@ -1561,7 +1571,7 @@ Try:
         if (isGrammarCheck) {
             prompt = `Please check the following text for grammar errors. If there are errors, explain what's wrong and provide the corrected version. If the grammar is correct, simply confirm that it's correct:\n\n"${text}"`;
         } else if (content) {
-            prompt = `Context from current course page:\n${content.substring(0, 2000)}\n\nUser question: ${text}\n\nPlease answer based on the course context above.`;
+            prompt = `Context from current course page:\n${content.substring(0, 6000)}\n\nUser question: ${text}\n\nPlease answer based on the course context above.`;
         }
 
         await this.generateResponse(prompt);
@@ -1652,6 +1662,34 @@ Try:
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    toggleSystemPrompt() {
+        if (this.systemPromptArea.classList.contains('hidden')) {
+            this.showSystemPrompt();
+        } else {
+            this.hideSystemPrompt();
+        }
+    }
+
+    showSystemPrompt() {
+        // Get current system prompt from messages array
+        const systemMessage = this.messages.find(m => m.role === 'system');
+        if (systemMessage && this.systemPromptContent) {
+            this.systemPromptContent.textContent = systemMessage.content;
+        } else if (this.systemPromptContent) {
+            this.systemPromptContent.textContent = 'No system prompt set. Load a model to see the system prompt.';
+        }
+        
+        if (this.systemPromptArea) {
+            this.systemPromptArea.classList.remove('hidden');
+        }
+    }
+
+    hideSystemPrompt() {
+        if (this.systemPromptArea) {
+            this.systemPromptArea.classList.add('hidden');
+        }
     }
 }
 
