@@ -507,6 +507,16 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        .ai-chat-container.position-left {
+            right: auto;
+            left: 20px;
+        }
+
+        .ai-chat-container.position-left .ai-chat-fab {
+            right: auto;
+            left: 20px;
+        }
+
         .ai-chat-panel {
             background: white;
             border-radius: 16px;
@@ -1060,6 +1070,7 @@
             <div class="ai-chat-header" id="aiChatHeader">
                 <h3><i class="fas fa-robot"></i> AI Learning Assistant</h3>
                 <div class="header-actions">
+                    <button id="aiChatPosition" title="Move to other side"><i class="fas fa-arrows-alt-h"></i></button>
                     <button id="aiChatClear" title="Clear chat"><i class="fas fa-trash"></i></button>
                     <button id="aiChatToggle" title="Minimize"><i class="fas fa-minus"></i></button>
                 </div>

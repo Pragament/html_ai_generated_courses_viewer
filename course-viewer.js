@@ -1169,17 +1169,6 @@ class AIChatPanel {
         this.quickActions = document.getElementById('aiQuickActions');
         this.chatInputArea = document.getElementById('aiChatInputArea');
         
-        this.init();
-    }
-
-    init() {
-        this.setupEventListeners();
-        this.updateStatus('default', 'Select a model and click Load');
-    }
-
-    setupEventListeners() {
-        // Toggle chat panel
-        this.fab.addEventListener('click', () => this.openChat());
         
         const header = document.getElementById('aiChatHeader');
         const toggleBtn = document.getElementById('aiChatToggle');
@@ -1193,6 +1182,11 @@ class AIChatPanel {
         toggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             this.toggleChat();
+        });
+
+        // FAB button - open chat
+        this.fab.addEventListener('click', () => {
+            this.openChat();
         });
 
         // Clear chat
@@ -1227,6 +1221,14 @@ class AIChatPanel {
                 this.handleQuickAction(action);
             });
         });
+
+        // Position toggle
+        const positionBtn = document.getElementById('aiChatPosition');
+        if (positionBtn) {
+            positionBtn.addEventListener('click', () => {
+                this.togglePosition();
+            });
+        }
 
         // Help section toggle
         const helpHeader = document.getElementById('aiHelpHeader');
@@ -1371,6 +1373,28 @@ Try:
     updateStatus(state, text) {
         this.statusText.textContent = text;
         this.statusIndicator.className = 'status-indicator ' + state;
+    }
+
+    togglePosition() {
+        const isLeft = this.container.classList.toggle('position-left');
+        const fab = document.getElementById('aiChatFab');
+        
+        if (fab) {
+            if (isLeft) {
+                fab.style.right = 'auto';
+                fab.style.left = '20px';
+            } else {
+                fab.style.left = 'auto';
+                fab.style.right = '20px';
+            }
+        }
+        
+        // Save preference
+        try {
+            localStorage.setItem('aiChatPosition', isLeft ? 'left' : 'right');
+        } catch (e) {
+            console.log('Could not save position preference');
+        }
     }
 
     openChat() {
