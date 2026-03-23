@@ -1290,6 +1290,10 @@ class AIChatPanel {
                 initProgressCallback: updateProgress
             });
 
+            // Get current page content for context
+            const pageContent = this.getCurrentPageContent();
+            const contextSection = pageContent ? `\n\nCurrent course content context:\n${pageContent.substring(0, 2000)}` : '';
+
             // Set up chat with system prompt for educational context
             this.messages = [
                 {
@@ -1302,7 +1306,7 @@ class AIChatPanel {
                     4. Explain concepts clearly and helpfully
                     
                     Always be encouraging, clear, and educational in your responses.
-                    Keep responses concise but informative.`
+                    Keep responses concise but informative.${contextSection}`
                 }
             ];
 
@@ -1419,12 +1423,30 @@ Try:
     }
 
     clearChat() {
-        // Keep only system message if exists
-        this.messages = this.messages.filter(m => m.role === 'system');
+        // Get current page content for context
+        const pageContent = this.getCurrentPageContent();
+        const contextSection = pageContent ? `\n\nCurrent course content context:\n${pageContent.substring(0, 2000)}` : '';
+        
+        // Reset messages with system prompt including context
+        this.messages = [
+            {
+                role: 'system',
+                content: `You are an AI learning assistant helping students with their course content. 
+                You can:
+                1. Summarize educational content
+                2. Generate practice questions based on topics
+                3. Check and correct grammar in student responses
+                4. Explain concepts clearly and helpfully
+                
+                Always be encouraging, clear, and educational in your responses.
+                Keep responses concise but informative.${contextSection}`
+            }
+        ];
+        
         this.messagesEl.innerHTML = `
             <div class="ai-chat-message ai">
                 <div class="message-bubble">${this.isReady 
-                    ? 'Chat cleared. How can I help you?' 
+                    ? 'Chat cleared. I have the current page content loaded as context. How can I help you?' 
                     : 'Hello! Select a model above and click "Load Model" to get started.'}</div>
                 <span class="message-time">Just now</span>
             </div>
