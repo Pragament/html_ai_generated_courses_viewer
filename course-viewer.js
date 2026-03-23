@@ -1605,8 +1605,16 @@ Try:
         messageEl.className = `ai-chat-message ${role}`;
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         
+        // Render markdown for AI messages using marked library
+        let content;
+        if (role === 'ai' && typeof marked !== 'undefined') {
+            content = marked.parse(text);
+        } else {
+            content = this.escapeHtml(text);
+        }
+        
         messageEl.innerHTML = `
-            <div class="message-bubble">${this.escapeHtml(text)}</div>
+            <div class="message-bubble markdown-content">${content}</div>
             <span class="message-time">${time}</span>
         `;
         

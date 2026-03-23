@@ -582,21 +582,17 @@
             background: #f8f9fa;
             max-height: 300px;
         }
-
         .ai-chat-message {
             margin-bottom: 12px;
             display: flex;
             flex-direction: column;
         }
-
         .ai-chat-message.user {
             align-items: flex-end;
         }
-
         .ai-chat-message.ai {
             align-items: flex-start;
         }
-
         .ai-chat-message .message-bubble {
             max-width: 85%;
             padding: 10px 14px;
@@ -604,6 +600,84 @@
             font-size: 13px;
             line-height: 1.5;
             word-wrap: break-word;
+        }
+
+        /* Markdown content styles */
+        .message-bubble.markdown-content h1,
+        .message-bubble.markdown-content h2,
+        .message-bubble.markdown-content h3,
+        .message-bubble.markdown-content h4 {
+            margin: 12px 0 8px 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .message-bubble.markdown-content h1 { font-size: 16px; }
+        .message-bubble.markdown-content h2 { font-size: 15px; }
+        .message-bubble.markdown-content p {
+            margin: 8px 0;
+        }
+
+        .message-bubble.markdown-content ul,
+        .message-bubble.markdown-content ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .message-bubble.markdown-content li {
+            margin: 4px 0;
+        }
+
+        .message-bubble.markdown-content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .message-bubble.markdown-content pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .message-bubble.markdown-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .message-bubble.markdown-content blockquote {
+            border-left: 3px solid #667eea;
+            margin: 10px 0;
+            padding-left: 12px;
+            color: #555;
+            font-style: italic;
+        }
+
+        .message-bubble.markdown-content table {
+            border-collapse: collapse;
+            margin: 10px 0;
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .message-bubble.markdown-content th,
+        .message-bubble.markdown-content td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        .message-bubble.markdown-content th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .message-bubble.markdown-content strong {
+            font-weight: 600;
         }
 
         .ai-chat-message.user .message-bubble {
@@ -629,6 +703,7 @@
             padding: 12px 16px;
             background: white;
             border-top: 1px solid #e0e0e0;
+            display: block !important;
         }
 
         .ai-chat-input-wrapper {
@@ -1102,18 +1177,18 @@
                     <div class="ai-help-section">
                         <h4><i class="fas fa-lightbulb"></i> Sample Prompts</h4>
                         <div class="ai-sample-prompts">
-                            <button class="ai-sample-btn" data-prompt="Summarize the key points of this chapter" title="Get a concise summary of the current chapter content">Summarize this chapter</button>
-                            <button class="ai-sample-btn" data-prompt="Create 5 quiz questions based on this topic" title="Generate multiple-choice or open-ended questions to test your understanding">Create quiz questions</button>
-                            <button class="ai-sample-btn" data-prompt="Explain this concept like I'm 10 years old" title="Get a simple, easy-to-understand explanation with analogies">Explain like I'm 10</button>
-                            <button class="ai-sample-btn" data-prompt="Check my grammar" title="Review your text for grammar errors and get corrections with explanations">Check my grammar</button>
-                            <button class="ai-sample-btn" data-prompt="What are the main formulas in this chapter?" title="Extract and list important formulas, equations, or key data">Show main formulas</button>
-                            <button class="ai-sample-btn" data-prompt="Give me a real-world example of this concept" title="Get practical applications and real-life scenarios">Real-world example</button>
-                            <button class="ai-sample-btn" data-prompt="Act as an AI writing tutor. Review my writing and provide feedback on how I can improve my composition, suggest ways to better express my thoughts and ideas in written form." title="Get AI feedback on your writing with suggestions for improvement">AI Writing Tutor</button>
-                            <button class="ai-sample-btn" data-prompt="Create a fill in the blank worksheet with 10 sentences about this topic, each with a blank space where a key word is missing. Provide a list of word options for students to choose from." title="Generate fill-in-the-blank exercises for practice">Fill in Blank Worksheet</button>
-                            <button class="ai-sample-btn" data-prompt="Act as a math teacher. Explain this mathematical concept in easy-to-understand terms with step-by-step instructions for solving problems." title="Get math explanations with step-by-step problem solving guidance">Math Teacher</button>
-                            <button class="ai-sample-btn" data-prompt="Act as an educational content creator. Create engaging and informative learning content about this topic suitable for students, including key points, examples, and study tips." title="Generate engaging educational content and study materials">Educational Content Creator</button>
-                            <button class="ai-sample-btn" data-prompt="Create a mind map or outline of this chapter showing how the concepts connect and relate to each other" title="Get a visual structure of how topics are interconnected">Create Mind Map/Outline</button>
-                            <button class="ai-sample-btn" data-prompt="Generate flashcards for this topic with questions on one side and answers on the other" title="Create study flashcards for quick review">Generate Flashcards</button>
+                            <button class="ai-sample-btn" data-prompt="Summarize the key points of this chapter using markdown formatting with bullet points" title="Get a concise summary with formatted bullet points">Summarize this chapter</button>
+                            <button class="ai-sample-btn" data-prompt="Create 5 quiz questions based on this topic. Format output in markdown with numbered list and bold for answers" title="Generate formatted quiz questions with bold answers">Create quiz questions</button>
+                            <button class="ai-sample-btn" data-prompt="Explain this concept like I'm 10 years old using markdown with bold key terms and emojis" title="Get a simple explanation with bold terms and emojis">Explain like I'm 10</button>
+                            <button class="ai-sample-btn" data-prompt="Check my grammar and provide corrections in markdown with bold for errors and italic for corrections" title="Review grammar with formatted corrections">Check my grammar</button>
+                            <button class="ai-sample-btn" data-prompt="What are the main formulas in this chapter? List them in markdown with code blocks for equations" title="Extract formulas formatted in code blocks">Show main formulas</button>
+                            <button class="ai-sample-btn" data-prompt="Give me a real-world example of this concept using markdown with bold key points and numbered steps" title="Get practical examples with formatted steps">Real-world example</button>
+                            <button class="ai-sample-btn" data-prompt="Act as an AI writing tutor. Review my writing and provide feedback in markdown with bold for issues and bullet points for suggestions" title="Get writing feedback with formatted suggestions">AI Writing Tutor</button>
+                            <button class="ai-sample-btn" data-prompt="Create a fill in the blank worksheet with 10 sentences about this topic. Output in markdown table format with columns for Sentence and Answer" title="Generate worksheet as formatted markdown table">Fill in Blank Worksheet</button>
+                            <button class="ai-sample-btn" data-prompt="Act as a math teacher. Explain this mathematical concept with markdown code blocks for formulas and bold for key rules" title="Get math explanations with formatted formulas">Math Teacher</button>
+                            <button class="ai-sample-btn" data-prompt="Act as an educational content creator. Create engaging content in markdown with headers, bold key terms, and bullet points" title="Generate educational content with rich markdown formatting">Educational Content Creator</button>
+                            <button class="ai-sample-btn" data-prompt="Create a mind map or outline of this chapter using markdown headers and nested bullet points" title="Get hierarchical outline with markdown formatting">Create Mind Map/Outline</button>
+                            <button class="ai-sample-btn" data-prompt="Generate flashcards for this topic in markdown format with bold questions and blockquote for answers" title="Create formatted flashcards with bold questions and blockquote answers">Generate Flashcards</button>
                         </div>
                     </div>
                     <div class="ai-help-section">
