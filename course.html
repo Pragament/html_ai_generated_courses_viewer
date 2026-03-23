@@ -1072,7 +1072,7 @@
                 <div class="header-actions">
                     <button id="aiChatPosition" title="Move to other side"><i class="fas fa-arrows-alt-h"></i></button>
                     <button id="aiChatClear" title="Clear chat"><i class="fas fa-trash"></i></button>
-                    <button id="aiChatToggle" title="Minimize"><i class="fas fa-minus"></i></button>
+                    <button id="aiChatToggle" title="Minimize/Maximize"><i class="fas fa-minus"></i></button>
                 </div>
             </div>
             <div class="ai-chat-model-select" id="aiModelSelectArea">
@@ -1081,7 +1081,7 @@
                     <option value="Phi-3.5-mini-instruct-q4f32_1-MLC">Phi-3.5 Mini (Balanced)</option>
                     <option value="Llama-3.2-1B-Instruct-q4f32_1-MLC">Llama 3.2 1B (Better quality)</option>
                 </select>
-                <button id="aiLoadModel" class="ai-load-btn"><i class="fas fa-download"></i> Load Model</button>
+                <button id="aiLoadModel" class="ai-load-btn" title="Download and initialize the AI model"><i class="fas fa-download"></i> Load Model</button>
             </div>
             <div class="ai-chat-help" id="aiChatHelp">
                 <div class="ai-help-header" id="aiHelpHeader">
@@ -1102,12 +1102,18 @@
                     <div class="ai-help-section">
                         <h4><i class="fas fa-lightbulb"></i> Sample Prompts</h4>
                         <div class="ai-sample-prompts">
-                            <button class="ai-sample-btn" data-prompt="Summarize the key points of this chapter">Summarize this chapter</button>
-                            <button class="ai-sample-btn" data-prompt="Create 5 quiz questions based on this topic">Create quiz questions</button>
-                            <button class="ai-sample-btn" data-prompt="Explain this concept like I'm 10 years old">Explain like I'm 10</button>
-                            <button class="ai-sample-btn" data-prompt="Check my grammar">Check my grammar</button>
-                            <button class="ai-sample-btn" data-prompt="What are the main formulas in this chapter?">Show main formulas</button>
-                            <button class="ai-sample-btn" data-prompt="Give me a real-world example of this concept">Real-world example</button>
+                            <button class="ai-sample-btn" data-prompt="Summarize the key points of this chapter" title="Get a concise summary of the current chapter content">Summarize this chapter</button>
+                            <button class="ai-sample-btn" data-prompt="Create 5 quiz questions based on this topic" title="Generate multiple-choice or open-ended questions to test your understanding">Create quiz questions</button>
+                            <button class="ai-sample-btn" data-prompt="Explain this concept like I'm 10 years old" title="Get a simple, easy-to-understand explanation with analogies">Explain like I'm 10</button>
+                            <button class="ai-sample-btn" data-prompt="Check my grammar" title="Review your text for grammar errors and get corrections with explanations">Check my grammar</button>
+                            <button class="ai-sample-btn" data-prompt="What are the main formulas in this chapter?" title="Extract and list important formulas, equations, or key data">Show main formulas</button>
+                            <button class="ai-sample-btn" data-prompt="Give me a real-world example of this concept" title="Get practical applications and real-life scenarios">Real-world example</button>
+                            <button class="ai-sample-btn" data-prompt="Act as an AI writing tutor. Review my writing and provide feedback on how I can improve my composition, suggest ways to better express my thoughts and ideas in written form." title="Get AI feedback on your writing with suggestions for improvement">AI Writing Tutor</button>
+                            <button class="ai-sample-btn" data-prompt="Create a fill in the blank worksheet with 10 sentences about this topic, each with a blank space where a key word is missing. Provide a list of word options for students to choose from." title="Generate fill-in-the-blank exercises for practice">Fill in Blank Worksheet</button>
+                            <button class="ai-sample-btn" data-prompt="Act as a math teacher. Explain this mathematical concept in easy-to-understand terms with step-by-step instructions for solving problems." title="Get math explanations with step-by-step problem solving guidance">Math Teacher</button>
+                            <button class="ai-sample-btn" data-prompt="Act as an educational content creator. Create engaging and informative learning content about this topic suitable for students, including key points, examples, and study tips." title="Generate engaging educational content and study materials">Educational Content Creator</button>
+                            <button class="ai-sample-btn" data-prompt="Create a mind map or outline of this chapter showing how the concepts connect and relate to each other" title="Get a visual structure of how topics are interconnected">Create Mind Map/Outline</button>
+                            <button class="ai-sample-btn" data-prompt="Generate flashcards for this topic with questions on one side and answers on the other" title="Create study flashcards for quick review">Generate Flashcards</button>
                         </div>
                     </div>
                     <div class="ai-help-section">
@@ -1131,10 +1137,10 @@
                 <span id="aiStatusText">Select a model and click Load</span>
             </div>
             <div class="ai-chat-quick-actions" id="aiQuickActions" style="display: none;">
-                <button class="ai-chat-quick-btn" data-action="summarize"><i class="fas fa-compress"></i> Summarize</button>
-                <button class="ai-chat-quick-btn" data-action="questions"><i class="fas fa-question-circle"></i> Generate Questions</button>
-                <button class="ai-chat-quick-btn" data-action="explain"><i class="fas fa-lightbulb"></i> Explain This</button>
-                <button class="ai-chat-quick-btn" data-action="grammar"><i class="fas fa-spell-check"></i> Check Grammar</button>
+                <button class="ai-chat-quick-btn" data-action="summarize" title="Summarize current chapter"><i class="fas fa-compress"></i> Summarize</button>
+                <button class="ai-chat-quick-btn" data-action="questions" title="Generate practice questions"><i class="fas fa-question-circle"></i> Generate Questions</button>
+                <button class="ai-chat-quick-btn" data-action="explain" title="Explain topic in simple terms"><i class="fas fa-lightbulb"></i> Explain This</button>
+                <button class="ai-chat-quick-btn" data-action="grammar" title="Check grammar in your text"><i class="fas fa-spell-check"></i> Check Grammar</button>
             </div>
             <div class="ai-chat-messages" id="aiChatMessages">
                 <div class="ai-chat-message ai">
@@ -1144,8 +1150,8 @@
             </div>
             <div class="ai-chat-input-area" id="aiChatInputArea" style="display: none;">
                 <div class="ai-chat-input-wrapper">
-                    <textarea class="ai-chat-input" id="aiChatInput" placeholder="Ask about the course content..." rows="1" disabled></textarea>
-                    <button class="ai-chat-send-btn" id="aiChatSend" disabled><i class="fas fa-paper-plane"></i></button>
+                    <textarea class="ai-chat-input" id="aiChatInput" placeholder="Ask about the course content..." rows="1" disabled title="Type your message here"></textarea>
+                    <button class="ai-chat-send-btn" id="aiChatSend" disabled title="Send message"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
