@@ -1140,4 +1140,464 @@ class CourseViewer {
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.courseViewer = new CourseViewer();
+    window.aiChatPanel = new AIChatPanel();
 });
+
+// AI Chat Panel using WebLLM - Updated with explicit model loading
+class AIChatPanel {
+    constructor() {
+        this.engine = null;
+        this.messages = [];
+        this.isLoading = false;
+        this.isReady = false;
+        
+        // UI Elements
+        this.container = document.getElementById('aiChatContainer');
+        this.fab = document.getElementById('aiChatFab');
+        this.messagesEl = document.getElementById('aiChatMessages');
+        this.inputEl = document.getElementById('aiChatInput');
+        this.sendBtn = document.getElementById('aiChatSend');
+        this.statusText = document.getElementById('aiStatusText');
+        this.statusIndicator = document.getElementById('aiStatusIndicator');
+        
+        // New elements for model selection
+        this.modelSelect = document.getElementById('aiModelSelect');
+        this.loadBtn = document.getElementById('aiLoadModel');
+        this.progressContainer = document.getElementById('aiProgressContainer');
+        this.progressFill = document.getElementById('aiProgressFill');
+        this.progressText = document.getElementById('aiProgressText');
+        this.quickActions = document.getElementById('aiQuickActions');
+        this.chatInputArea = document.getElementById('aiChatInputArea');
+        
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.updateStatus('default', 'Select a model and click Load');
+    }
+
+    setupEventListeners() {
+        // Toggle chat panel
+        this.fab.addEventListener('click', () => this.openChat());
+        
+        const header = document.getElementById('aiChatHeader');
+        const toggleBtn = document.getElementById('aiChatToggle');
+        
+        header.addEventListener('click', (e) => {
+            if (!e.target.closest('button')) {
+                this.toggleChat();
+            }
+        });
+        
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleChat();
+        });
+
+        // Clear chat
+        document.getElementById('aiChatClear').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.clearChat();
+        });
+
+        // Load model button
+        this.loadBtn.addEventListener('click', () => this.loadModel());
+
+        // Send message
+        this.sendBtn.addEventListener('click', () => this.sendMessage());
+        
+        this.inputEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.sendMessage();
+            }
+        });
+
+        // Auto-resize textarea
+        this.inputEl.addEventListener('input', () => {
+            this.inputEl.style.height = 'auto';
+            this.inputEl.style.height = Math.min(this.inputEl.scrollHeight, 100) + 'px';
+        });
+
+        // Quick action buttons
+        document.querySelectorAll('.ai-chat-quick-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                this.handleQuickAction(action);
+            });
+        });
+
+        // Help section toggle
+        const helpHeader = document.getElementById('aiHelpHeader');
+        const helpContainer = document.getElementById('aiChatHelp');
+        if (helpHeader && helpContainer) {
+            helpHeader.addEventListener('click', () => {
+                helpContainer.classList.toggle('collapsed');
+            });
+            // Start collapsed
+            helpContainer.classList.add('collapsed');
+        }
+
+        // Sample prompt buttons
+        document.querySelectorAll('.ai-sample-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const prompt = btn.dataset.prompt;
+                if (prompt) {
+                    this.useSamplePrompt(prompt);
+                }
+            });
+        });
+    }
+
+    async loadModel() {
+        const modelId = this.modelSelect.value;
+        
+        // Check WebGPU support
+        if (!navigator.gpu) {
+            this.showError('WebGPU not supported in this browser. Please use Chrome 113+ or Edge 113+');
+            this.updateStatus('error', 'WebGPU not supported');
+            return;
+        }
+
+        // Check WebLLM availability
+        if (typeof window.CreateMLCEngine === 'undefined') {
+            this.showError('WebLLM library not loaded. Please check your internet connection.');
+            this.updateStatus('error', 'Library not loaded');
+            return;
+        }
+
+        // Disable controls during loading
+        this.loadBtn.disabled = true;
+        this.modelSelect.disabled = true;
+        this.progressContainer.classList.add('active');
+        this.progressFill.style.width = '0%';
+        this.progressText.textContent = '0%';
+        this.addMessage('ai', `Loading ${modelId}... This may take a few minutes on first load.`);
+
+        try {
+            const updateProgress = (progress) => {
+                const percent = Math.round(progress.progress * 100);
+                this.progressFill.style.width = percent + '%';
+                this.progressText.textContent = percent + '%';
+                this.updateStatus('loading', `Loading model... ${percent}%`);
+            };
+
+            // Configure engine with cache clearing on error
+            this.engine = await window.CreateMLCEngine(modelId, {
+                initProgressCallback: updateProgress
+            });
+
+            // Set up chat with system prompt for educational context
+            this.messages = [
+                {
+                    role: 'system',
+                    content: `You are an AI learning assistant helping students with their course content. 
+                    You can:
+                    1. Summarize educational content
+                    2. Generate practice questions based on topics
+                    3. Check and correct grammar in student responses
+                    4. Explain concepts clearly and helpfully
+                    
+                    Always be encouraging, clear, and educational in your responses.
+                    Keep responses concise but informative.`
+                }
+            ];
+
+            this.isReady = true;
+            this.updateStatus('ready', 'AI Assistant Ready');
+            this.progressContainer.classList.remove('active');
+            
+            // Enable chat interface
+            this.inputEl.disabled = false;
+            this.sendBtn.disabled = false;
+            this.quickActions.style.display = 'flex';
+            this.chatInputArea.style.display = 'block';
+            
+            this.addMessage('ai', 'Model loaded successfully! I can now help you with summarizing content, generating questions, explaining topics, or checking grammar.');
+            
+        } catch (error) {
+            console.error('Failed to load model:', error);
+            this.handleLoadError(error, modelId);
+        }
+    }
+
+    handleLoadError(error, modelId) {
+        let errorMsg = error.message || 'Unknown error';
+        
+        // Check for specific error types
+        if (errorMsg.includes('network error') || errorMsg.includes('Cache.add')) {
+            errorMsg = `Network error while loading model. This could be due to:
+• CORS restrictions
+• Network connectivity issues
+• Model not available on CDN
+
+Try:
+1. Refresh the page and try again
+2. Try a different model from the dropdown
+3. Check your internet connection`;
+            
+            // Add retry button
+            this.addMessage('ai', `Error loading ${modelId}:\n${errorMsg}`);
+            
+            // Create retry button
+            const retryBtn = document.createElement('button');
+            retryBtn.className = 'ai-chat-quick-btn';
+            retryBtn.innerHTML = '<i class="fas fa-redo"></i> Retry Loading';
+            retryBtn.style.marginTop = '8px';
+            retryBtn.onclick = () => {
+                retryBtn.remove();
+                this.loadModel();
+            };
+            
+            const lastMessage = this.messagesEl.lastElementChild;
+            if (lastMessage) {
+                lastMessage.querySelector('.message-bubble').appendChild(document.createElement('br'));
+                lastMessage.querySelector('.message-bubble').appendChild(retryBtn);
+            }
+            
+        } else if (errorMsg.includes('WebGPU') || errorMsg.includes('webgpu')) {
+            this.showError('WebGPU error: ' + errorMsg);
+        } else {
+            this.addMessage('ai', `Error loading model: ${errorMsg}`);
+        }
+        
+        this.updateStatus('error', 'Failed to load');
+        this.progressContainer.classList.remove('active');
+        this.loadBtn.disabled = false;
+        this.modelSelect.disabled = false;
+    }
+
+    updateStatus(state, text) {
+        this.statusText.textContent = text;
+        this.statusIndicator.className = 'status-indicator ' + state;
+    }
+
+    openChat() {
+        this.container.classList.remove('collapsed');
+        this.fab.classList.add('hidden');
+        if (this.isReady) {
+            this.inputEl.focus();
+        }
+    }
+
+    closeChat() {
+        this.container.classList.add('collapsed');
+        this.fab.classList.remove('hidden');
+    }
+
+    toggleChat() {
+        if (this.container.classList.contains('collapsed')) {
+            this.openChat();
+        } else {
+            this.closeChat();
+        }
+    }
+
+    clearChat() {
+        // Keep only system message if exists
+        this.messages = this.messages.filter(m => m.role === 'system');
+        this.messagesEl.innerHTML = `
+            <div class="ai-chat-message ai">
+                <div class="message-bubble">${this.isReady 
+                    ? 'Chat cleared. How can I help you?' 
+                    : 'Hello! Select a model above and click "Load Model" to get started.'}</div>
+                <span class="message-time">Just now</span>
+            </div>
+        `;
+    }
+
+    getCurrentPageContent() {
+        const courseContent = document.getElementById('courseContent');
+        if (!courseContent || courseContent.style.display === 'none') {
+            return '';
+        }
+
+        const chapterTitle = document.querySelector('.chapter-title')?.textContent || '';
+        const subtopics = Array.from(document.querySelectorAll('.subtopic-item')).map(el => {
+            const title = el.querySelector('.subtopic-title')?.textContent || '';
+            const content = el.querySelector('.subtopic-content')?.textContent || '';
+            return `${title}: ${content}`;
+        }).join('\n\n');
+
+        return `Chapter: ${chapterTitle}\n\n${subtopics}`;
+    }
+
+    handleQuickAction(action) {
+        if (!this.isReady) {
+            this.addMessage('ai', 'Please load a model first using the dropdown above.');
+            return;
+        }
+
+        const content = this.getCurrentPageContent();
+        
+        switch (action) {
+            case 'summarize':
+                if (!content) {
+                    this.addMessage('ai', 'Please open a course chapter first so I can summarize the content for you.');
+                    return;
+                }
+                this.addMessage('user', 'Please summarize the current chapter content.');
+                this.generateResponse(`Please provide a concise summary of the following educational content. Highlight the key points and main concepts:\n\n${content.substring(0, 3000)}`);
+                break;
+                
+            case 'questions':
+                if (!content) {
+                    this.addMessage('ai', 'Please open a course chapter first so I can generate questions for you.');
+                    return;
+                }
+                this.addMessage('user', 'Generate practice questions for this chapter.');
+                this.generateResponse(`Based on the following educational content, generate 3-5 practice questions to test understanding. Include a mix of factual and conceptual questions. For each question, provide the correct answer:\n\n${content.substring(0, 3000)}`);
+                break;
+                
+            case 'explain':
+                if (!content) {
+                    this.addMessage('ai', 'Please open a course chapter first so I can explain the content.');
+                    return;
+                }
+                this.addMessage('user', 'Explain this topic in simpler terms.');
+                this.generateResponse(`Please explain the following educational content in simple, easy-to-understand terms. Break down complex concepts and use analogies where helpful:\n\n${content.substring(0, 3000)}`);
+                break;
+                
+            case 'grammar':
+                this.inputEl.placeholder = 'Type your text here for grammar checking...';
+                this.inputEl.focus();
+                this.addMessage('ai', 'Type your text in the input box below and I\'ll check it for grammar errors and provide corrections.');
+                break;
+        }
+    }
+
+    useSamplePrompt(prompt) {
+        if (!this.isReady) {
+            this.addMessage('ai', 'Please load a model first using the dropdown above.');
+            return;
+        }
+
+        // Handle special prompts
+        if (prompt === 'Check my grammar') {
+            this.inputEl.placeholder = 'Type your text here for grammar checking...';
+            this.inputEl.focus();
+            this.addMessage('user', 'Check my grammar');
+            this.addMessage('ai', 'Type your text in the input box below and I\'ll check it for grammar errors and provide corrections.');
+            return;
+        }
+
+        const content = this.getCurrentPageContent();
+        let fullPrompt = prompt;
+        
+        if (content && prompt.includes('this chapter') || prompt.includes('this topic') || prompt.includes('this concept')) {
+            fullPrompt = `${prompt}\n\nContext:\n${content.substring(0, 2000)}`;
+        }
+
+        this.addMessage('user', prompt);
+        this.generateResponse(fullPrompt);
+    }
+
+    async sendMessage() {
+        if (!this.isReady) {
+            this.addMessage('ai', 'Please load a model first using the dropdown above.');
+            return;
+        }
+
+        const text = this.inputEl.value.trim();
+        if (!text || this.isLoading) return;
+
+        const lastAiMessage = this.messagesEl.querySelector('.ai-chat-message.ai:last-child .message-bubble')?.textContent;
+        const isGrammarCheck = lastAiMessage?.includes('grammar');
+
+        this.addMessage('user', text);
+        this.inputEl.value = '';
+        this.inputEl.style.height = 'auto';
+
+        let prompt = text;
+        const content = this.getCurrentPageContent();
+        
+        if (isGrammarCheck) {
+            prompt = `Please check the following text for grammar errors. If there are errors, explain what's wrong and provide the corrected version. If the grammar is correct, simply confirm that it's correct:\n\n"${text}"`;
+        } else if (content) {
+            prompt = `Context from current course page:\n${content.substring(0, 2000)}\n\nUser question: ${text}\n\nPlease answer based on the course context above.`;
+        }
+
+        await this.generateResponse(prompt);
+    }
+
+    async generateResponse(prompt) {
+        this.isLoading = true;
+        this.showTyping();
+        this.sendBtn.disabled = true;
+
+        try {
+            this.messages.push({ role: 'user', content: prompt });
+
+            const reply = await this.engine.chat.completions.create({
+                messages: this.messages,
+                temperature: 0.7,
+                max_tokens: 1000
+            });
+
+            const responseText = reply.choices[0].message.content;
+            this.messages.push({ role: 'assistant', content: responseText });
+            
+            if (this.messages.length > 12) {
+                this.messages = [this.messages[0], ...this.messages.slice(-11)];
+            }
+
+            this.hideTyping();
+            this.addMessage('ai', responseText);
+        } catch (error) {
+            console.error('AI response error:', error);
+            this.hideTyping();
+            this.addMessage('ai', 'Sorry, I encountered an error. Please try again.');
+        } finally {
+            this.isLoading = false;
+            this.sendBtn.disabled = false;
+        }
+    }
+
+    addMessage(role, text) {
+        const messageEl = document.createElement('div');
+        messageEl.className = `ai-chat-message ${role}`;
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        messageEl.innerHTML = `
+            <div class="message-bubble">${this.escapeHtml(text)}</div>
+            <span class="message-time">${time}</span>
+        `;
+        
+        this.messagesEl.appendChild(messageEl);
+        this.messagesEl.scrollTop = this.messagesEl.scrollHeight;
+    }
+
+    showTyping() {
+        const typingEl = document.createElement('div');
+        typingEl.className = 'ai-chat-message ai typing';
+        typingEl.id = 'typingIndicator';
+        typingEl.innerHTML = `
+            <div class="message-bubble ai-chat-typing">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+        this.messagesEl.appendChild(typingEl);
+        this.messagesEl.scrollTop = this.messagesEl.scrollHeight;
+    }
+
+    hideTyping() {
+        const typingEl = document.getElementById('typingIndicator');
+        if (typingEl) typingEl.remove();
+    }
+
+    showError(message) {
+        const errorEl = document.createElement('div');
+        errorEl.className = 'ai-chat-error';
+        errorEl.textContent = message;
+        this.messagesEl.appendChild(errorEl);
+        this.messagesEl.scrollTop = this.messagesEl.scrollHeight;
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+}
+
