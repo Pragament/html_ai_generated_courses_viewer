@@ -1,0 +1,18 @@
+{
+  "id": "financial-applications",
+  "title": "Discount, Tax & Financial Games 🏷️",
+  "practice-quiz": true,
+  "description": "Master discounts, taxes, markup, and practice with money math games!",
+  "subtopics": [
+    {
+      "id": "discount-tax-markup",
+      "title": "Discount, Tax & Markup! 🏷️",
+      "content": "### 1. Discount: The Price Cutter! ✂️\n- **Discount = Marked Price (MP) - Selling Price (SP)**\n- **Discount % = (Discount/MP) × 100**\n\n**Example:** MP = ₹1000, Discount = 20%\nDiscount amount = 20% of 1000 = ₹200\nSP = ₹1000 - ₹200 = ₹800\n\n### 2. Sales Tax: The Price Adder! ➕\n- **Tax Amount = (Tax% × Price)/100**\n- **Final Price = Price + Tax Amount**\n\n**Example:** Item = ₹500, Tax = 12%\nTax = 12% of 500 = ₹60\nFinal Price = ₹500 + ₹60 = ₹560\n\n### 3. Successive Changes: Handle with Care! ⚠️\n**Rule:** Always calculate step-by-step, NEVER add percentages!\n\n**Example:** MP = ₹1000\nFirst: 20% discount → SP = ₹800\nThen: 10% tax on ₹800 → Tax = ₹80\nFinal = ₹800 + ₹80 = ₹880\n\n**Common Mistake:** 1000 - 20% + 10% = 1000×0.9 = ₹900 ❌ WRONG!"
+    },
+    {
+      "id": "financial-games",
+      "title": "Money Math Games & Simulations! 🎲",
+      "content": "**Game 1: Profit-Loss Detective Agency** 🔍\nSolve business mysteries:\n\nCase 1: Bought for ₹500, sold for ₹650\n- Profit = ______\n- Profit % = ______%\n\nCase 2: Bought for ₹800, sold for ₹720\n- Loss = ______\n- Loss % = ______%\n\nCase 3: CP = ₹1200, Profit % = 25%\n- Profit = ______\n- SP = ______\n\nCase 4: SP = ₹900, Loss % = 10%\n- Loss = ______\n- CP = ______ (Tricky!)\n\n**Game 2: Simple Interest Calculator Race** ⏱️\nCalculate:\n1. P=₹2000, R=5%, T=3 years → SI=______, Amount=______\n2. P=₹5000, R=8%, T=6 months → SI=______\n3. P=₹3000, R=12%, T=90 days → SI=______\n\n**Game 3: Compound vs Simple Showdown**\n₹15,000 at 10% for 3 years:\nSimple Interest = ______\nCompound Interest = ______\nDifference = ______ (Magic money!)\n\n**Talk to a Friend Prompt:**\n\"You have ₹10,000 to invest. Option A: 7% simple for 5 years. Option B: 6.5% compound for 5 years. Calculate both, create persuasive argument for your choice!\" 💼"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "interest-concepts",
+  "title": "Simple & Compound Interest 💰",
+  "practice-quiz": true,
+  "description": "Master simple and compound interest - the 8th wonder of the world!",
+  "subtopics": [
+    {
+      "id": "simple-interest",
+      "title": "Simple Interest: Time-Based Money! ⏰",
+      "content": "**Simple Explanation:** Interest = Rent money pays for being used!\n- Earn interest when you LEND (save in bank) 📈\n- Pay interest when you BORROW (loan from bank) 📉\n\n**The Simple Interest Formula:**\nSI = (P × R × T) / 100\n\nWhere:\n- **P = Principal:** Starting amount of money\n- **R = Rate %:** Interest rate per year\n- **T = Time:** Number of years (convert months to years!)\n\n**Memory Aid:** \"**P**lease **R**emember **T**o divide by 100!\" 🙏\n\n**Visual Prompt:** \"The Interest Growth Ladder\"\n```\nYear 0: ₹1000 (P) 🎯\nYear 1: ₹1000 + ₹80 (8% of 1000) = ₹1080\nYear 2: ₹1080 + ₹80 (same ₹80!) = ₹1160\nYear 3: ₹1160 + ₹80 = ₹1240\nStraight line growth! Each year adds SAME interest!\n```\n\n**Time Conversion Guide:**\n- Months to Years: Divide by 12\n  Example: 6 months = 6/12 = 0.5 years\n- Days to Years: Divide by 365 (or 360 for banking)\n  Example: 90 days = 90/365 ≈ 0.2466 years"
+    },
+    {
+      "id": "compound-interest",
+      "title": "Compound Interest: 8th Wonder! ✨",
+      "content": "**Simple Explanation:** Compound interest = Earning interest on interest! Your money grows like a snowball rolling downhill! ❄️\n\n**Memory Aid:** \"**C**ompound = **C**ascading cash creation!\" 💸\n\n**The Magic Formula:** A = P(1 + R/100)ⁿ\n\nWhere:\n- **A = Amount** (final total)\n- **P = Principal** (starting amount)\n- **R = Rate %** per period\n- **n = Number** of periods\n\n**Visual Prompt:** \"The Compound Interest Money Tree\" 🌳\n```\nYear 0: Plant ₹1000 seed (P) 🌱\nYear 1: Grows 10% → ₹1100 (Interest: ₹100)\nYear 2: Grows 10% on ₹1100 → ₹1210 (Interest: ₹110)\nYear 3: Grows 10% on ₹1210 → ₹1331 (Interest: ₹121)\n\nSee the magic? Interest grows each year!\nSimple interest would be: ₹100 each year → ₹1300 total\nCompound gives MORE: ₹1331! ✨\n```\n\n**The Rule of 72:**\nYears to double ≈ 72 ÷ Interest Rate %\n- At 6%: 72÷6 = 12 years\n- At 8%: 72÷8 = 9 years\n- At 12%: 72÷12 = 6 years"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "proportion-games",
+  "title": "Proportion Practice Games! 🎯",
+  "practice-quiz": true,
+  "description": "Practice proportions and unitary method with fun games!",
+  "subtopics": [
+    {
+      "id": "proportion-games",
+      "title": "Proportion & Unitary Games!",
+      "content": "**Game 1: Proportion Detective Agency** 🔍\nWhich pairs are proportional? Use cross-multiplication!\n1. 2:3 and 4:6 → 2×6=12, 3×4=12 ✓ PROPORTIONAL!\n2. 5:8 and 15:24 → ______\n3. 3:7 and 9:28 → ______\n4. 4:5 and 16:20 → ______\n\n**Game 2: Missing Value Mysteries**\nFind missing numbers in proportions:\n1. 3:5 = 12:x → x = ______\n2. 7:8 = y:24 → y = ______\n3. a:9 = 4:12 → a = ______\n\n**Method:** Cross multiply!\nFor 3:5 = 12:x\n3x = 5×12 → 3x = 60 → x = 20 ✓\n\n**Game 3: Unitary Method Speed Challenge** ⏱️\nSolve fastest:\n1. 4 books cost ₹200 → 7 books cost? ______\n2. 5 kg apples cost ₹150 → 3 kg cost? ______\n3. 8 m cloth costs ₹400 → 1 m costs? ______ → 5 m costs? ______"
+    }
+  ]
+}

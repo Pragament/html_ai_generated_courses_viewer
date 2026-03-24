@@ -1,0 +1,13 @@
+{
+  "id": "ratio-games",
+  "title": "Ratio Games & Challenges! 🎮",
+  "practice-quiz": true,
+  "description": "Test your ratio skills with fun games and challenges!",
+  "subtopics": [
+    {
+      "id": "ratio-games",
+      "title": "Ratio Games Bonanza! 🎪",
+      "content": "**Game 1: Ratio Simplification Championship**\nRace to simplify:\n1. 24:36 = ______:______\n2. 45:60 = ______:______\n3. 18:42 = ______:______\n4. 56:84 = ______:______\n\n**Game 2: Unit Conversion Challenge**\nConvert to same unit, then simplify:\n1. 2 hours : 45 minutes = ______ min : ______ min = ______:______\n2. 3 km : 500 m = ______ m : ______ m = ______:______\n3. ₹5 : 200 paise = ______ paise : ______ paise = ______:______\n\n**Game 3: Equivalent Ratio Generator**\nStarting ratio: 3:5\nGenerate 5 equivalent ratios:\n1. ______:______ (×2)\n2. ______:______ (×3)\n3. ______:______ (×10)\n4. ______:______ (×0.5)\n5. ______:______ (×1/3)"
+    }
+  ]
+}

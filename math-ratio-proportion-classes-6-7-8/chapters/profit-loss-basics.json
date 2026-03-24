@@ -1,0 +1,13 @@
+{
+  "id": "profit-loss-basics",
+  "title": "Profit & Loss Basics 💼",
+  "practice-quiz": true,
+  "description": "Learn the fundamentals of profit and loss in business!",
+  "subtopics": [
+    {
+      "id": "profit-loss-basics",
+      "title": "Profit & Loss: Business Magic! 🎩",
+      "content": "**Simple Explanation:** Business is about buying low, selling high! Profit = Happy 😊, Loss = Sad 😢\n\n**Memory Aid:** \"**P**rofit = **P**ositive cash, **L**oss = **L**ess cash!\" 💰\n\n## Key Players in Business Game:\n\n1. **Cost Price (CP):** What YOU pay to buy/make product\n   - Think: Your investment\n   \n2. **Selling Price (SP):** What CUSTOMER pays you\n   - Think: Your income\n   \n3. **Profit (Gain):** When SP > CP\n   Formula: Profit = SP - CP\n   \n4. **Loss:** When CP > SP\n   Formula: Loss = CP - SP\n\n**Visual Prompt:** \"The Business Balance Scale\" ⚖️\n```\nLeft Pan (CP): What you spent\nRight Pan (SP): What you earned\n\nIf Right heavier → PROFIT! 📈\nIf Left heavier → LOSS! 📉\nIf balanced → No profit, no loss\n```"
+    }
+  ]
+}

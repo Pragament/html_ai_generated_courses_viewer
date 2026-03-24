@@ -1,19 +1,9 @@
 {
-  "id": "proportions-fundamentals",
-  "title": "Proportions: When Ratios Are Equal! ⚖️",
+  "id": "proportion-methods",
+  "title": "Proportion Methods & Types 🔧",
   "practice-quiz": true,
-  "description": "Discover the magic of proportions! Learn when ratios are equal, how to check them, and the powerful unitary method.",
+  "description": "Learn about types of proportion and master the unitary method!",
   "subtopics": [
-    {
-      "id": "proportion-definition",
-      "title": "Proportion: Equal Ratio Twins! 👯",
-      "content": "**Simple Explanation:** Proportion tells us two ratios are EQUAL - they have the same relationship value!\n\n**Memory Aid:** \"**P**roportion = **P**aired ratios that are **P**erfectly equal!\" ✅\n\n**Deep Dive:** Consider two paint mixtures:\nMixture A: 2 cups red + 3 cups white = pink\nMixture B: 4 cups red + 6 cups white = same pink!\nWhy? Because 2:3 = 4:6 (both simplify to 2:3)\nThey're proportional! 🎨\n\n**Visual Prompt:** \"The Proportion Balance Scale\" ⚖️\n```\nLeft Pan:  3 apples : 4 oranges\nRight Pan: 9 apples : 12 oranges\n\nWeigh relationship, not weight!\n3/4 = 0.75  and  9/12 = 0.75\nBalanced! Proportional! ✅\n```\n\n**Real-World Applications:**\n- Map scales\n- Recipe scaling\n- Blueprint scaling"
-    },
-    {
-      "id": "checking-proportion",
-      "title": "Cross-Multiplication Test! ✖️",
-      "content": "**Method:** For a:b = c:d\nIf a × d = b × c, they're proportional!\n\n**Example:** Is 3:4 = 9:12 proportional?\n3 × 12 = 36\n4 × 9 = 36\nEqual! So YES proportional! ✓\n\n**Step-by-Step Guide:**\n1. Write ratios as fractions: 3/4 and 9/12\n2. Cross multiply: 3×12 and 4×9\n3. Compare products: 36 = 36\n4. Conclusion: Proportional!\n\n**Practice Problems:**\n1. Check if 2:5 = 6:15\n2. Check if 4:7 = 12:21\n3. Check if 5:8 = 15:25\n\n**Why it works:** Cross-multiplication checks if the two fractions are equivalent!"
-    },
     {
       "id": "types-proportion",
       "title": "Types of Proportion",

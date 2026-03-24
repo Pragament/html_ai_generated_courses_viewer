@@ -1,0 +1,18 @@
+{
+  "id": "ratio-basics",
+  "title": "What is a Ratio? 📊",
+  "practice-quiz": true,
+  "description": "Begin your ratio adventure! Learn what ratios are and the different ways to write them.",
+  "subtopics": [
+    {
+      "id": "ratio-definition",
+      "title": "Ratio: The Comparison Language! 🗣️",
+      "content": "**Simple Explanation:** A ratio is a special way to COMPARE two quantities - showing how much of one thing there is compared to another!\n\n**Memory Aid:** \"**R**atio **R**eveals **R**elative amounts!\" 📊\n\n**Deep Dive Story:** Imagine you're organizing a class picnic:\n- You have 12 apples 🍎 and 8 oranges 🍊\n- Ratio of apples to oranges = 12:8\n- But let's make it simpler! Divide both by 4\n- Simplified ratio = 3:2\n- Meaning: For every 3 apples, there are 2 oranges!\n\n**Real-World Connection:**\n- Recipes: Flour:Sugar ratio in cakes 🎂\n- Maps: 1 cm represents 5 km 🗺️\n- Sports: Win:Loss ratio of teams 🏏\n- Art: Color mixing ratios 🎨"
+    },
+    {
+      "id": "ratio-notation",
+      "title": "Three Ways to Write Ratios",
+      "content": "## Three Notation Styles:\n1. **Colon Form:** 3:2 (most common)\n2. **Word Form:** \"3 to 2\"\n3. **Fraction Form:** 3/2\n\n**Visual Prompt:** \"The Ratio Rainbow Bridge\" 🌈\n```\nApples: 🍎🍎🍎🍎🍎🍎 (6)\nOranges: 🍊🍊🍊🍊 (4)\nDraw rainbow connecting:\n6 apples ←🌈→ 4 oranges\nSimplified: 3 apples ←🌈→ 2 oranges\nEach color connects equal value!\n```\n\n**Think About It:** 🤔\n- Which notation do you find easiest?\n- When might you use word form instead of colon form?\n- How is the fraction form different from regular fractions?"
+    }
+  ]
+}

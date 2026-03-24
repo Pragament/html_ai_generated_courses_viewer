@@ -1,0 +1,13 @@
+{
+  "id": "percentage-calculations",
+  "title": "Working with Percentages 📈",
+  "practice-quiz": true,
+  "description": "Learn to calculate percentages of quantities with mental math tricks!",
+  "subtopics": [
+    {
+      "id": "percentage-calculations",
+      "title": "Finding Percentage of a Quantity",
+      "content": "**Three Methods to Calculate Percentages:**\n\n**Method 1: Using Fractions**\nFind 25% of 80:\n25% = 1/4\n1/4 of 80 = 80 ÷ 4 = 20 ✓\n\n**Method 2: Using Decimals**\nFind 25% of 80:\n25% = 0.25\n0.25 × 80 = 20 ✓\n\n**Method 3: Using Proportion**\nFind 25% of 80:\n25/100 = x/80\nCross multiply: 100x = 2000 → x = 20 ✓\n\n**Mental Math Tricks:**\n- 10% of any number = Move decimal left 1 place\n  Example: 10% of ₹250 = ₹25\n- 5% = Half of 10%\n  Example: 5% of ₹250 = ₹12.50\n- 1% = Move decimal left 2 places\n  Example: 1% of ₹250 = ₹2.50\n\n**Interactive Activity:** \"Percentage of the Day\"\nDaily challenge: Find percentages of:\n- 10% of your class strength\n- 25% of pages in your notebook\n- 50% of hours in a day\n- 75% of ₹1000"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "ratio-simplifying",
+  "title": "Simplifying Ratios 👯",
+  "practice-quiz": true,
+  "description": "Master equivalent ratios and learn to simplify ratios like a pro!",
+  "subtopics": [
+    {
+      "id": "equivalent-ratios",
+      "title": "Equivalent Ratios: Same Meaning, Different Looks!",
+      "content": "**Simple Explanation:** Different ratios that mean the SAME thing - like different outfits on the same person!\n\n**Example:** 2:4, 1:2, 3:6, 50:100\nALL mean \"for every 1 of the first, there are 2 of the second\"\n\n**Interactive Activity:** \"Equivalent Ratio Treasure Hunt\"\nFind all equivalent ratios to 2:3:\n- Multiply both by 2: 4:6\n- Multiply by 3: 6:9\n- Multiply by 10: 20:30\n\n**Pattern Discovery:**\nThe pattern is: 2n : 3n (where n is any number!)\n\n**Quick Check:**\nAre these ratios equivalent to 2:3?\n- 4:6 ✓ (multiplied by 2)\n- 8:12 ✓ (multiplied by 4)\n- 1:1.5 ✓ (divided by 2)\n- 10:20 ✗ (this would be 1:2)"
+    },
+    {
+      "id": "simplifying-ratios",
+      "title": "Simplifying Ratios: Making Them Friendlier! 🤗",
+      "content": "**Step-by-Step Method:**\n1. Write the ratio (e.g., 18:24)\n2. Find the HCF of both numbers (HCF of 18 & 24 = 6)\n3. Divide both by HCF: 18÷6 : 24÷6 = 3:4\n4. Check: Can it be simplified more? No!\n\n**Common Mistakes Alert:** ⚠️\n1. **Unit Mix-Up:** Don't mix units! \n   Example: 2 hours : 30 minutes → Convert to same unit first! (120 min : 30 min = 4:1)\n2. **Order Matters:** Always write in same order asked!\n3. **Forgetting to Check:** Always check if you can simplify further!\n\n**Practice Examples:**\n1. 24:36 = ? (HCF = 12) → 2:3\n2. 45:60 = ? (HCF = 15) → 3:4\n3. 14:21 = ? (HCF = 7) → 2:3"
+    }
+  ]
+}

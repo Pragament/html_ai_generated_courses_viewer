@@ -1,0 +1,13 @@
+{
+  "id": "proportion-patterns",
+  "title": "Real-World Proportion Patterns 🌍",
+  "practice-quiz": true,
+  "description": "Discover proportion patterns in everyday life!",
+  "subtopics": [
+    {
+      "id": "proportion-patterns",
+      "title": "Finding Proportion Patterns Everywhere",
+      "content": "**Direct Proportion Examples:**\n1. Cost ∝ Number of items (More items, more cost)\n2. Distance ∝ Time at constant speed\n3. Work done ∝ Number of workers\n4. Food needed ∝ Number of people\n\n**Inverse Proportion Examples:**\n1. Speed ∝ 1/Time for fixed distance\n2. Workers ∝ 1/Days for fixed work\n3. Price ∝ 1/Quantity for fixed budget\n4. Focal length ∝ 1/Magnification in lenses\n\n**Think About It:** 🤔\n- Can something be both direct and inverse?\n- What if y/x is constant but negative?\n- Real example of neither direct nor inverse?\n\n**Real-World Applications:**\n- Physics relationships (Ohm's law, Boyle's law) ⚡\n- Economics (supply-demand) 📈\n- Engineering design ⚙️\n- Cooking adjustments 👨‍🍳"
+    }
+  ]
+}

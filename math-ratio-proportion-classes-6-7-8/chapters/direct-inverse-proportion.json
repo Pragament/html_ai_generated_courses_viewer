@@ -1,0 +1,18 @@
+{
+  "id": "direct-inverse-proportion",
+  "title": "Direct & Inverse Proportion 🤝↔️",
+  "practice-quiz": true,
+  "description": "Master direct and inverse proportion relationships!",
+  "subtopics": [
+    {
+      "id": "direct-proportion",
+      "title": "Direct Proportion: Together Relationship! 🤝",
+      "content": "**Simple Explanation:** Two quantities are directly proportional if when one increases, the other increases at the SAME RATE!\n\n**Memory Aid:** \"**D**irect = **D**ouble one, **D**ouble the other!\" ✌️\n\n**Deep Dive Characteristics:**\n1. **Graph:** Straight line through origin\n2. **Equation:** y = kx (where k is constant)\n3. **Ratio:** y/x = constant (k)\n4. **If x doubles, y doubles. If x triples, y triples.**\n\n**Visual Prompt:** \"The Direct Proportion Dance Partners\" 💃🕺\n```\nWhen Food ↑, Happiness ↑\nWhen Study time ↑, Marks ↑\nWhen Practice ↑, Skill ↑\nThey dance together, hand in hand!\nBoth move same direction! ↗️↗️\n```\n\n**Mathematical Test:** For direct proportion between x and y:\ny/x should be constant for all pairs!\n\n**Example:**\nx: 2, 4, 6, 8\ny: 10, 20, 30, 40\ny/x: 5, 5, 5, 5 ✓ CONSTANT! Direct proportion!"
+    },
+    {
+      "id": "inverse-proportion",
+      "title": "Inverse Proportion: Opposite Relationship! ↔️",
+      "content": "**Simple Explanation:** Two quantities are inversely proportional if when one increases, the other DECREASES!\n\n**Memory Aid:** \"**I**nverse = **I**ncrease one, **I**nvert the other!\" 🔄\n\n**Deep Dive Characteristics:**\n1. **Graph:** Curve (hyperbola)\n2. **Equation:** xy = k (where k is constant)\n3. **Product:** x × y = constant (k)\n4. **If x doubles, y halves. If x triples, y becomes one-third.**\n\n**Visual Prompt:** \"The Inverse Proportion See-Saw\" ⚖️\n```\nWhen Speed ↑, Time ↓ (for same distance)\nWhen Workers ↑, Days ↓ (for same work)\nWhen Pressure ↑, Volume ↓ (gas law)\nThey're on see-saw: one up, one down! ⬆️⬇️\n```\n\n**Mathematical Test:** For inverse proportion between x and y:\nx × y should be constant for all pairs!\n\n**Example:**\nx: 2, 4, 6, 8\ny: 24, 12, 8, 6\nx×y: 48, 48, 48, 48 ✓ CONSTANT! Inverse proportion!"
+    }
+  ]
+}

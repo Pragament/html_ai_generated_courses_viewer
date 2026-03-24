@@ -1,0 +1,13 @@
+{
+  "id": "profit-loss-advanced",
+  "title": "Percentage Profit & Loss 📊",
+  "practice-quiz": true,
+  "description": "Learn to calculate profit and loss as percentages for true business analysis!",
+  "subtopics": [
+    {
+      "id": "percentage-profit-loss",
+      "title": "Percentage Profit/Loss: True Measure! 📈",
+      "content": "**Why Percentage?** ₹100 profit on ₹1000 item is different from ₹100 profit on ₹100 item!\n\n**Formulas:**\n- Profit % = (Profit / CP) × 100\n- Loss % = (Loss / CP) × 100\n\n**Example Deep Dive:**\nYou buy toy for ₹200 (CP)\nSell for ₹250 (SP)\nProfit = ₹50\nProfit % = (50/200)×100 = 25%\n\nBUT if bought for ₹400, sold for ₹450:\nSame ₹50 profit, but Profit % = (50/400)×100 = 12.5%\nSee difference? Percentage tells true story!\n\n**Think About It:** 🤔\n- Can profit % be more than 100%?\n- What if selling price equals cost price?\n- Why use percentage instead of just rupees?"
+    }
+  ]
+}
