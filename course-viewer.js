@@ -2056,6 +2056,9 @@ ${content.substring(0, 2000)}`;
         
         if (!userAnswer) return false;
         
+        // Get the correct answer for this question
+        const correctAnswer = this.currentQuizQuestions[index]?.answer || '';
+        
         // Clear active question
         this.activeQuizQuestion = null;
         this.activeQuizIndex = null;
@@ -2071,12 +2074,14 @@ ${content.substring(0, 2000)}`;
         this.addMessage('ai', 'Evaluating your answer...');
         
         try {
-            const systemPrompt = `You are a quiz assistant.
+            const systemPrompt = `You are a quiz assistant evaluating answers.
 
 Rules:
-- Use ONLY the given context.
-- Ask ONE simple factual question.
-- Evaluate user's answer strictly based on provided context.
+- Compare user answer with the correct answer provided.
+- Evaluation criteria:
+  * Correct: User answer matches key points of correct answer
+  * Partial: User answer has some correct elements but incomplete
+  * Incorrect: User answer is wrong or unrelated
 
 Response format (ONE LINE ONLY):
 Evaluation: <Correct/Partial/Incorrect> | Correct Answer: <short answer>
@@ -2085,10 +2090,15 @@ Constraints:
 - No extra text.
 - No explanations.
 - No multiple sentences.
-- If answer not in context: say "Not found".
 - Keep everything short and exact.`;
 
-            const userPrompt = `Context:\n${this.currentQuizContext.substring(0, 2000)}\n\nQuestion: ${question}\n\nUser Answer: ${userAnswer}\n\nEvaluate the answer based ONLY on the context provided. Follow the system prompt format exactly.`;
+            const userPrompt = `Question: ${question}
+
+Correct Answer: ${correctAnswer}
+
+User Answer: ${userAnswer}
+
+Evaluate the user's answer against the correct answer. Follow the system prompt format exactly.`;
 
             const messages = [
                 { role: 'system', content: systemPrompt },
@@ -2100,6 +2110,7 @@ Constraints:
                 temperature: 0.3,
                 max_tokens: 200
             });
+            console.log(reply)
 
             const evaluation = reply.choices[0].message.content.trim();
             
