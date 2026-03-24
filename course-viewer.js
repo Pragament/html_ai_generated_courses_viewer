@@ -1163,11 +1163,15 @@ class AIChatPanel {
         // New elements for model selection
         this.modelSelect = document.getElementById('aiModelSelect');
         this.loadBtn = document.getElementById('aiLoadModel');
+        this.deleteBtn = document.getElementById('aiDeleteModel');
         this.progressContainer = document.getElementById('aiProgressContainer');
         this.progressFill = document.getElementById('aiProgressFill');
         this.progressText = document.getElementById('aiProgressText');
         this.quickActions = document.getElementById('aiQuickActions');
         this.chatInputArea = document.getElementById('aiChatInputArea');
+        
+        // Model cache status
+        this.modelCacheStatus = {};
         
         // Quiz mode elements
         this.quizContainer = document.getElementById('aiChatQuiz');
@@ -1214,6 +1218,19 @@ class AIChatPanel {
 
         // Load model button
         this.loadBtn.addEventListener('click', () => this.loadModel());
+
+        // Delete model button
+        if (this.deleteBtn) {
+            this.deleteBtn.addEventListener('click', () => this.deleteModel());
+        }
+
+        // Model selection change
+        if (this.modelSelect) {
+            this.modelSelect.addEventListener('change', () => this.updateDeleteButtonVisibility());
+        }
+
+        // Check model cache status on init
+        this.checkModelCacheStatus();
 
         // Send message
         this.sendBtn.addEventListener('click', () => this.sendMessage());
@@ -1425,6 +1442,114 @@ Try:
         this.progressContainer.classList.remove('active');
         this.loadBtn.disabled = false;
         this.modelSelect.disabled = false;
+    }
+
+    async checkModelCacheStatus() {
+        try {
+            const cacheNames = await caches.keys();
+            const modelCacheNames = cacheNames.filter(name => name.includes('webllm') || name.includes('mlc'));
+            
+            for (const option of this.modelSelect.options) {
+                const modelId = option.value;
+                let isDownloaded = false;
+                
+                for (const cacheName of modelCacheNames) {
+                    const cache = await caches.open(cacheName);
+                    const requests = await cache.keys();
+                    if (requests.some(req => req.url.includes(modelId))) {
+                        isDownloaded = true;
+                        break;
+                    }
+                }
+                
+                this.modelCacheStatus[modelId] = isDownloaded;
+                this.updateDropdownOption(option, isDownloaded);
+            }
+            
+            this.updateDeleteButtonVisibility();
+        } catch (error) {
+            console.error('Error checking model cache status:', error);
+        }
+    }
+
+    updateDropdownOption(option, isDownloaded) {
+        const baseText = option.textContent.replace(/^[✓↓]\s*/, '');
+        const size = option.dataset.size || '';
+        const sizeText = size ? ` (~${size}MB)` : '';
+        
+        if (isDownloaded) {
+            option.textContent = `✓ ${baseText}${sizeText}`;
+            option.style.color = '#28a745';
+        } else {
+            option.textContent = `↓ ${baseText}${sizeText}`;
+            option.style.color = '#666';
+        }
+    }
+
+    updateDeleteButtonVisibility() {
+        if (!this.deleteBtn) return;
+        
+        const selectedModel = this.modelSelect.value;
+        const isDownloaded = this.modelCacheStatus[selectedModel];
+        
+        if (isDownloaded) {
+            this.deleteBtn.style.display = 'flex';
+            this.deleteBtn.title = `Delete ${selectedModel} to free space`;
+        } else {
+            this.deleteBtn.style.display = 'none';
+        }
+    }
+
+    async deleteModel() {
+        const modelId = this.modelSelect.value;
+        
+        if (!confirm(`Are you sure you want to delete ${modelId}? This will free up storage space.`)) {
+            return;
+        }
+        
+        this.deleteBtn.disabled = true;
+        this.deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        try {
+            const cacheNames = await caches.keys();
+            const modelCacheNames = cacheNames.filter(name => name.includes('webllm') || name.includes('mlc'));
+            
+            let deletedCount = 0;
+            for (const cacheName of modelCacheNames) {
+                const cache = await caches.open(cacheName);
+                const requests = await cache.keys();
+                
+                for (const request of requests) {
+                    if (request.url.includes(modelId)) {
+                        await cache.delete(request);
+                        deletedCount++;
+                    }
+                }
+            }
+            
+            this.modelCacheStatus[modelId] = false;
+            this.updateDropdownOption(this.modelSelect.options[this.modelSelect.selectedIndex], false);
+            this.updateDeleteButtonVisibility();
+            
+            this.addMessage('ai', `✅ ${modelId} has been deleted. ${deletedCount} cache entries removed. You can re-download it anytime.`);
+            
+            if (this.isReady && this.engine) {
+                this.isReady = false;
+                this.engine = null;
+                this.inputEl.disabled = true;
+                this.sendBtn.disabled = true;
+                this.quickActions.style.display = 'none';
+                this.chatInputArea.style.display = 'none';
+                this.updateStatus('ready', 'Model deleted. Load a model to continue.');
+            }
+            
+        } catch (error) {
+            console.error('Error deleting model:', error);
+            this.addMessage('ai', `❌ Error deleting model: ${error.message}`);
+        } finally {
+            this.deleteBtn.disabled = false;
+            this.deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        }
     }
 
     updateStatus(state, text) {
