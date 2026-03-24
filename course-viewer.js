@@ -1341,7 +1341,7 @@ class AIChatPanel {
 
             // Get current page content for context
             const pageContent = this.getCurrentPageContent();
-            const contextSection = pageContent ? `\n\nCurrent course content context:\n${pageContent.substring(0, 6000)}` : '';
+            const contextSection = pageContent ? `\n\nCurrent course content context:\n${pageContent.substring(0, 2000)}` : '';
 
             // Set up chat with system prompt for educational context
             this.messages = [
@@ -1579,7 +1579,7 @@ Try:
         let fullPrompt = prompt;
         
         if (content && prompt.includes('this chapter') || prompt.includes('this topic') || prompt.includes('this concept')) {
-            fullPrompt = `${prompt}\n\nContext:\n${content.substring(0, 6000)}`;
+            fullPrompt = `${prompt}\n\nContext:\n${content.substring(0, 2000)}`;
         }
 
         this.addMessage('user', prompt);
@@ -1618,7 +1618,7 @@ Try:
         const grammarPrompt = `Check the user text only for spoken English grammar. Ignore capitalization, punctuation, and formatting issues. Treat it as spoken English practice. Reply Corrected spoken-English version of the user text. 3. Short explanation of the spoken grammar mistakes.\n\nUser text: "${text}"`;
         console.log(grammarPrompt)
         if (content) {
-            prompt += `\n\nContext from current course page:\n${content.substring(0, 6000)}\n\nPlease answer based on the course context above.`;
+            prompt += `\n\nContext from current course page:\n${content.substring(0, 2000)}\n\nPlease answer based on the course context above.`;
         }
 
         await this.generateResponse(prompt);
@@ -1768,7 +1768,7 @@ A: <answer>
 For each question-answer pair, provide a concise 1-2 sentence answer based ONLY on the context.
 
 Context:
-${content.substring(0, 6000)}`;
+${content.substring(0, 2000)}`;
 
             const response = await this.generateQuizResponse(prompt);
             
@@ -1962,7 +1962,7 @@ Constraints:
 - If answer not in context: say "Not found".
 - Keep everything short and exact.`;
 
-            const userPrompt = `Context:\n${this.currentQuizContext.substring(0, 6000)}\n\nQuestion: ${question}\n\nUser Answer: ${userAnswer}\n\nEvaluate the answer based ONLY on the context provided. Follow the system prompt format exactly.`;
+            const userPrompt = `Context:\n${this.currentQuizContext.substring(0, 2000)}\n\nQuestion: ${question}\n\nUser Answer: ${userAnswer}\n\nEvaluate the answer based ONLY on the context provided. Follow the system prompt format exactly.`;
 
             const messages = [
                 { role: 'system', content: systemPrompt },
