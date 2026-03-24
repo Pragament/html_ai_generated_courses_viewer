@@ -1720,13 +1720,16 @@ Try:
 
         const text = this.inputEl.value.trim();
         if (!text || this.isLoading) return;
-
+        // Rewrite prompt to include spoken English grammar check after answering
+        const grammarPrompt = `correct user text grammar and give short Summary of grammar analysis on User text: "${text}"`;
+        console.log(grammarPrompt)
         // Check if this is a quiz answer first
         if (this.activeQuizQuestion && this.activeQuizIndex !== null) {
             this.addMessage('user', text);
             this.inputEl.value = '';
             this.inputEl.style.height = 'auto';
             await this.handleQuizAnswer(text);
+            await this.generateResponse(grammarPrompt);
             return;
         }
 
@@ -1740,9 +1743,6 @@ Try:
         let prompt = text;
         const content = this.getCurrentPageContent();
         
-        // Rewrite prompt to include spoken English grammar check after answering
-        const grammarPrompt = `Check the user text only for spoken English grammar. Ignore capitalization, punctuation, and formatting issues. Treat it as spoken English practice. Reply Corrected spoken-English version of the user text. 3. Short explanation of the spoken grammar mistakes.\n\nUser text: "${text}"`;
-        console.log(grammarPrompt)
         if (content) {
             prompt += `\n\nContext from current course page:\n${content.substring(0, 2000)}\n\nPlease answer based on the course context above.`;
         }
@@ -2074,31 +2074,20 @@ ${content.substring(0, 2000)}`;
         this.addMessage('ai', 'Evaluating your answer...');
         
         try {
-            const systemPrompt = `You are a quiz assistant evaluating answers.
+            const systemPrompt = `You are a supportive AI learning assistant helping a student with quiz answers. Your goal is to provide encouraging, constructive feedback.
 
-Rules:
-- Compare user answer with the correct answer provided.
-- Evaluation criteria:
-  * Correct: User answer matches key points of correct answer
-  * Partial: User answer has some correct elements but incomplete
-  * Incorrect: User answer is wrong or unrelated
+Your response should include:
+**Content Evaluation**: Compare the user's answer to the correct answer. Be encouraging and highlight what they got right, while gently correcting any mistakes.
 
-Response format (ONE LINE ONLY):
-Evaluation: <Correct/Partial/Incorrect> | Correct Answer: <short answer>
-
-Constraints:
-- No extra text.
-- No explanations.
-- No multiple sentences.
-- Keep everything short and exact.`;
+Tone: Encouraging, supportive, educational. Never harsh or dismissive.`;
 
             const userPrompt = `Question: ${question}
 
 Correct Answer: ${correctAnswer}
 
-User Answer: ${userAnswer}
+User's Answer: ${userAnswer}
 
-Evaluate the user's answer against the correct answer. Follow the system prompt format exactly.`;
+Please provide feedback comparing their answer to the correct answer.`;
 
             const messages = [
                 { role: 'system', content: systemPrompt },
@@ -2107,43 +2096,14 @@ Evaluate the user's answer against the correct answer. Follow the system prompt 
 
             const reply = await this.engine.chat.completions.create({
                 messages: messages,
-                temperature: 0.3,
-                max_tokens: 200
+                temperature: 0.7,
+                max_tokens: 800
             });
-            console.log(reply)
 
-            const evaluation = reply.choices[0].message.content.trim();
+            const analysis = reply.choices[0].message.content.trim();
             
-            // Parse evaluation to determine styling class
-            let evaluationClass = '';
-            let icon = '';
-            if (evaluation.toLowerCase().includes('correct') && !evaluation.toLowerCase().includes('incorrect') && !evaluation.toLowerCase().includes('partial')) {
-                evaluationClass = 'correct';
-                icon = '✅';
-            } else if (evaluation.toLowerCase().includes('partial')) {
-                evaluationClass = 'partial';
-                icon = '⚠️';
-            } else {
-                evaluationClass = 'incorrect';
-                icon = '❌';
-            }
-            
-            // Add evaluation as a special message
-            const messageEl = document.createElement('div');
-            messageEl.className = 'ai-chat-message ai';
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            messageEl.innerHTML = `
-                <div class="message-bubble markdown-content">
-                    <div class="ai-quiz-evaluation ${evaluationClass}" style="margin: 0;">
-                        <strong>${icon}</strong> ${evaluation}
-                    </div>
-                </div>
-                <span class="message-time">${time}</span>
-            `;
-            
-            this.messagesEl.appendChild(messageEl);
-            this.messagesEl.scrollTop = this.messagesEl.scrollHeight;
+            // Add analysis as a regular AI message (no special parsing)
+            this.addMessage('ai', analysis);
             
             return true;
 
