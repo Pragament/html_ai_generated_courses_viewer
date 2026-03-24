@@ -1169,6 +1169,17 @@ class AIChatPanel {
         this.quickActions = document.getElementById('aiQuickActions');
         this.chatInputArea = document.getElementById('aiChatInputArea');
         
+        // Quiz mode elements
+        this.quizContainer = document.getElementById('aiChatQuiz');
+        this.quizHeader = document.getElementById('aiQuizHeader');
+        this.quizContent = document.getElementById('aiQuizContent');
+        this.quizGenerateBtn = document.getElementById('aiQuizGenerate');
+        this.quizQuestions = document.getElementById('aiQuizQuestions');
+        this.currentQuizQuestions = [];
+        this.currentQuizContext = '';
+        this.activeQuizQuestion = null;
+        this.activeQuizIndex = null;
+        
         // System prompt elements
         this.systemPromptArea = document.getElementById('aiSystemPromptArea');
         this.systemPromptContent = document.getElementById('aiSystemPromptContent');
@@ -1260,6 +1271,22 @@ class AIChatPanel {
             this.closeSystemPromptBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.hideSystemPrompt();
+            });
+        }
+
+        // Quiz mode toggle
+        if (this.quizHeader && this.quizContainer) {
+            this.quizHeader.addEventListener('click', () => {
+                this.quizContainer.classList.toggle('collapsed');
+            });
+            // Start collapsed
+            this.quizContainer.classList.add('collapsed');
+        }
+
+        // Quiz generate button
+        if (this.quizGenerateBtn) {
+            this.quizGenerateBtn.addEventListener('click', () => {
+                this.generateQuizQuestions();
             });
         }
 
@@ -1558,6 +1585,15 @@ Try:
         const text = this.inputEl.value.trim();
         if (!text || this.isLoading) return;
 
+        // Check if this is a quiz answer first
+        if (this.activeQuizQuestion && this.activeQuizIndex !== null) {
+            this.addMessage('user', text);
+            this.inputEl.value = '';
+            this.inputEl.style.height = 'auto';
+            await this.handleQuizAnswer(text);
+            return;
+        }
+
         const lastAiMessage = this.messagesEl.querySelector('.ai-chat-message.ai:last-child .message-bubble')?.textContent;
         const isGrammarCheck = lastAiMessage?.includes('grammar');
 
@@ -1568,13 +1604,16 @@ Try:
         let prompt = text;
         const content = this.getCurrentPageContent();
         
-        if (isGrammarCheck) {
-            prompt = `Please check the following text for grammar errors. If there are errors, explain what's wrong and provide the corrected version. If the grammar is correct, simply confirm that it's correct:\n\n"${text}"`;
-        } else if (content) {
-            prompt = `Context from current course page:\n${content.substring(0, 6000)}\n\nUser question: ${text}\n\nPlease answer based on the course context above.`;
+        // Rewrite prompt to include spoken English grammar check after answering
+        const grammarPrompt = `Check the user text only for spoken English grammar. Ignore capitalization, punctuation, and formatting issues. Treat it as spoken English practice. Reply Corrected spoken-English version of the user text. 3. Short explanation of the spoken grammar mistakes.\n\nUser text: "${text}"`;
+        console.log(grammarPrompt)
+        if (content) {
+            prompt += `\n\nContext from current course page:\n${content.substring(0, 6000)}\n\nPlease answer based on the course context above.`;
         }
 
         await this.generateResponse(prompt);
+
+        await this.generateResponse(grammarPrompt);
     }
 
     async generateResponse(prompt) {
@@ -1590,6 +1629,7 @@ Try:
                 temperature: 0.7,
                 max_tokens: 1000
             });
+            console.log(reply)
 
             const responseText = reply.choices[0].message.content;
             this.messages.push({ role: 'assistant', content: responseText });
@@ -1689,6 +1729,269 @@ Try:
     hideSystemPrompt() {
         if (this.systemPromptArea) {
             this.systemPromptArea.classList.add('hidden');
+        }
+    }
+
+    async generateQuizQuestions() {
+        if (!this.isReady) {
+            this.addMessage('ai', 'Please load a model first using the dropdown above.');
+            return;
+        }
+
+        const content = this.getCurrentPageContent();
+        if (!content) {
+            this.addMessage('ai', 'Please open a course chapter first so I can generate quiz questions.');
+            return;
+        }
+
+        this.currentQuizContext = content;
+        this.quizGenerateBtn.disabled = true;
+        this.quizGenerateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+        this.quizQuestions.innerHTML = '';
+
+        try {
+            // Generate questions using AI
+            const prompt = `Based on the following course content, generate 3-5 simple factual questions that test understanding. Format each question on a new line starting with "Q: ". Do not include answers or explanations, only the questions.\n\nContext:\n${content.substring(0, 6000)}`;
+
+            const response = await this.generateQuizResponse(prompt);
+            
+            // Parse questions from response
+            const lines = response.split('\n').filter(line => line.trim().startsWith('Q:') || line.trim().startsWith('Q :'));
+            this.currentQuizQuestions = lines.map(line => line.replace(/^Q\s*:\s*/, '').trim()).filter(q => q.length > 0);
+
+            if (this.currentQuizQuestions.length === 0) {
+                // Fallback: try to extract any lines that look like questions
+                this.currentQuizQuestions = response.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 10 && (line.includes('?') || line.toLowerCase().startsWith('what') || line.toLowerCase().startsWith('how') || line.toLowerCase().startsWith('why') || line.toLowerCase().startsWith('when') || line.toLowerCase().startsWith('where') || line.toLowerCase().startsWith('who') || line.toLowerCase().startsWith('which')))
+                    .slice(0, 5);
+            }
+
+            if (this.currentQuizQuestions.length === 0) {
+                this.currentQuizQuestions = ['What is the main topic of this chapter?', 'What are the key points discussed?', 'How would you summarize this content?'];
+            }
+
+            this.renderQuizQuestions();
+
+        } catch (error) {
+            console.error('Quiz generation error:', error);
+            this.addMessage('ai', 'Sorry, I encountered an error generating quiz questions. Please try again.');
+        } finally {
+            this.quizGenerateBtn.disabled = false;
+            this.quizGenerateBtn.innerHTML = '<i class="fas fa-magic"></i> Generate Quiz Questions';
+        }
+    }
+
+    async generateQuizResponse(prompt) {
+        const messages = [{ role: 'user', content: prompt }];
+        
+        const reply = await this.engine.chat.completions.create({
+            messages: messages,
+            temperature: 0.7,
+            max_tokens: 1000
+        });
+
+        return reply.choices[0].message.content;
+    }
+
+    renderQuizQuestions() {
+        this.quizQuestions.innerHTML = '';
+        
+        this.currentQuizQuestions.forEach((question, index) => {
+            const questionContainer = document.createElement('div');
+            questionContainer.className = 'ai-quiz-question-container';
+            questionContainer.style.marginBottom = '10px';
+            
+            const questionBtn = document.createElement('button');
+            questionBtn.className = 'ai-quiz-question-btn';
+            questionBtn.style.width = 'calc(100% - 80px)';
+            questionBtn.style.display = 'inline-block';
+            questionBtn.innerHTML = `<i class="fas fa-question-circle"></i> ${index + 1}. ${question}`;
+            questionBtn.onclick = () => this.selectQuizQuestion(question, index);
+            
+            const viewAnswerBtn = document.createElement('button');
+            viewAnswerBtn.className = 'ai-quiz-view-btn';
+            viewAnswerBtn.innerHTML = '<i class="fas fa-eye"></i>';
+            viewAnswerBtn.title = 'View answer';
+            viewAnswerBtn.style.width = '36px';
+            viewAnswerBtn.style.padding = '10px 8px';
+            viewAnswerBtn.style.marginLeft = '4px';
+            viewAnswerBtn.style.background = '#6c757d';
+            viewAnswerBtn.style.color = 'white';
+            viewAnswerBtn.style.border = 'none';
+            viewAnswerBtn.style.borderRadius = '6px';
+            viewAnswerBtn.style.cursor = 'pointer';
+            viewAnswerBtn.style.fontSize = '12px';
+            viewAnswerBtn.style.display = 'inline-block';
+            viewAnswerBtn.style.verticalAlign = 'top';
+            viewAnswerBtn.onclick = () => this.viewQuizAnswer(question, index);
+            
+            questionContainer.appendChild(questionBtn);
+            questionContainer.appendChild(viewAnswerBtn);
+            this.quizQuestions.appendChild(questionContainer);
+        });
+    }
+
+    async viewQuizAnswer(question, index) {
+        if (!this.isReady) return;
+        
+        this.addMessage('ai', `📖 Viewing answer for question ${index + 1}...`);
+        
+        try {
+            const prompt = `Based ONLY on the following context, provide a short, direct answer to this question. Answer in 1-2 sentences maximum.\n\nContext:\n${this.currentQuizContext.substring(0, 6000)}\n\nQuestion: ${question}\n\nProvide only the answer, no extra text.`;
+            
+            const messages = [{ role: 'user', content: prompt }];
+            
+            const reply = await this.engine.chat.completions.create({
+                messages: messages,
+                temperature: 0.3,
+                max_tokens: 200
+            });
+            
+            const answer = reply.choices[0].message.content.trim();
+            
+            const messageEl = document.createElement('div');
+            messageEl.className = 'ai-chat-message ai';
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageEl.innerHTML = `
+                <div class="message-bubble markdown-content">
+                    <div style="background: #e3f0ff; padding: 10px; border-radius: 6px; margin-bottom: 8px;">
+                        <strong>Q${index + 1}:</strong> ${question}
+                    </div>
+                    <div style="background: #d4edda; padding: 10px; border-radius: 6px; color: #155724;">
+                        <strong>✅ Answer:</strong> ${answer}
+                    </div>
+                </div>
+                <span class="message-time">${time}</span>
+            `;
+            
+            this.messagesEl.appendChild(messageEl);
+            this.messagesEl.scrollTop = this.messagesEl.scrollHeight;
+            
+        } catch (error) {
+            console.error('View answer error:', error);
+            this.addMessage('ai', '❌ Error fetching answer. Please try again.');
+        }
+    }
+
+    selectQuizQuestion(question, index) {
+        // Store the active question
+        this.activeQuizQuestion = question;
+        this.activeQuizIndex = index;
+        
+        // Highlight the selected question
+        document.querySelectorAll('.ai-quiz-question-btn').forEach((btn, i) => {
+            if (i === index) {
+                btn.style.background = '#e3f0ff';
+                btn.style.borderColor = '#5e72e4';
+            } else {
+                btn.style.background = 'white';
+                btn.style.borderColor = '#d0e0f0';
+            }
+        });
+        
+        // Focus the main chat input and set placeholder
+        this.inputEl.placeholder = `Answer: ${question}`;
+        this.inputEl.focus();
+        
+        // Show instruction in chat
+        this.addMessage('ai', `Selected question ${index + 1}: "${question}"\n\nType your answer in the chat input below and send it.`);
+    }
+
+    async handleQuizAnswer(text) {
+        if (!this.activeQuizQuestion || this.activeQuizIndex === null) return false;
+        
+        const question = this.activeQuizQuestion;
+        const index = this.activeQuizIndex;
+        const userAnswer = text.trim();
+        
+        if (!userAnswer) return false;
+        
+        // Clear active question
+        this.activeQuizQuestion = null;
+        this.activeQuizIndex = null;
+        this.inputEl.placeholder = 'Ask about the course content...';
+        
+        // Reset question button styling
+        document.querySelectorAll('.ai-quiz-question-btn').forEach(btn => {
+            btn.style.background = 'white';
+            btn.style.borderColor = '#d0e0f0';
+        });
+        
+        // Show evaluating message
+        this.addMessage('ai', 'Evaluating your answer...');
+        
+        try {
+            const systemPrompt = `You are a quiz assistant.
+
+Rules:
+- Use ONLY the given context.
+- Ask ONE simple factual question.
+- Evaluate user's answer strictly based on provided context.
+
+Response format (ONE LINE ONLY):
+Evaluation: <Correct/Partial/Incorrect> | Correct Answer: <short answer>
+
+Constraints:
+- No extra text.
+- No explanations.
+- No multiple sentences.
+- If answer not in context: say "Not found".
+- Keep everything short and exact.`;
+
+            const userPrompt = `Context:\n${this.currentQuizContext.substring(0, 6000)}\n\nQuestion: ${question}\n\nUser Answer: ${userAnswer}\n\nEvaluate the answer based ONLY on the context provided. Follow the system prompt format exactly.`;
+
+            const messages = [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userPrompt }
+            ];
+
+            const reply = await this.engine.chat.completions.create({
+                messages: messages,
+                temperature: 0.3,
+                max_tokens: 200
+            });
+
+            const evaluation = reply.choices[0].message.content.trim();
+            
+            // Parse evaluation to determine styling class
+            let evaluationClass = '';
+            let icon = '';
+            if (evaluation.toLowerCase().includes('correct') && !evaluation.toLowerCase().includes('incorrect') && !evaluation.toLowerCase().includes('partial')) {
+                evaluationClass = 'correct';
+                icon = '✅';
+            } else if (evaluation.toLowerCase().includes('partial')) {
+                evaluationClass = 'partial';
+                icon = '⚠️';
+            } else {
+                evaluationClass = 'incorrect';
+                icon = '❌';
+            }
+            
+            // Add evaluation as a special message
+            const messageEl = document.createElement('div');
+            messageEl.className = 'ai-chat-message ai';
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageEl.innerHTML = `
+                <div class="message-bubble markdown-content">
+                    <div class="ai-quiz-evaluation ${evaluationClass}" style="margin: 0;">
+                        <strong>${icon}</strong> ${evaluation}
+                    </div>
+                </div>
+                <span class="message-time">${time}</span>
+            `;
+            
+            this.messagesEl.appendChild(messageEl);
+            this.messagesEl.scrollTop = this.messagesEl.scrollHeight;
+            
+            return true;
+
+        } catch (error) {
+            console.error('Quiz evaluation error:', error);
+            this.addMessage('ai', '❌ Error evaluating answer. Please try again.');
+            return true;
         }
     }
 }
