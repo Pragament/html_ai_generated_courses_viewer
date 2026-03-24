@@ -1289,6 +1289,17 @@
             border-color: #667eea;
         }
 
+        .ai-sample-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .ai-sample-btn:disabled:hover {
+            background: white;
+            color: #555;
+            border-color: #ddd;
+        }
+
         @media (max-width: 768px) {
             .ai-chat-container {
                 width: calc(100vw - 20px);
@@ -1412,18 +1423,18 @@
                     <div class="ai-help-section">
                         <h4><i class="fas fa-lightbulb"></i> Sample Prompts</h4>
                         <div class="ai-sample-prompts">
-                            <button class="ai-sample-btn" data-prompt="Summarize the key points of this chapter using markdown formatting with bullet points" title="Get a concise summary with formatted bullet points">Summarize this chapter</button>
-                            <button class="ai-sample-btn" data-prompt="Create 5 quiz questions based on this topic. Format output in markdown with numbered list and bold for answers" title="Generate formatted quiz questions with bold answers">Create quiz questions</button>
-                            <button class="ai-sample-btn" data-prompt="Explain this concept like I'm 10 years old using markdown with bold key terms and emojis" title="Get a simple explanation with bold terms and emojis">Explain like I'm 10</button>
-                            <button class="ai-sample-btn" data-prompt="Check my grammar and provide corrections in markdown with bold for errors and italic for corrections" title="Review grammar with formatted corrections">Check my grammar</button>
-                            <button class="ai-sample-btn" data-prompt="What are the main formulas in this chapter? List them in markdown with code blocks for equations" title="Extract formulas formatted in code blocks">Show main formulas</button>
-                            <button class="ai-sample-btn" data-prompt="Give me a real-world example of this concept using markdown with bold key points and numbered steps" title="Get practical examples with formatted steps">Real-world example</button>
-                            <button class="ai-sample-btn" data-prompt="Act as an AI writing tutor. Review my writing and provide feedback in markdown with bold for issues and bullet points for suggestions" title="Get writing feedback with formatted suggestions">AI Writing Tutor</button>
-                            <button class="ai-sample-btn" data-prompt="Create a fill in the blank worksheet with 10 sentences about this topic. Output in markdown table format with columns for Sentence and Answer" title="Generate worksheet as formatted markdown table">Fill in Blank Worksheet</button>
-                            <button class="ai-sample-btn" data-prompt="Act as a math teacher. Explain this mathematical concept with markdown code blocks for formulas and bold for key rules" title="Get math explanations with formatted formulas">Math Teacher</button>
-                            <button class="ai-sample-btn" data-prompt="Act as an educational content creator. Create engaging content in markdown with headers, bold key terms, and bullet points" title="Generate educational content with rich markdown formatting">Educational Content Creator</button>
-                            <button class="ai-sample-btn" data-prompt="Create a mind map or outline of this chapter using markdown headers and nested bullet points" title="Get hierarchical outline with markdown formatting">Create Mind Map/Outline</button>
-                            <button class="ai-sample-btn" data-prompt="Generate flashcards for this topic in markdown format with bold questions and blockquote for answers" title="Create formatted flashcards with bold questions and blockquote answers">Generate Flashcards</button>
+                            <button class="ai-sample-btn" data-prompt="Summarize the key points of this chapter using markdown formatting with bullet points" title="Get a concise summary with formatted bullet points" disabled>Summarize this chapter</button>
+                            <button class="ai-sample-btn" data-prompt="Create 5 quiz questions based on this topic. Format output in markdown with numbered list and bold for answers" title="Generate formatted quiz questions with bold answers" disabled>Create quiz questions</button>
+                            <button class="ai-sample-btn" data-prompt="Explain this concept like I'm 10 years old using markdown with bold key terms and emojis" title="Get a simple explanation with bold terms and emojis" disabled>Explain like I'm 10</button>
+                            <button class="ai-sample-btn" data-prompt="Check my grammar and provide corrections in markdown with bold for errors and italic for corrections" title="Review grammar with formatted corrections" disabled>Check my grammar</button>
+                            <button class="ai-sample-btn" data-prompt="What are the main formulas in this chapter? List them in markdown with code blocks for equations" title="Extract formulas formatted in code blocks" disabled>Show main formulas</button>
+                            <button class="ai-sample-btn" data-prompt="Give me a real-world example of this concept using markdown with bold key points and numbered steps" title="Get practical examples with formatted steps" disabled>Real-world example</button>
+                            <button class="ai-sample-btn" data-prompt="Act as an AI writing tutor. Review my writing and provide feedback in markdown with bold for issues and bullet points for suggestions" title="Get writing feedback with formatted suggestions" disabled>AI Writing Tutor</button>
+                            <button class="ai-sample-btn" data-prompt="Create a fill in the blank worksheet with 10 sentences about this topic. Output in markdown table format with columns for Sentence and Answer" title="Generate worksheet as formatted markdown table" disabled>Fill in Blank Worksheet</button>
+                            <button class="ai-sample-btn" data-prompt="Act as a math teacher. Explain this mathematical concept with markdown code blocks for formulas and bold for key rules" title="Get math explanations with formatted formulas" disabled>Math Teacher</button>
+                            <button class="ai-sample-btn" data-prompt="Act as an educational content creator. Create engaging content in markdown with headers, bold key terms, and bullet points" title="Generate educational content with rich markdown formatting" disabled>Educational Content Creator</button>
+                            <button class="ai-sample-btn" data-prompt="Create a mind map or outline of this chapter using markdown headers and nested bullet points" title="Get hierarchical outline with markdown formatting" disabled>Create Mind Map/Outline</button>
+                            <button class="ai-sample-btn" data-prompt="Generate flashcards for this topic in markdown format with bold questions and blockquote for answers" title="Create formatted flashcards with bold questions and blockquote answers" disabled>Generate Flashcards</button>
                         </div>
                     </div>
                     <div class="ai-help-section">
@@ -1465,7 +1476,7 @@
                     <i class="fas fa-chevron-down ai-quiz-toggle"></i>
                 </div>
                 <div class="ai-quiz-content" id="aiQuizContent">
-                    <button class="ai-quiz-generate-btn" id="aiQuizGenerate">
+                    <button class="ai-quiz-generate-btn" id="aiQuizGenerate" disabled>
                         <i class="fas fa-magic"></i> Generate Quiz Questions
                     </button>
                     <div class="ai-quiz-questions" id="aiQuizQuestions"></div>

@@ -1363,6 +1363,16 @@ class AIChatPanel {
             this.quickActions.style.display = 'flex';
             this.chatInputArea.style.display = 'block';
             
+            // Enable quiz generate button
+            if (this.quizGenerateBtn) {
+                this.quizGenerateBtn.disabled = false;
+            }
+            
+            // Enable sample prompt buttons
+            document.querySelectorAll('.ai-sample-btn').forEach(btn => {
+                btn.disabled = false;
+            });
+            
             this.addMessage('ai', 'Model loaded successfully! I can now help you with summarizing content, generating questions, explaining topics, or checking grammar.');
             
         } catch (error) {
