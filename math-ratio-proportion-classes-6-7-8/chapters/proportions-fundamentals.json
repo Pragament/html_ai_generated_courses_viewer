@@ -1,0 +1,28 @@
+{
+  "id": "proportions-fundamentals",
+  "title": "Proportions: When Ratios Are Equal! ⚖️",
+  "practice-quiz": true,
+  "description": "Discover the magic of proportions! Learn when ratios are equal, how to check them, and the powerful unitary method.",
+  "subtopics": [
+    {
+      "id": "proportion-definition",
+      "title": "Proportion: Equal Ratio Twins! 👯",
+      "content": "**Simple Explanation:** Proportion tells us two ratios are EQUAL - they have the same relationship value!\n\n**Memory Aid:** \"**P**roportion = **P**aired ratios that are **P**erfectly equal!\" ✅\n\n**Deep Dive:** Consider two paint mixtures:\nMixture A: 2 cups red + 3 cups white = pink\nMixture B: 4 cups red + 6 cups white = same pink!\nWhy? Because 2:3 = 4:6 (both simplify to 2:3)\nThey're proportional! 🎨\n\n**Visual Prompt:** \"The Proportion Balance Scale\" ⚖️\n```\nLeft Pan:  3 apples : 4 oranges\nRight Pan: 9 apples : 12 oranges\n\nWeigh relationship, not weight!\n3/4 = 0.75  and  9/12 = 0.75\nBalanced! Proportional! ✅\n```\n\n**Real-World Applications:**\n- Map scales\n- Recipe scaling\n- Blueprint scaling"
+    },
+    {
+      "id": "checking-proportion",
+      "title": "Cross-Multiplication Test! ✖️",
+      "content": "**Method:** For a:b = c:d\nIf a × d = b × c, they're proportional!\n\n**Example:** Is 3:4 = 9:12 proportional?\n3 × 12 = 36\n4 × 9 = 36\nEqual! So YES proportional! ✓\n\n**Step-by-Step Guide:**\n1. Write ratios as fractions: 3/4 and 9/12\n2. Cross multiply: 3×12 and 4×9\n3. Compare products: 36 = 36\n4. Conclusion: Proportional!\n\n**Practice Problems:**\n1. Check if 2:5 = 6:15\n2. Check if 4:7 = 12:21\n3. Check if 5:8 = 15:25\n\n**Why it works:** Cross-multiplication checks if the two fractions are equivalent!"
+    },
+    {
+      "id": "types-proportion",
+      "title": "Types of Proportion",
+      "content": "## Three Main Types:\n\n1. **Direct Proportion (Preview):** As one quantity increases, the other increases proportionally\n   - Example: More workers, more work done\n   - Formula: y = kx (where k is constant)\n\n2. **Inverse Proportion (Preview):** As one quantity increases, the other decreases proportionally\n   - Example: More workers, less time needed for same work\n   - Formula: xy = k (where k is constant)\n\n3. **Continued Proportion:** A chain of equal ratios\n   - Example: a:b = b:c = c:d\n   - Means: a/b = b/c = c/d\n\n**Think About It:** 🤔\n- Can you think of real examples of each type?\n- Why do we need different types of proportion?\n- How can you recognize each type?"
+    },
+    {
+      "id": "unitary-method",
+      "title": "Unitary Method: The Power of ONE! 1️⃣",
+      "content": "**Simple Explanation:** Find value of ONE unit first, then use it to find any number!\n\n**Memory Aid:** \"**U**nitary starts with **U**nit one, then you're done!\" 🎯\n\n**Step-by-Step Process:**\n1. Identify what's given\n2. Find value of 1 unit (divide)\n3. Multiply to find required units\n\n**Example:** 5 pencils cost ₹25\n1. Given: 5 pencils → ₹25\n2. Find 1 pencil: ₹25 ÷ 5 = ₹5\n3. Find 8 pencils: ₹5 × 8 = ₹40\n\n**Why it works:** It breaks complex problems into simple steps!\n\n**Interactive Activity:** \"Unitary Method Supermarket\" 🛒\nSet up store with price tags:\n- 3 chocolates: ₹45 → 1 chocolate = ₹15\n- 4 notebooks: ₹80 → 1 notebook = ₹20\n- 6 pens: ₹54 → 1 pen = ₹9\n\n**Think About It:** 🤔\n- Why find 1 unit first?\n- When might this method be especially useful?\n- Can we work backwards using this method?"
+    }
+  ]
+}

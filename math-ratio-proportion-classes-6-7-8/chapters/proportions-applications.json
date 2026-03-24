@@ -1,0 +1,28 @@
+{
+  "id": "proportions-applications",
+  "title": "Proportions in the Real World! 🌍",
+  "practice-quiz": true,
+  "description": "Apply your proportion knowledge to real-world scenarios, games, and direct/inverse proportion problems.",
+  "subtopics": [
+    {
+      "id": "proportion-games",
+      "title": "Proportion & Unitary Games! 🎯",
+      "content": "**Game 1: Proportion Detective Agency** 🔍\nWhich pairs are proportional? Use cross-multiplication!\n1. 2:3 and 4:6 → 2×6=12, 3×4=12 ✓ PROPORTIONAL!\n2. 5:8 and 15:24 → ______\n3. 3:7 and 9:28 → ______\n4. 4:5 and 16:20 → ______\n\n**Game 2: Missing Value Mysteries**\nFind missing numbers in proportions:\n1. 3:5 = 12:x → x = ______\n2. 7:8 = y:24 → y = ______\n3. a:9 = 4:12 → a = ______\n\n**Method:** Cross multiply!\nFor 3:5 = 12:x\n3x = 5×12 → 3x = 60 → x = 20 ✓\n\n**Game 3: Unitary Method Speed Challenge** ⏱️\nSolve fastest:\n1. 4 books cost ₹200 → 7 books cost? ______\n2. 5 kg apples cost ₹150 → 3 kg cost? ______\n3. 8 m cloth costs ₹400 → 1 m costs? ______ → 5 m costs? ______"
+    },
+    {
+      "id": "direct-proportion",
+      "title": "Direct Proportion: Together Relationship! 🤝",
+      "content": "**Simple Explanation:** Two quantities are directly proportional if when one increases, the other increases at the SAME RATE!\n\n**Memory Aid:** \"**D**irect = **D**ouble one, **D**ouble the other!\" ✌️\n\n**Deep Dive Characteristics:**\n1. **Graph:** Straight line through origin\n2. **Equation:** y = kx (where k is constant)\n3. **Ratio:** y/x = constant (k)\n4. **If x doubles, y doubles. If x triples, y triples.**\n\n**Visual Prompt:** \"The Direct Proportion Dance Partners\" 💃🕺\n```\nWhen Food ↑, Happiness ↑\nWhen Study time ↑, Marks ↑\nWhen Practice ↑, Skill ↑\nThey dance together, hand in hand!\nBoth move same direction! ↗️↗️\n```\n\n**Mathematical Test:** For direct proportion between x and y:\ny/x should be constant for all pairs!\n\n**Example:**\nx: 2, 4, 6, 8\ny: 10, 20, 30, 40\ny/x: 5, 5, 5, 5 ✓ CONSTANT! Direct proportion!"
+    },
+    {
+      "id": "inverse-proportion",
+      "title": "Inverse Proportion: Opposite Relationship! ↔️",
+      "content": "**Simple Explanation:** Two quantities are inversely proportional if when one increases, the other DECREASES!\n\n**Memory Aid:** \"**I**nverse = **I**ncrease one, **I**nvert the other!\" 🔄\n\n**Deep Dive Characteristics:**\n1. **Graph:** Curve (hyperbola)\n2. **Equation:** xy = k (where k is constant)\n3. **Product:** x × y = constant (k)\n4. **If x doubles, y halves. If x triples, y becomes one-third.**\n\n**Visual Prompt:** \"The Inverse Proportion See-Saw\" ⚖️\n```\nWhen Speed ↑, Time ↓ (for same distance)\nWhen Workers ↑, Days ↓ (for same work)\nWhen Pressure ↑, Volume ↓ (gas law)\nThey're on see-saw: one up, one down! ⬆️⬇️\n```\n\n**Mathematical Test:** For inverse proportion between x and y:\nx × y should be constant for all pairs!\n\n**Example:**\nx: 2, 4, 6, 8\ny: 24, 12, 8, 6\nx×y: 48, 48, 48, 48 ✓ CONSTANT! Inverse proportion!"
+    },
+    {
+      "id": "proportion-patterns",
+      "title": "Real-World Proportion Patterns",
+      "content": "**Direct Proportion Examples:**\n1. Cost ∝ Number of items (More items, more cost)\n2. Distance ∝ Time at constant speed\n3. Work done ∝ Number of workers\n4. Food needed ∝ Number of people\n\n**Inverse Proportion Examples:**\n1. Speed ∝ 1/Time for fixed distance\n2. Workers ∝ 1/Days for fixed work\n3. Price ∝ 1/Quantity for fixed budget\n4. Focal length ∝ 1/Magnification in lenses\n\n**Think About It:** 🤔\n- Can something be both direct and inverse?\n- What if y/x is constant but negative?\n- Real example of neither direct nor inverse?\n\n**Real-World Applications:**\n- Physics relationships (Ohm's law, Boyle's law) ⚡\n- Economics (supply-demand) 📈\n- Engineering design ⚙️\n- Cooking adjustments 👨‍🍳"
+    }
+  ]
+}

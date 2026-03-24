@@ -1,0 +1,23 @@
+{
+  "id": "ratios-practice",
+  "title": "Ratios in Action: Games & Activities! 🎮",
+  "practice-quiz": true,
+  "description": "Put your ratio skills to the test with fun games, creative activities, and real-world challenges. Learning through play!",
+  "subtopics": [
+    {
+      "id": "ratio-games",
+      "title": "Ratio Games Bonanza! 🎪",
+      "content": "**Game 1: Ratio Simplification Championship**\nRace to simplify:\n1. 24:36 = ______:______\n2. 45:60 = ______:______\n3. 18:42 = ______:______\n4. 56:84 = ______:______\n\n**Game 2: Unit Conversion Challenge**\nConvert to same unit, then simplify:\n1. 2 hours : 45 minutes = ______ min : ______ min = ______:______\n2. 3 km : 500 m = ______ m : ______ m = ______:______\n3. ₹5 : 200 paise = ______ paise : ______ paise = ______:______\n\n**Game 3: Equivalent Ratio Generator**\nStarting ratio: 3:5\nGenerate 5 equivalent ratios:\n1. ______:______ (×2)\n2. ______:______ (×3)\n3. ______:______ (×10)\n4. ______:______ (×0.5)\n5. ______:______ (×1/3)"
+    },
+    {
+      "id": "ratio-activities",
+      "title": "Creative Ratio Activities 🎨",
+      "content": "**Talk to a Friend Prompt:**\n\"Create a 'Perfect Smoothie' recipe using ratios. Your friend must guess ingredients from your ratio! Example: Banana:Berry:Yogurt = 2:3:1\" 🥤\n\n**Drawing Challenge:**\nCreate \"Ratio Monsters\":\n- Monster A: Eyes:Legs = 2:8\n- Monster B: Spots:Stripes = 3:2\n- Monster C: Horns:Tails = 1:4\nDraw them following ratios exactly!\n\n**Hands-On Experiment:** \"The Perfect Lemonade Lab\"\nTest different lemon:sugar:water ratios:\n1. 1:2:10 (too sweet?)\n2. 2:1:10 (too sour?)\n3. 1:1:8 (just right?)\nBlind taste test! Rate each! 🍋\n\n**Memory Palace Technique:**\nImagine a \"Ratio Restaurant\":\n- Entrance sign: \"Comparing Quantities\"\n- Table 1: Colon form (3:2)\n- Table 2: Word form (\"3 to 2\")\n- Table 3: Fraction form (3/2)\n- Kitchen: Simplifying station\n- Menu: Real-world examples"
+    },
+    {
+      "id": "ratio-real-world",
+      "title": "Real-World Ratio Scavenger Hunt 🔍",
+      "content": "**Game 4: Real-Life Ratio Scavenger Hunt**\nFind and photograph:\n1. A recipe with ingredient ratio 📸\n2. A map with scale ratio 🗺️\n3. Sports score showing ratio ⚽\n4. Classroom boy:girl ratio 👦👧\n\n**Real-Life Math Puzzle:**\nParty planning dilemma:\nYou have 20 cupcakes and 15 juice boxes.\nRatio of cupcakes:juice = 20:15 = 4:3\nIf 5 more friends come, maintaining 4:3 ratio:\nCupcakes needed for 25 juice boxes?\nSet up: 4/3 = x/25 → 3x = 100 → x ≈ 33.33\nNeed about 34 cupcakes!\n\n**Talk to a Friend Challenge:**\n\"Find 3 ratios in your home. Share photos and simplify them. Winner finds the most unusual ratio!\""
+    }
+  ]
+}

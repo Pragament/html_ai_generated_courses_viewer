@@ -1,0 +1,28 @@
+{
+  "id": "percentages-business-basics",
+  "title": "Percentages & Business Basics! 💼",
+  "practice-quiz": true,
+  "description": "Master percentages and discover the basics of profit and loss. Essential business math for everyday life!",
+  "subtopics": [
+    {
+      "id": "percentage-definition",
+      "title": "Percentage: Universal Comparison! 🌐",
+      "content": "**Simple Explanation:** Percentage = \"Per cent\" = \"Out of 100\" - it's like having a standard measuring cup of size 100!\n\n**Memory Aid:** \"**P**ercent = **P**arts per **P**erfect 100!\" 🎯\n\n**Deep Dive:** Why 100? Because it's easy!\n- Halves: 50%\n- Quarters: 25%, 75%\n- Tenths: 10%, 20%, 30%...\n- Everyone understands 100% = whole thing!\n\n**Visual Prompt:** \"The Percentage Grid Masterpiece\"\n```\nCreate 10×10 grid (100 squares)\n▦▦▦▦▦▦▦▦▦▦\n▦▦▦▦▦▦▦▦▦▦ (10 rows)\n...\n\nShade 25 squares = 25% = ¼\nShade 50 squares = 50% = ½\nShade 75 squares = 75% = ¾\nVISUAL MAGIC! ✨\n```\n\n**Real-World Applications:**\n- Test scores and grades 📊\n- Battery charge indicators 🔋\n- Progress bars 📈\n- Discount advertisements 🏷️"
+    },
+    {
+      "id": "percentage-conversions",
+      "title": "Fractions, Decimals, Percentages! 🔢",
+      "content": "## Three Conversion Methods:\n\n**1. Fractions ↔ Percentage:**\n- Multiply fraction by 100, add % sign\n- Example: 3/4 = 0.75 × 100 = 75%\n\n**2. Decimals ↔ Percentage:**\n- Multiply decimal by 100, add % sign\n- Example: 0.6 = 0.6 × 100 = 60%\n\n**3. Percentage ↔ Fraction/Decimal:**\n- Divide by 100, remove % sign\n- Example: 45% = 45 ÷ 100 = 0.45 or 45/100 = 9/20\n\n**Common Percentage Conversions (Memorize These!):**\n- 1/2 = 50% (Half)\n- 1/4 = 25% (Quarter)\n- 3/4 = 75% (Three-quarters)\n- 1/5 = 20%\n- 1/10 = 10%\n- 1/3 ≈ 33.33%\n- 2/3 ≈ 66.67%\n\n**Think About It:** 🤔\n- Why is 100% maximum?\n- Can percentage be more than 100%?\n- What does 0% mean?"
+    },
+    {
+      "id": "percentage-calculations",
+      "title": "Finding Percentage of Quantity",
+      "content": "**Three Methods to Calculate Percentages:**\n\n**Method 1: Using Fractions**\nFind 25% of 80:\n25% = 1/4\n1/4 of 80 = 80 ÷ 4 = 20 ✓\n\n**Method 2: Using Decimals**\nFind 25% of 80:\n25% = 0.25\n0.25 × 80 = 20 ✓\n\n**Method 3: Using Proportion**\nFind 25% of 80:\n25/100 = x/80\nCross multiply: 100x = 2000 → x = 20 ✓\n\n**Mental Math Tricks:**\n- 10% of any number = Move decimal left 1 place\n  Example: 10% of ₹250 = ₹25\n- 5% = Half of 10%\n  Example: 5% of ₹250 = ₹12.50\n- 1% = Move decimal left 2 places\n  Example: 1% of ₹250 = ₹2.50\n\n**Interactive Activity:** \"Percentage of the Day\"\nDaily challenge: Find percentages of:\n- 10% of your class strength\n- 25% of pages in your notebook\n- 50% of hours in a day\n- 75% of ₹1000"
+    },
+    {
+      "id": "profit-loss-basics",
+      "title": "Profit & Loss: Business Magic! 🎩",
+      "content": "**Simple Explanation:** Business is about buying low, selling high! Profit = Happy 😊, Loss = Sad 😢\n\n**Memory Aid:** \"**P**rofit = **P**ositive cash, **L**oss = **L**ess cash!\" 💰\n\n## Key Players in Business Game:\n\n1. **Cost Price (CP):** What YOU pay to buy/make product\n   - Think: Your investment\n   \n2. **Selling Price (SP):** What CUSTOMER pays you\n   - Think: Your income\n   \n3. **Profit (Gain):** When SP > CP\n   Formula: Profit = SP - CP\n   \n4. **Loss:** When CP > SP\n   Formula: Loss = CP - SP\n\n**Visual Prompt:** \"The Business Balance Scale\" ⚖️\n```\nLeft Pan (CP): What you spent\nRight Pan (SP): What you earned\n\nIf Right heavier → PROFIT! 📈\nIf Left heavier → LOSS! 📉\nIf balanced → No profit, no loss\n```"
+    }
+  ]
+}

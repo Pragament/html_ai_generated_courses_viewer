@@ -1,0 +1,28 @@
+{
+  "id": "ratios-fundamentals",
+  "title": "Ratios Fundamentals: Building Your Foundation! 📊",
+  "practice-quiz": true,
+  "description": "Begin your ratio adventure! Discover fundamental concepts through fun activities and real-world examples. Perfect for students starting their journey.",
+  "subtopics": [
+    {
+      "id": "ratio-definition",
+      "title": "What is a Ratio? The Comparison Language! 🗣️",
+      "content": "**Simple Explanation:** A ratio is a special way to COMPARE two quantities - showing how much of one thing there is compared to another!\n\n**Memory Aid:** \"**R**atio **R**eveals **R**elative amounts!\" 📊\n\n**Deep Dive Story:** Imagine you're organizing a class picnic:\n- You have 12 apples 🍎 and 8 oranges 🍊\n- Ratio of apples to oranges = 12:8\n- But let's make it simpler! Divide both by 4\n- Simplified ratio = 3:2\n- Meaning: For every 3 apples, there are 2 oranges!\n\n**Real-World Connection:**\n- Recipes: Flour:Sugar ratio in cakes 🎂\n- Maps: 1 cm represents 5 km 🗺️\n- Sports: Win:Loss ratio of teams 🏏\n- Art: Color mixing ratios 🎨"
+    },
+    {
+      "id": "ratio-notation",
+      "title": "Three Ways to Write Ratios",
+      "content": "## Three Notation Styles:\n1. **Colon Form:** 3:2 (most common)\n2. **Word Form:** \"3 to 2\"\n3. **Fraction Form:** 3/2\n\n**Visual Prompt:** \"The Ratio Rainbow Bridge\" 🌈\n```\nApples: 🍎🍎🍎🍎🍎🍎 (6)\nOranges: 🍊🍊🍊🍊 (4)\nDraw rainbow connecting:\n6 apples ←🌈→ 4 oranges\nSimplified: 3 apples ←🌈→ 2 oranges\nEach color connects equal value!\n```\n\n**Think About It:** 🤔\n- Which notation do you find easiest?\n- When might you use word form instead of colon form?\n- How is the fraction form different from regular fractions?"
+    },
+    {
+      "id": "equivalent-ratios",
+      "title": "Equivalent Ratios: Same Meaning, Different Looks! 👯",
+      "content": "**Simple Explanation:** Different ratios that mean the SAME thing - like different outfits on the same person!\n\n**Example:** 2:4, 1:2, 3:6, 50:100\nALL mean \"for every 1 of the first, there are 2 of the second\"\n\n**Interactive Activity:** \"Equivalent Ratio Treasure Hunt\"\nFind all equivalent ratios to 2:3:\n- Multiply both by 2: 4:6\n- Multiply by 3: 6:9\n- Multiply by 10: 20:30\n\n**Pattern Discovery:**\nThe pattern is: 2n : 3n (where n is any number!)\n\n**Quick Check:**\nAre these ratios equivalent to 2:3?\n- 4:6 ✓ (multiplied by 2)\n- 8:12 ✓ (multiplied by 4)\n- 1:1.5 ✓ (divided by 2)\n- 10:20 ✗ (this would be 1:2)"
+    },
+    {
+      "id": "simplifying-ratios",
+      "title": "Simplifying Ratios: Making Them Friendlier! 🤗",
+      "content": "**Step-by-Step Method:**\n1. Write the ratio (e.g., 18:24)\n2. Find the HCF of both numbers (HCF of 18 & 24 = 6)\n3. Divide both by HCF: 18÷6 : 24÷6 = 3:4\n4. Check: Can it be simplified more? No!\n\n**Common Mistakes Alert:** ⚠️\n1. **Unit Mix-Up:** Don't mix units! \n   Example: 2 hours : 30 minutes → Convert to same unit first! (120 min : 30 min = 4:1)\n2. **Order Matters:** Always write in same order asked!\n3. **Forgetting to Check:** Always check if you can simplify further!\n\n**Practice Examples:**\n1. 24:36 = ? (HCF = 12) → 2:3\n2. 45:60 = ? (HCF = 15) → 3:4\n3. 14:21 = ? (HCF = 7) → 2:3"
+    }
+  ]
+}

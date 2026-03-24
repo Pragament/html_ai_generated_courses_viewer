@@ -1512,6 +1512,7 @@ Try:
             const content = el.querySelector('.subtopic-content')?.textContent || '';
             return `${title}: ${content}`;
         }).join('\n\n');
+        console.log(`Chapter: ${chapterTitle}\n\n${subtopics}`);
 
         return `Chapter: ${chapterTitle}\n\n${subtopics}`;
     }
