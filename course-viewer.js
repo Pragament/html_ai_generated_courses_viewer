@@ -1760,27 +1760,60 @@ Try:
         this.quizQuestions.innerHTML = '';
 
         try {
-            // Generate questions using AI
-            const prompt = `Based on the following course content, generate 3-5 simple factual questions that test understanding. Format each question on a new line starting with "Q: ". Do not include answers or explanations, only the questions.\n\nContext:\n${content.substring(0, 6000)}`;
+            // Generate questions and answers together
+            const prompt = `Based on the following course content, generate 3-5 simple factual questions with their answers. Format exactly as:
+Q: <question>
+A: <answer>
+
+For each question-answer pair, provide a concise 1-2 sentence answer based ONLY on the context.
+
+Context:
+${content.substring(0, 6000)}`;
 
             const response = await this.generateQuizResponse(prompt);
             
-            // Parse questions from response
-            const lines = response.split('\n').filter(line => line.trim().startsWith('Q:') || line.trim().startsWith('Q :'));
-            this.currentQuizQuestions = lines.map(line => line.replace(/^Q\s*:\s*/, '').trim()).filter(q => q.length > 0);
-
-            if (this.currentQuizQuestions.length === 0) {
-                // Fallback: try to extract any lines that look like questions
-                this.currentQuizQuestions = response.split('\n')
-                    .map(line => line.trim())
-                    .filter(line => line.length > 10 && (line.includes('?') || line.toLowerCase().startsWith('what') || line.toLowerCase().startsWith('how') || line.toLowerCase().startsWith('why') || line.toLowerCase().startsWith('when') || line.toLowerCase().startsWith('where') || line.toLowerCase().startsWith('who') || line.toLowerCase().startsWith('which')))
-                    .slice(0, 5);
+            // Parse Q&A pairs from response
+            const qaPairs = [];
+            const lines = response.split('\n');
+            let currentQuestion = null;
+            
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (trimmed.startsWith('Q:') || trimmed.startsWith('Q :')) {
+                    currentQuestion = trimmed.replace(/^Q\s*:\s*/, '').trim();
+                } else if ((trimmed.startsWith('A:') || trimmed.startsWith('A :')) && currentQuestion) {
+                    const answer = trimmed.replace(/^A\s*:\s*/, '').trim();
+                    if (answer) {
+                        qaPairs.push({ question: currentQuestion, answer: answer });
+                        currentQuestion = null;
+                    }
+                }
+            }
+            
+            // Fallback: try alternate parsing if no pairs found
+            if (qaPairs.length === 0) {
+                const questionMatches = response.match(/Q[:\s]+(.+?)(?=\n|$)/gi) || [];
+                const answerMatches = response.match(/A[:\s]+(.+?)(?=\n|$)/gi) || [];
+                
+                for (let i = 0; i < questionMatches.length; i++) {
+                    const q = questionMatches[i].replace(/^Q[:\s]+/i, '').trim();
+                    const a = answerMatches[i] ? answerMatches[i].replace(/^A[:\s]+/i, '').trim() : 'Answer not found';
+                    if (q && q.length > 10) {
+                        qaPairs.push({ question: q, answer: a });
+                    }
+                }
+            }
+            
+            // Final fallback
+            if (qaPairs.length === 0) {
+                qaPairs.push(
+                    { question: 'What is the main topic of this chapter?', answer: 'Main topic based on the chapter title and introduction.' },
+                    { question: 'What are the key points discussed?', answer: 'Key points are found in the subtopics covered.' },
+                    { question: 'How would you summarize this content?', answer: 'A concise summary of the chapter material.' }
+                );
             }
 
-            if (this.currentQuizQuestions.length === 0) {
-                this.currentQuizQuestions = ['What is the main topic of this chapter?', 'What are the key points discussed?', 'How would you summarize this content?'];
-            }
-
+            this.currentQuizQuestions = qaPairs;
             this.renderQuizQuestions();
 
         } catch (error) {
@@ -1807,7 +1840,7 @@ Try:
     renderQuizQuestions() {
         this.quizQuestions.innerHTML = '';
         
-        this.currentQuizQuestions.forEach((question, index) => {
+        this.currentQuizQuestions.forEach((qaPair, index) => {
             const questionContainer = document.createElement('div');
             questionContainer.className = 'ai-quiz-question-container';
             questionContainer.style.marginBottom = '10px';
@@ -1816,8 +1849,8 @@ Try:
             questionBtn.className = 'ai-quiz-question-btn';
             questionBtn.style.width = 'calc(100% - 80px)';
             questionBtn.style.display = 'inline-block';
-            questionBtn.innerHTML = `<i class="fas fa-question-circle"></i> ${index + 1}. ${question}`;
-            questionBtn.onclick = () => this.selectQuizQuestion(question, index);
+            questionBtn.innerHTML = `<i class="fas fa-question-circle"></i> ${index + 1}. ${qaPair.question}`;
+            questionBtn.onclick = () => this.selectQuizQuestion(qaPair.question, index);
             
             const viewAnswerBtn = document.createElement('button');
             viewAnswerBtn.className = 'ai-quiz-view-btn';
@@ -1834,7 +1867,7 @@ Try:
             viewAnswerBtn.style.fontSize = '12px';
             viewAnswerBtn.style.display = 'inline-block';
             viewAnswerBtn.style.verticalAlign = 'top';
-            viewAnswerBtn.onclick = () => this.viewQuizAnswer(question, index);
+            viewAnswerBtn.onclick = () => this.viewQuizAnswer(qaPair, index);
             
             questionContainer.appendChild(questionBtn);
             questionContainer.appendChild(viewAnswerBtn);
@@ -1842,47 +1875,26 @@ Try:
         });
     }
 
-    async viewQuizAnswer(question, index) {
-        if (!this.isReady) return;
+    viewQuizAnswer(qaPair, index) {
+        // Display the pre-generated answer without calling AI
+        const messageEl = document.createElement('div');
+        messageEl.className = 'ai-chat-message ai';
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         
-        this.addMessage('ai', `📖 Viewing answer for question ${index + 1}...`);
-        
-        try {
-            const prompt = `Based ONLY on the following context, provide a short, direct answer to this question. Answer in 1-2 sentences maximum.\n\nContext:\n${this.currentQuizContext.substring(0, 6000)}\n\nQuestion: ${question}\n\nProvide only the answer, no extra text.`;
-            
-            const messages = [{ role: 'user', content: prompt }];
-            
-            const reply = await this.engine.chat.completions.create({
-                messages: messages,
-                temperature: 0.3,
-                max_tokens: 200
-            });
-            
-            const answer = reply.choices[0].message.content.trim();
-            
-            const messageEl = document.createElement('div');
-            messageEl.className = 'ai-chat-message ai';
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            messageEl.innerHTML = `
-                <div class="message-bubble markdown-content">
-                    <div style="background: #e3f0ff; padding: 10px; border-radius: 6px; margin-bottom: 8px;">
-                        <strong>Q${index + 1}:</strong> ${question}
-                    </div>
-                    <div style="background: #d4edda; padding: 10px; border-radius: 6px; color: #155724;">
-                        <strong>✅ Answer:</strong> ${answer}
-                    </div>
+        messageEl.innerHTML = `
+            <div class="message-bubble markdown-content">
+                <div style="background: #e3f0ff; padding: 10px; border-radius: 6px; margin-bottom: 8px;">
+                    <strong>Q${index + 1}:</strong> ${qaPair.question}
                 </div>
-                <span class="message-time">${time}</span>
-            `;
-            
-            this.messagesEl.appendChild(messageEl);
-            this.messagesEl.scrollTop = this.messagesEl.scrollHeight;
-            
-        } catch (error) {
-            console.error('View answer error:', error);
-            this.addMessage('ai', '❌ Error fetching answer. Please try again.');
-        }
+                <div style="background: #d4edda; padding: 10px; border-radius: 6px; color: #155724;">
+                    <strong>✅ Answer:</strong> ${qaPair.answer}
+                </div>
+            </div>
+            <span class="message-time">${time}</span>
+        `;
+        
+        this.messagesEl.appendChild(messageEl);
+        this.messagesEl.scrollTop = this.messagesEl.scrollHeight;
     }
 
     selectQuizQuestion(question, index) {
