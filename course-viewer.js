@@ -1264,6 +1264,15 @@ class AIChatPanel {
             });
         }
 
+        // Fullscreen toggle button
+        const fullscreenBtn = document.getElementById('aiChatFullscreen');
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleFullscreen();
+            });
+        }
+
         // Help section toggle
         const helpHeader = document.getElementById('aiHelpHeader');
         const helpContainer = document.getElementById('aiChatHelp');
@@ -1555,6 +1564,23 @@ Try:
     updateStatus(state, text) {
         this.statusText.textContent = text;
         this.statusIndicator.className = 'status-indicator ' + state;
+    }
+
+    toggleFullscreen() {
+        const isFullscreen = this.container.classList.toggle('fullscreen');
+        const fullscreenBtn = document.getElementById('aiChatFullscreen');
+        
+        if (fullscreenBtn) {
+            fullscreenBtn.innerHTML = isFullscreen ? '<i class="fas fa-compress"></i>' : '<i class="fas fa-expand"></i>';
+            fullscreenBtn.title = isFullscreen ? 'Exit fullscreen' : 'Toggle fullscreen';
+        }
+        
+        // Save preference
+        try {
+            localStorage.setItem('aiChatFullscreen', isFullscreen ? 'true' : 'false');
+        } catch (e) {
+            console.log('Could not save fullscreen preference');
+        }
     }
 
     togglePosition() {
