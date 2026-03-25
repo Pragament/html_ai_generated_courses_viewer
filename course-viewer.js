@@ -1721,35 +1721,109 @@ Try:
         const text = this.inputEl.value.trim();
         if (!text || this.isLoading) return;
         // Rewrite prompt to include spoken English grammar check after answering
-        const grammarPrompt = `correct user text grammar and give short Summary of grammar analysis on User text: "${text}"`;
-        console.log(grammarPrompt)
-        // Check if this is a quiz answer first
-        if (this.activeQuizQuestion && this.activeQuizIndex !== null) {
-            this.addMessage('user', text);
-            this.inputEl.value = '';
-            this.inputEl.style.height = 'auto';
-            await this.handleQuizAnswer(text);
-            await this.generateResponse(grammarPrompt);
-            return;
-        }
-
-        const lastAiMessage = this.messagesEl.querySelector('.ai-chat-message.ai:last-child .message-bubble')?.textContent;
-        const isGrammarCheck = lastAiMessage?.includes('grammar');
-
         this.addMessage('user', text);
         this.inputEl.value = '';
         this.inputEl.style.height = 'auto';
-
+        
+        // Check if this is a quiz answer first
+        const wasQuizAnswer = await this.handleQuizAnswer(text);
+        if (wasQuizAnswer) {
+            const grammarPrompt = `short Summary of grammar analysis on User text: "${text}"`;
+            await this.generateGrammarResponse(grammarPrompt);
+            return;
+        }
+        
+        // Regular message - generate response with context
         let prompt = text;
         const content = this.getCurrentPageContent();
-        
         if (content) {
             prompt += `\n\nContext from current course page:\n${content.substring(0, 2000)}\n\nPlease answer based on the course context above.`;
         }
-
+        
         await this.generateResponse(prompt);
 
-        await this.generateResponse(grammarPrompt);
+        const grammarPrompt = `short Summary of grammar analysis on User text: "${text}"`;
+        await this.generateGrammarResponse(grammarPrompt);
+    }
+
+    async generateGrammarResponse(prompt) {
+        this.isLoading = true;
+        this.showTyping();
+        this.sendBtn.disabled = true;
+
+        try {
+            this.messages.push({ role: 'user', content: prompt });
+
+            const reply = await this.engine.chat.completions.create({
+                messages: this.messages,
+                temperature: 0.7,
+                max_tokens: 1000
+            });
+
+            const responseText = reply.choices[0].message.content;
+            this.messages.push({ role: 'assistant', content: responseText });
+            
+            if (this.messages.length > 12) {
+                this.messages = [this.messages[0], ...this.messages.slice(-11)];
+            }
+
+            this.hideTyping();
+            
+            // Show trimmed grammar response with expand button
+            this.addTrimmedGrammarMessage(responseText);
+        } catch (error) {
+            console.error('AI grammar response error:', error);
+            this.hideTyping();
+            this.addMessage('ai', 'Sorry, I encountered an error analyzing grammar. Please try again.');
+        } finally {
+            this.isLoading = false;
+            this.sendBtn.disabled = false;
+        }
+    }
+
+    addTrimmedGrammarMessage(text) {
+        const messageEl = document.createElement('div');
+        messageEl.className = 'ai-chat-message ai';
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        // Render markdown
+        let content;
+        if (typeof marked !== 'undefined') {
+            content = marked.parse(text);
+        } else {
+            content = this.escapeHtml(text);
+        }
+        
+        // Create summary (first 150 chars or first sentence)
+        const plainText = text.replace(/<[^>]*>/g, '');
+        const summary = plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
+        let summaryContent;
+        if (typeof marked !== 'undefined') {
+            summaryContent = marked.parse(summary);
+        } else {
+            summaryContent = this.escapeHtml(summary);
+        }
+        
+        const messageId = 'grammar-' + Date.now();
+        
+        messageEl.innerHTML = `
+            <div class="message-bubble markdown-content">
+                <div id="${messageId}-summary" class="grammar-summary">
+                    <strong>📝 Grammar Analysis:</strong><br>
+                    ${summaryContent}
+                    ${plainText.length > 150 ? `<button class="grammar-show-more-btn" onclick="document.getElementById('${messageId}-summary').style.display='none';document.getElementById('${messageId}-full').style.display='block';" style="margin-top:8px;padding:4px 12px;background:#5e72e4;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px;">Show More</button>` : ''}
+                </div>
+                <div id="${messageId}-full" class="grammar-full" style="display:none;">
+                    <strong>📝 Grammar Analysis:</strong><br>
+                    ${content}
+                    <button onclick="document.getElementById('${messageId}-full').style.display='none';document.getElementById('${messageId}-summary').style.display='block';" style="margin-top:8px;padding:4px 12px;background:#6c757d;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px;">Show Less</button>
+                </div>
+            </div>
+            <span class="message-time">${time}</span>
+        `;
+        
+        this.messagesEl.appendChild(messageEl);
+        this.messagesEl.scrollTop = this.messagesEl.scrollHeight;
     }
 
     async generateResponse(prompt) {
