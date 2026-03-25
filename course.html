@@ -34,7 +34,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         body {
@@ -1488,7 +1488,7 @@
                 <span class="status-indicator" id="aiStatusIndicator"></span>
                 <span id="aiStatusText">Select a model and click Load</span>
             </div>
-            <div class="ai-chat-quick-actions" id="aiQuickActions" style="display: none;">
+            <div class="ai-chat-quick-actions hidden" id="aiQuickActions" style="display: none;">
                 <button class="ai-chat-quick-btn" data-action="summarize" title="Summarize current chapter"><i class="fas fa-compress"></i> Summarize</button>
                 <button class="ai-chat-quick-btn" data-action="questions" title="Generate practice questions"><i class="fas fa-question-circle"></i> Generate Questions</button>
                 <button class="ai-chat-quick-btn" data-action="explain" title="Explain topic in simple terms"><i class="fas fa-lightbulb"></i> Explain This</button>
